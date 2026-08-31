@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>웹프론트 개발기초 Final 특강 | MBTI 기반 커리어 로드맵 웹앱</title>
+<style>
+:root{
+  --stage:#dbe4ef; --slide:#fdfbf7; --ink:#182033; --muted:#64748b;
+  --security:#0f766e; --navy:#0f172a; --purple:#6d28d9; --blue:#2563eb; --mint:#10b981; --amber:#f59e0b; --rose:#e11d48;
+  --line:#dbeafe; --card:#ffffff; --code:#0b1020; --scale:1;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:"Noto Sans KR","Pretendard","Malgun Gothic",system-ui,sans-serif;background:var(--stage);color:var(--ink)}
+body{background:radial-gradient(circle at 10% 10%,rgba(37,99,235,.12),transparent 28%),radial-gradient(circle at 90% 85%,rgba(15,118,110,.12),transparent 28%),#dbe4ef}
+.deck{position:relative;width:100vw;height:100vh;overflow:hidden}.slide{display:none;position:absolute;left:50%;top:50%;width:1280px;height:720px;transform:translate(-50%,-50%) scale(var(--scale));transform-origin:center center;background:var(--slide);border:8px solid white;border-radius:32px;box-shadow:0 25px 50px rgba(15,23,42,.22);padding:44px 64px 68px;overflow:hidden}.slide.active{display:block}.slide:before,.slide:after{content:"";position:absolute;border-radius:50%;z-index:0;pointer-events:none}.slide:before{width:260px;height:260px;right:-75px;top:-80px;background:radial-gradient(circle,rgba(37,99,235,.12),transparent 70%)}.slide:after{width:320px;height:320px;left:-110px;bottom:-120px;background:radial-gradient(circle,rgba(15,118,110,.10),transparent 70%)}.slide>*{position:relative;z-index:2}
+.topline{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}.badge{display:inline-flex;align-items:center;gap:8px;background:#ecfeff;color:#0f766e;border:1px solid #99f6e4;border-radius:999px;padding:8px 14px;font-weight:900;font-size:15px}.page{font-size:15px;color:#2563eb;font-weight:900}h1{font-size:50px;line-height:1.12;margin:0 0 20px;letter-spacing:-1.6px;font-weight:950;color:#111827}h2{font-size:38px;line-height:1.18;margin:0 0 20px;letter-spacing:-1px;font-weight:950;display:flex;gap:14px;align-items:center;color:#111827}h2:before{content:"";width:8px;height:38px;background:linear-gradient(180deg,#0f766e,#2563eb);border-radius:8px;display:inline-block;flex:0 0 auto}h3{font-size:24px;color:#075985;margin:0 0 12px;font-weight:950}p,li{font-size:20px;line-height:1.55}.small{font-size:15px;color:var(--muted)}.big{font-size:27px;line-height:1.42}.strong{font-weight:950;color:#0f766e}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:#fff;border:2px solid #dbeafe;border-radius:24px;padding:22px;box-shadow:0 10px 24px rgba(30,41,59,.08)}.card.green{border-color:#99f6e4;background:#f0fdfa}.card.blue{border-color:#bfdbfe;background:#eff6ff}.card.purple{border-color:#ddd6fe;background:#f5f3ff}.card.yellow{border-color:#fde68a;background:#fffbeb}.card.rose{border-color:#fecdd3;background:#fff1f2}.card.dark{background:#111827;color:#f8fafc;border-color:#334155}.step{display:inline-block;background:#0f766e;color:white;border-radius:12px;padding:6px 12px;font-weight:950;margin-bottom:10px}.pill{display:inline-block;border-radius:999px;padding:7px 12px;margin:4px;background:#e0f2fe;color:#075985;font-weight:850}.quote{background:#fff7ed;border-left:8px solid var(--amber);border-radius:18px;padding:18px 22px;font-size:24px;line-height:1.45;font-weight:900;color:#7c2d12}.prompt{background:var(--code);color:#f8fafc;border-radius:20px;padding:19px 22px;font-family:"Consolas","D2Coding",monospace;font-size:16.5px;line-height:1.48;white-space:pre-wrap;height:420px;overflow:auto;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}.prompt.smallcode{font-size:15.8px;line-height:1.42;height:410px}.prompt::-webkit-scrollbar{width:12px}.prompt::-webkit-scrollbar-thumb{background:#64748b;border-radius:999px;border:3px solid var(--code)}.copy{position:absolute;right:64px;top:41px;background:#22c55e;color:#052e16;border:none;border-radius:999px;padding:9px 14px;font-weight:950;cursor:pointer;z-index:9}.copy:hover{filter:brightness(1.05)}.mock{border:2px solid #bae6fd;background:#f8fafc;border-radius:24px;padding:16px;min-height:260px}.mock .bar{height:30px;background:white;border:1px solid #cbd5e1;border-radius:999px;margin-bottom:16px}.phone{width:300px;min-height:430px;background:#0b1020;border-radius:34px;padding:18px;margin:auto;color:white;box-shadow:0 18px 38px rgba(15,23,42,.2)}.phone .screen{background:#111827;border-radius:24px;padding:18px;min-height:360px;border:1px solid #334155}.flow{display:flex;align-items:center;gap:10px;justify-content:center}.flow .node{background:white;border:2px solid #bfdbfe;border-radius:18px;padding:15px 17px;font-weight:900;text-align:center;min-width:132px}.arrow{font-size:28px;color:#0f766e}.checklist{list-style:none;padding-left:0}.checklist li{margin:9px 0;padding-left:32px;position:relative}.checklist li:before{content:"✓";position:absolute;left:0;top:0;color:#0f766e;font-weight:950}.code-compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}.snippet{background:#0f172a;color:#e5e7eb;border-radius:16px;padding:14px;font-family:"Consolas",monospace;font-size:15px;line-height:1.4;white-space:pre-wrap}.nav{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;background:rgba(15,23,42,.9);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:8px 14px;z-index:50}.nav button{width:38px;height:38px;border-radius:50%;border:0;background:white;color:#0f172a;font-weight:950;cursor:pointer}.nav span{color:white;font-weight:900}.progress{width:190px;height:8px;background:#475569;border-radius:999px;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,#0f766e,#2563eb,#8b5cf6);transition:.25s}.tg-toggle{position:absolute;right:24px;bottom:18px;z-index:60;background:#111827;color:white;border:0;border-radius:999px;padding:8px 13px;font-weight:900;cursor:pointer;opacity:.82}.tg{position:absolute;left:64px;right:64px;bottom:70px;background:#111827;color:#f8fafc;border:2px solid #38bdf8;border-radius:18px;padding:18px 22px;z-index:40;display:none;box-shadow:0 12px 30px rgba(15,23,42,.3)}.tg.show{display:block}.tg h4{margin:0 0 7px;font-size:18px;color:#7dd3fc}.tg p,.tg li{font-size:16px;line-height:1.45;margin:4px 0}.table{width:100%;border-collapse:collapse;background:white;border-radius:18px;overflow:hidden;border:1px solid #dbeafe}.table th,.table td{border-bottom:1px solid #e2e8f0;padding:13px 15px;font-size:18px;line-height:1.35;vertical-align:top}.table th{background:#dbeafe;color:#1e3a8a;text-align:left}.table tr:last-child td{border-bottom:0}.mini{font-size:17px}.mono{font-family:"Consolas","D2Coding",monospace}.footerhint{position:absolute;left:64px;bottom:30px;color:#64748b;font-weight:800;font-size:14px}.career-preview{background:#0b0f19;color:white;border-radius:24px;padding:24px;height:410px;overflow:hidden;border:2px solid #334155}.career-preview h3{color:#c4b5fd}.road{border-left:3px solid #6366f1;padding-left:20px}.road div{background:#111827;border:1px solid #334155;border-radius:14px;padding:12px;margin-bottom:10px}.road b{color:#67e8f9}
+@media (max-width:900px){.slide{border-radius:18px}}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<section class="slide active">
+  <div class="topline"><span class="badge">웹프론트 개발기초 · Final 특강</span><span class="page">01 / 22</span></div>
+  <h1>HTML로 만든 교안,<br>그리고 나의 커리어 웹앱</h1>
+  <p class="big">컴퓨터보안과 1학년이 그동안 배운 <span class="strong">HTML · CSS · JavaScript</span>를 읽고, AI와 협업해 final 과제 방향을 잡는 시간</p>
+  <div class="grid3" style="margin-top:34px">
+    <div class="card green"><h3>1. 만들기</h3><p>MBTI형 성향 테스트 웹앱의 구조를 이해하고 변형한다.</p></div>
+    <div class="card blue"><h3>2. 읽기</h3><p>이 HTML 교안 자체를 코드리터러시 관점에서 읽어본다.</p></div>
+    <div class="card purple"><h3>3. 설계하기</h3><p>취업 전 준비를 정리하는 커리어 로드맵 웹사이트로 확장한다.</p></div>
+  </div>
+  <div class="tg"><h4>TG</h4><p>첫 장에서는 “오늘 보는 자료도 HTML 파일”이라는 사실을 먼저 강조한다. 학생들이 웹페이지와 교안의 경계를 자연스럽게 이해하게 한다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">오늘의 목표</span><span class="page">02 / 22</span></div>
+  <h2>Final 과제를 위한 3가지 방향</h2>
+  <div class="grid3">
+    <div class="card"><span class="step">목표 1</span><h3>HTML 슬라이드 템플릿</h3><p>교안처럼 보이는 화면도 결국 HTML/CSS/JS로 만들 수 있음을 확인한다.</p></div>
+    <div class="card"><span class="step">목표 2</span><h3>코드리터러시</h3><p>코드를 전부 외우는 것이 아니라, 구조·스타일·동작의 역할을 구분해서 읽는다.</p></div>
+    <div class="card"><span class="step">목표 3</span><h3>진로 웹앱 설계</h3><p>나의 성향, 보안 직무, 준비 항목을 웹사이트로 설계한다.</p></div>
+  </div>
+  <div class="quote" style="margin-top:28px">오늘의 핵심: “AI가 만든 코드를 그대로 제출하는 것”이 아니라, 내가 읽고 설명하고 고쳐서 내 프로젝트로 만든다.</div>
+  <div class="tg"><h4>TG</h4><p>final 과제는 완성도보다 “웹프론트 요소를 의식적으로 사용했는가”와 “본인이 설명 가능한가”를 중점으로 안내한다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">왜 HTML 교안인가?</span><span class="page">03 / 22</span></div>
+  <h2>지금 보고 있는 화면도 웹페이지입니다</h2>
+  <div class="grid2">
+    <div class="card blue"><h3>일반 PPT와 다른 점</h3><ul class="checklist"><li>소스코드를 열어 구조를 볼 수 있다.</li><li>버튼, 단축키, 복사 기능을 직접 넣을 수 있다.</li><li>교사용 TG 표시/숨김 같은 상호작용이 가능하다.</li><li>수정 후 브라우저 새로고침으로 바로 확인한다.</li></ul></div>
+    <div class="card dark"><h3 style="color:#7dd3fc">HTML 교안의 구조</h3><div class="snippet">&lt;section class="slide"&gt;
+  &lt;h2&gt;슬라이드 제목&lt;/h2&gt;
+  &lt;div class="card"&gt;내용 카드&lt;/div&gt;
+&lt;/section&gt;
+
+&lt;script&gt;
+  nextSlide();
+&lt;/script&gt;</div></div>
+  </div>
+  <p class="small" style="margin-top:18px">이 수업에서는 웹페이지를 ‘콘텐츠를 담는 문서’이자 ‘상호작용하는 앱’으로 본다.</p>
+  <div class="tg"><h4>TG</h4><p>이 장은 대학생용으로 중요하다. “HTML은 페이지 제작만이 아니라 발표자료·설문·대시보드·포트폴리오도 만들 수 있다”는 확장 인식을 준다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">코드리터러시</span><span class="page">04 / 22</span></div>
+  <h2>HTML · CSS · JavaScript를 이렇게 읽습니다</h2>
+  <div class="code-compare">
+    <div class="card"><h3>HTML</h3><p>무엇을 화면에 놓을까?</p><div class="snippet">&lt;h1&gt;제목&lt;/h1&gt;
+&lt;button&gt;시작&lt;/button&gt;
+&lt;section&gt;결과&lt;/section&gt;</div></div>
+    <div class="card"><h3>CSS</h3><p>어떻게 보이게 할까?</p><div class="snippet">.card {
+  border-radius: 24px;
+  background: white;
+}</div></div>
+    <div class="card"><h3>JavaScript</h3><p>무엇이 움직일까?</p><div class="snippet">function showResult(){
+  score++;
+  result.innerText = "...";
+}</div></div>
+  </div>
+  <div class="quote" style="margin-top:24px">읽기 기준: “이 코드는 화면 구조인가, 디자인인가, 동작인가?”</div>
+  <div class="tg"><h4>TG</h4><p>학생에게 전체 코드 설명보다 ‘세 덩어리 분류’가 더 중요하다. final 발표 때도 이 기준으로 설명하게 할 수 있다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">Final 과제 방향</span><span class="page">05 / 22</span></div>
+  <h2>두 단계 프로젝트: MBTI → 커리어 로드맵</h2>
+  <div class="flow" style="margin-top:40px">
+    <div class="node">MBTI형<br>성향 테스트</div><div class="arrow">→</div><div class="node">나의 성향<br>해석</div><div class="arrow">→</div><div class="node">보안 직무<br>연결</div><div class="arrow">→</div><div class="node">취업 전<br>준비 로드맵</div><div class="arrow">→</div><div class="node">나만의<br>웹사이트</div>
+  </div>
+  <div class="grid2" style="margin-top:44px">
+    <div class="card green"><h3>1단계</h3><p>질문과 선택지를 통해 결과가 바뀌는 성향 테스트 앱을 만든다.</p></div>
+    <div class="card blue"><h3>2단계</h3><p>결과를 진로 설계 페이지로 확장한다. 예: “보안을 지키는 요기니” 커리어 로드맵</p></div>
+  </div>
+  <div class="tg"><h4>TG</h4><p>학생이 MBTI를 과학적 진단으로 오해하지 않게, “자기이해를 돕는 웹앱 형식”으로 설명한다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">MBTI 앱 구조</span><span class="page">06 / 22</span></div>
+  <h2>MBTI 앱은 복잡해 보여도 흐름은 단순합니다</h2>
+  <div class="flow" style="margin-top:30px">
+    <div class="node">시작 화면</div><div class="arrow">→</div><div class="node">질문 출력</div><div class="arrow">→</div><div class="node">A/B 선택</div><div class="arrow">→</div><div class="node">점수 누적</div><div class="arrow">→</div><div class="node">결과 출력</div>
+  </div>
+  <div class="grid3" style="margin-top:42px">
+    <div class="card"><h3>데이터</h3><p>질문, 선택지, 결과 설명</p><span class="pill">배열</span><span class="pill">객체</span></div>
+    <div class="card"><h3>화면</h3><p>질문 카드, 버튼, 결과 카드</p><span class="pill">HTML</span><span class="pill">CSS</span></div>
+    <div class="card"><h3>동작</h3><p>클릭, 점수 계산, 화면 전환</p><span class="pill">함수</span><span class="pill">이벤트</span></div>
+  </div>
+  <div class="tg"><h4>TG</h4><p>‘배열/객체’는 깊게 가르치기보다 “데이터를 묶어놓은 상자” 정도로만 연결해도 충분하다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">STEP 0</span><span class="page">07 / 22</span></div>
+  <h2>먼저 앱을 설계합니다</h2>
+  <table class="table">
+    <tr><th>항목</th><th>예시</th><th>내 프로젝트</th></tr>
+    <tr><td>앱 주제</td><td>나와 닮은 보안 직무 찾기</td><td>직접 작성</td></tr>
+    <tr><td>대상 사용자</td><td>컴퓨터보안과 1학년, 취업 준비 시작 단계</td><td>직접 작성</td></tr>
+    <tr><td>결과 유형</td><td>침해대응형 / 웹보안형 / 포렌식형 / 보안기획형</td><td>4개 이상</td></tr>
+    <tr><td>디자인 콘셉트</td><td>다크모드, 보안 대시보드, 네온 포인트</td><td>직접 작성</td></tr>
+  </table>
+  <div class="quote" style="margin-top:20px">AI에게 맡기기 전에, 내가 원하는 결과의 기준을 먼저 정한다.</div>
+  <div class="tg"><h4>TG</h4><p>이 장은 활동지처럼 사용한다. 학생이 빈칸을 채우고 나서 프롬프트를 넣게 한다.</p></div>
+</section>
+
+<section class="slide">
+  <button class="copy" data-copy="prompt1">프롬프트 복사</button>
+  <div class="topline"><span class="badge">STEP 1 · 최소 기능</span><span class="page">08 / 22</span></div>
+  <h2>AI에 넣을 첫 번째 프롬프트</h2>
+  <div class="prompt" id="prompt1">너는 웹 프론트엔드 개발자야.
+전문대 컴퓨터보안과 1학년 학생이 final 과제로 제출할 수 있는 MBTI형 성향 테스트 웹앱을 만들어줘.
+
+주제: 나와 어울리는 보안 직무 유형 찾기
+
+먼저 간단한 버전으로 만들어줘.
+- 시작 화면
+- 질문 4개
+- 질문마다 선택지 2개
+- 선택 결과를 점수로 계산
+- 결과는 4종류
+- 결과 화면
+- 다시하기 버튼
+
+조건:
+- HTML, CSS, JavaScript를 하나의 index.html 파일에 작성
+- 외부 설치 없이 브라우저에서 바로 실행
+- 코드에는 초보자가 이해할 수 있는 주석 추가
+- 디자인은 너무 복잡하지 않게, 보안/IT 느낌의 깔끔한 스타일
+- 내가 나중에 질문과 결과를 쉽게 바꿀 수 있도록 구조화</div>
+  <div class="tg"><h4>TG</h4><p>처음부터 진로 로드맵까지 만들지 않는다. 작동하는 최소 버전을 먼저 만든 뒤 확장한다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">실행 확인</span><span class="page">09 / 22</span></div>
+  <h2>AI가 만든 결과에서 먼저 확인할 것</h2>
+  <div class="grid2">
+    <div class="phone"><div class="screen"><h3 style="color:#67e8f9">보안 직무 유형 테스트</h3><p class="mini">나는 어떤 보안 분야와 잘 맞을까?</p><button style="width:100%;padding:12px;border-radius:14px;border:0;background:#06b6d4;color:#082f49;font-weight:900">테스트 시작</button><div style="height:18px"></div><div style="background:#1f2937;border-radius:16px;padding:14px">Q1. 문제 상황을 보면?</div></div></div>
+    <div class="card"><h3>3가지 점검</h3><ul class="checklist"><li>버튼을 누르면 다음 화면으로 이동하는가?</li><li>선택하면 점수가 계산되는가?</li><li>마지막에 결과가 바뀌어 나오는가?</li></ul><p class="small">디자인보다 먼저 “작동 여부”를 확인한다.</p></div>
+  </div>
+  <div class="tg"><h4>TG</h4><p>학생들이 디자인부터 수정하려는 경우가 많다. 기능 확인 → 개인화 → 디자인 순으로 유도한다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">코드 탐정 1</span><span class="page">10 / 22</span></div>
+  <h2>생성된 코드에서 세 군데만 찾아봅니다</h2>
+  <div class="grid3">
+    <div class="card"><h3>① 제목</h3><p>웹앱의 제목을 만드는 코드</p><div class="snippet">&lt;h1&gt;나와 어울리는 보안 직무&lt;/h1&gt;</div></div>
+    <div class="card"><h3>② 버튼</h3><p>선택지를 누르게 하는 코드</p><div class="snippet">&lt;button onclick="selectAnswer(1)"&gt;
+  A 선택
+&lt;/button&gt;</div></div>
+    <div class="card"><h3>③ 함수</h3><p>결과를 계산하는 코드</p><div class="snippet">function showResult() {
+  // 점수에 따라 결과 출력
+}</div></div>
+  </div>
+  <div class="quote" style="margin-top:25px">목표는 전체 코드를 암기하는 것이 아니라, 내가 수정할 위치를 찾는 것이다.</div>
+  <div class="tg"><h4>TG</h4><p>여기서 “코드리터러시”를 평가 기준으로 연결한다. 어느 줄이 무슨 역할인지 설명할 수 있으면 좋은 결과물이다.</p></div>
+</section>
+
+<section class="slide">
+  <button class="copy" data-copy="prompt2">프롬프트 복사</button>
+  <div class="topline"><span class="badge">STEP 2 · 개인화</span><span class="page">11 / 22</span></div>
+  <h2>내 주제와 결과 유형으로 바꾸기</h2>
+  <div class="prompt" id="prompt2">지금 만든 성향 테스트 웹앱을 내 final 과제 주제에 맞게 바꿔줘.
+
+앱 주제: [내가 정한 주제]
+대상 사용자: [예: 컴퓨터보안과 1학년, 취업 준비를 시작하는 학생]
+
+결과 유형 4개:
+1. [예: 웹보안 분석가형]
+2. [예: 침해사고 대응가형]
+3. [예: 디지털 포렌식 탐정형]
+4. [예: 보안 기획/정책형]
+
+각 결과 화면에 포함할 내용:
+- 나의 성향 설명
+- 어울리는 보안 직무
+- 지금부터 준비하면 좋은 기술 3개
+- 추천 실습 1개
+- 응원 메시지 1개
+
+기존 테스트 기능은 유지하고, 질문과 결과 문장만 위 주제에 맞게 자연스럽게 바꿔줘.</div>
+  <div class="tg"><h4>TG</h4><p>결과 유형을 보안 직무와 연결하게 한다. “나는 어떤 성향인가”에서 “그럼 무엇을 준비할까”로 자연스럽게 이동한다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">진로 연결</span><span class="page">12 / 22</span></div>
+  <h2>MBTI 결과는 진로 로드맵의 출발점입니다</h2>
+  <table class="table">
+    <tr><th>성향 결과</th><th>연결 가능한 보안 직무</th><th>준비 항목</th></tr>
+    <tr><td>분석형</td><td>침해사고 분석, 로그 분석, 보안관제</td><td>네트워크, 리눅스, 로그 읽기</td></tr>
+    <tr><td>탐정형</td><td>디지털 포렌식, 악성코드 분석</td><td>파일시스템, 증거 보존, Python</td></tr>
+    <tr><td>방어형</td><td>웹보안, 취약점 진단</td><td>HTML/CSS/JS, OWASP, Burp Suite</td></tr>
+    <tr><td>기획형</td><td>정보보호 관리체계, 보안 정책</td><td>문서화, 위험관리, 개인정보보호</td></tr>
+  </table>
+  <div class="tg"><h4>TG</h4><p>성격검사 자체보다 “진로 탐색을 돕는 UI”로 의미를 재설정한다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">예시 분석</span><span class="page">13 / 22</span></div>
+  <h2>예시: “보안을 지키는 요기니” 커리어 사이트</h2>
+  <div class="grid2">
+    <div class="career-preview">
+      <span class="pill" style="background:#1e1b4b;color:#c4b5fd">Yoga × Cybersecurity × AI</span>
+      <h3>보안을 지키는 요기니,<br>인공지능의 윤리를 품다</h3>
+      <p class="mini">개인의 성향과 관심사를 보안 진로와 연결한 포트폴리오형 웹사이트</p>
+      <div class="road"><div><b>1단계</b> 전공 기본기</div><div><b>2단계</b> 보안 실습</div><div><b>3단계</b> AI 보안 연구</div></div>
+    </div>
+    <div class="card"><h3>이 예시에서 읽을 수 있는 것</h3><ul class="checklist"><li>상단 네비게이션</li><li>Hero Section</li><li>성향/가치관 카드</li><li>커리어 로드맵 타임라인</li><li>인터랙티브 입력/저장 기능</li></ul><p class="small">진로 사이트는 단순 소개 페이지가 아니라 상호작용하는 포트폴리오가 될 수 있다.</p></div>
+  </div>
+  <div class="tg"><h4>TG</h4><p>업로드한 커리어 대시보드 예시의 구조를 대학생 수준으로 재해석한다. 학생 개인 특성은 보안 직무 준비와 연결한다.</p></div>
+</section>
+
+<section class="slide">
+  <button class="copy" data-copy="prompt3">프롬프트 복사</button>
+  <div class="topline"><span class="badge">STEP 3 · 커리어 확장</span><span class="page">14 / 22</span></div>
+  <h2>MBTI 결과를 커리어 로드맵 사이트로 확장</h2>
+  <div class="prompt smallcode" id="prompt3">지금 만든 MBTI형 성향 테스트 웹앱에 “커리어 로드맵” 섹션을 추가해줘.
+
+목표:
+테스트 결과가 단순히 성향 설명에서 끝나지 않고, 취업 전 내가 무엇을 준비해야 하는지 알려주는 웹사이트가 되게 하고 싶어.
+
+추가할 섹션:
+1. 나의 성향 요약
+2. 어울리는 보안 직무
+3. 취업 전 준비해야 할 기술 로드맵
+4. 추천 실습 프로젝트
+5. 포트폴리오에 넣을 수 있는 결과물
+
+로드맵 예시 단계:
+- 1단계: HTML/CSS/JavaScript 기본기 정리
+- 2단계: 네트워크와 리눅스 기초 실습
+- 3단계: 웹 취약점 진단 실습
+- 4단계: GitHub 또는 포트폴리오 페이지 정리
+
+디자인:
+- 보안 대시보드 느낌
+- 다크모드 기반
+- 카드와 타임라인 구조 사용
+- 모바일에서도 보기 좋게
+
+기존 테스트 기능은 유지하고, 아래쪽에 로드맵 섹션을 추가하는 방식으로 수정해줘.</div>
+  <div class="tg"><h4>TG</h4><p>여기서 final 과제의 방향성을 명확히 한다. “앱 하나”가 아니라 “테스트 + 진로 안내 사이트” 구조로 확장한다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">프론트엔드 개념 연결</span><span class="page">15 / 22</span></div>
+  <h2>이번 과제에서 드러나야 할 학습 요소</h2>
+  <div class="grid3">
+    <div class="card green"><h3>HTML</h3><ul class="checklist"><li>header/main/section/footer</li><li>button, form, input</li><li>카드와 타임라인 구조</li></ul></div>
+    <div class="card blue"><h3>CSS</h3><ul class="checklist"><li>색상과 폰트</li><li>flex/grid 레이아웃</li><li>hover, border-radius</li><li>반응형 화면</li></ul></div>
+    <div class="card purple"><h3>JavaScript</h3><ul class="checklist"><li>클릭 이벤트</li><li>점수 계산</li><li>결과 표시</li><li>화면 전환</li><li>localStorage 선택</li></ul></div>
+  </div>
+  <div class="quote" style="margin-top:22px">final 과제 발표에서는 “무엇을 만들었는가”와 함께 “어떤 프론트엔드 개념을 사용했는가”를 설명한다.</div>
+  <div class="tg"><h4>TG</h4><p>평가 루브릭과 연결 가능. HTML/CSS/JS 항목별 최소 요구사항으로 제시해도 좋다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">HTML 슬라이드 템플릿</span><span class="page">16 / 22</span></div>
+  <h2>이 교안 자체도 final 확장 예제가 됩니다</h2>
+  <div class="grid2">
+    <div class="card dark"><h3 style="color:#7dd3fc">슬라이드 하나의 기본 구조</h3><div class="snippet">&lt;section class="slide"&gt;
+  &lt;div class="topline"&gt;...&lt;/div&gt;
+  &lt;h2&gt;슬라이드 제목&lt;/h2&gt;
+  &lt;div class="card"&gt;내용&lt;/div&gt;
+  &lt;div class="tg"&gt;교사용 메모&lt;/div&gt;
+&lt;/section&gt;</div></div>
+    <div class="card"><h3>읽어볼 포인트</h3><ul class="checklist"><li>각 슬라이드는 section으로 구분된다.</li><li>카드는 div class="card"로 반복된다.</li><li>T키를 누르면 TG가 보인다.</li><li>프롬프트 복사 버튼도 JavaScript로 동작한다.</li></ul></div>
+  </div>
+  <div class="tg"><h4>TG</h4><p>대학생 수업에서 이 HTML 교안을 소스 보기로 열어 보여주면 매우 좋은 예제가 된다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">TG 토글 코드</span><span class="page">17 / 22</span></div>
+  <h2>교사용 TG 표시/숨김 기능 읽기</h2>
+  <div class="grid2">
+    <div class="card"><h3>사용자 입장</h3><p>수업 중에는 학생 화면만 보이고, 필요할 때 교사가 T키를 눌러 진행 메모를 확인한다.</p><div class="quote">T = Teacher Guide</div></div>
+    <div class="card dark"><h3 style="color:#7dd3fc">JavaScript 개념</h3><div class="snippet">window.addEventListener('keydown', e =&gt; {
+  if (e.key.toLowerCase() === 't') {
+    document.body.classList.toggle('teacher');
+  }
+});</div><p class="small">이벤트 처리 + 클래스 토글</p></div>
+  </div>
+  <div class="tg"><h4>TG</h4><p>실제 코드에서는 현재 슬라이드의 TG에 show 클래스를 붙였다 떼는 방식으로 구현했다. classList 개념과 연결한다.</p></div>
+</section>
+
+<section class="slide">
+  <button class="copy" data-copy="prompt4">프롬프트 복사</button>
+  <div class="topline"><span class="badge">STEP 4 · 디자인 고도화</span><span class="page">18 / 22</span></div>
+  <h2>디자인을 바꿀 때는 기능을 유지하라고 말합니다</h2>
+  <div class="prompt" id="prompt4">현재 웹앱은 기능이 잘 작동하고 있어.
+이번에는 디자인만 보안 포트폴리오 느낌으로 고도화해줘.
+
+디자인 조건:
+- 다크모드 기반
+- 네온 블루/민트 포인트 컬러
+- 결과 화면은 보안 대시보드 카드처럼 구성
+- 커리어 로드맵은 타임라인 형태
+- 버튼에는 hover 효과
+- 모바일에서도 보기 좋게 반응형 처리
+
+중요:
+- 기존 질문, 점수 계산, 결과 출력 기능은 변경하지 마.
+- HTML/CSS/JavaScript가 하나의 파일 안에 유지되게 해줘.
+- 수정한 부분을 주석으로 표시해줘.</div>
+  <div class="tg"><h4>TG</h4><p>AI가 기능 전체를 다시 만들면서 오류를 내는 경우가 있으므로 “기능 유지, 디자인만 수정”을 강조한다.</p></div>
+</section>
+
+<section class="slide">
+  <button class="copy" data-copy="prompt5">프롬프트 복사</button>
+  <div class="topline"><span class="badge">디버깅</span><span class="page">19 / 22</span></div>
+  <h2>오류가 날 때 AI에게 이렇게 질문합니다</h2>
+  <div class="prompt" id="prompt5">웹앱에서 오류가 발생했어.
+
+내가 원한 동작:
+[예: 결과보기 버튼을 누르면 커리어 로드맵이 표시되어야 함]
+
+실제로 일어난 동작:
+[예: 버튼을 눌러도 아무 변화가 없음]
+
+내가 확인한 것:
+[예: 버튼의 onclick 이름과 JavaScript 함수 이름이 다른 것 같음]
+
+요청:
+- 전체 코드를 처음부터 다시 만들지 마.
+- 오류 원인을 먼저 설명해줘.
+- 수정해야 할 부분만 알려줘.
+- 수정 전/수정 후 코드를 비교해서 보여줘.
+- 초보자가 이해할 수 있게 설명해줘.</div>
+  <div class="tg"><h4>TG</h4><p>final 과제에서 “AI에게 고쳐달라고 했습니다”가 아니라 “어떤 오류를 어떤 방식으로 추적했는가”를 보고서에 쓰게 할 수 있다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">제출물</span><span class="page">20 / 22</span></div>
+  <h2>Final 과제 제출 구성</h2>
+  <div class="grid2">
+    <div class="card green"><h3>웹 결과물</h3><ul class="checklist"><li>index.html 파일</li><li>실행 화면 캡처</li><li>가능하면 배포 링크</li><li>나의 성향 테스트 + 커리어 로드맵 포함</li></ul></div>
+    <div class="card blue"><h3>설명 자료</h3><ul class="checklist"><li>사용한 프롬프트 2~3개</li><li>내가 직접 수정한 부분</li><li>HTML/CSS/JS 사용 요소</li><li>오류 해결 과정</li><li>진로 준비 계획</li></ul></div>
+  </div>
+  <div class="quote" style="margin-top:24px">제출의 핵심은 결과물 + 코드 이해 + 진로설정 방향성이다.</div>
+  <div class="tg"><h4>TG</h4><p>과제 난이도를 조절하려면 배포 링크는 선택으로 두고, HTML 파일과 설명 자료를 필수로 둔다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">발표 가이드</span><span class="page">21 / 22</span></div>
+  <h2>Final 발표에서 말해야 할 5가지</h2>
+  <div class="grid3">
+    <div class="card"><h3>1</h3><p>무엇을 만들었나요?</p></div>
+    <div class="card"><h3>2</h3><p>어떤 사용자를 위한 사이트인가요?</p></div>
+    <div class="card"><h3>3</h3><p>AI에게 어떤 프롬프트를 사용했나요?</p></div>
+    <div class="card"><h3>4</h3><p>내가 직접 고친 코드는 무엇인가요?</p></div>
+    <div class="card"><h3>5</h3><p>나의 진로 준비 계획은 무엇인가요?</p></div>
+    <div class="card yellow"><h3>+α</h3><p>HTML/CSS/JS 중 가장 설명 가능한 부분은?</p></div>
+  </div>
+  <div class="tg"><h4>TG</h4><p>발표 시간은 1인 2~3분 정도로 설정 가능. 코드 한 부분을 반드시 설명하게 하면 코드리터러시 평가가 된다.</p></div>
+</section>
+
+<section class="slide">
+  <div class="topline"><span class="badge">마무리</span><span class="page">22 / 22</span></div>
+  <h1>웹프론트 개발은<br>나를 설명하는 도구가 됩니다</h1>
+  <div class="grid3" style="margin-top:30px">
+    <div class="card green"><h3>HTML</h3><p>나의 내용을 구조화한다.</p></div>
+    <div class="card blue"><h3>CSS</h3><p>나의 메시지를 시각화한다.</p></div>
+    <div class="card purple"><h3>JavaScript</h3><p>나의 사이트를 움직이게 한다.</p></div>
+  </div>
+  <div class="quote" style="margin-top:28px">Final 과제는 “AI가 만든 웹앱”이 아니라 “AI와 협업해 내가 읽고 수정한 나의 웹사이트”입니다.</div>
+  <div class="tg"><h4>TG</h4><p>마지막에는 학생들이 각자 어떤 진로 방향을 넣을 수 있을지 짧게 말하게 해도 좋다.</p></div>
+</section>
+
+<div class="nav"><button id="prev">←</button><span id="counter">1 / 22</span><div class="progress"><div class="bar" id="progress"></div></div><button id="next">→</button></div>
+<button class="tg-toggle" id="tgBtn">TG</button>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let current=0; let tgVisible=false;
+function fit(){ const scale=Math.min(window.innerWidth/1280, window.innerHeight/720); document.documentElement.style.setProperty('--scale', scale); }
+function update(){ slides.forEach((s,i)=>{s.classList.toggle('active', i===current); const tg=s.querySelector('.tg'); if(tg) tg.classList.toggle('show', tgVisible && i===current);}); document.getElementById('counter').innerText=`${current+1} / ${slides.length}`; document.getElementById('progress').style.width=((current+1)/slides.length*100)+'%'; }
+function next(){ if(current<slides.length-1){current++; update();} }
+function prev(){ if(current>0){current--; update();} }
+document.getElementById('next').onclick=next; document.getElementById('prev').onclick=prev; document.getElementById('tgBtn').onclick=()=>{tgVisible=!tgVisible; update();};
+window.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key===' '){e.preventDefault(); next();} if(e.key==='ArrowLeft'){prev();} if(e.key.toLowerCase()==='t'){tgVisible=!tgVisible; update();} });
+window.addEventListener('resize',fit); fit(); update();
+document.querySelectorAll('.copy').forEach(btn=>{btn.addEventListener('click',async()=>{const el=document.getElementById(btn.dataset.copy); const text=el?el.innerText:''; try{await navigator.clipboard.writeText(text); const old=btn.innerText; btn.innerText='복사됨'; setTimeout(()=>btn.innerText=old,1200);}catch(err){alert('복사 실패: 직접 드래그해서 복사하세요.');}})});
+</script>
+</body>
+</html>

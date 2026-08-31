@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cyber Yogini | AI & Security Dream Roadmap</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans for tech aesthetic & Gothic A1 for clean Korean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@300;400;700;800&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom styling & Tailwind Configuration -->
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Gothic A1', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        .neon-text-indigo {
+            text-shadow: 0 0 10px rgba(99, 102, 241, 0.6), 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+        .neon-text-rose {
+            text-shadow: 0 0 10px rgba(244, 63, 94, 0.6), 0 0 20px rgba(244, 63, 94, 0.4);
+        }
+        .glassmorphism {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gradient-border {
+            position: relative;
+            border-radius: 1rem;
+            background: linear-gradient(135deg, #6366f1, #f43f5e);
+            padding: 1px;
+        }
+        .gradient-border-inner {
+            background: #111827;
+            border-radius: 1rem;
+            height: 100%;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glassmorphism border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo with Hybrid Symbol (Shield + Lotus) -->
+                <div class="flex items-center space-x-2">
+                    <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    <span class="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-rose-400 tracking-wider">CYBER YOGINI</span>
+                </div>
+                <!-- Menu -->
+                <div class="hidden md:flex space-x-8 text-sm font-semibold text-gray-300">
+                    <a href="#about" class="hover:text-rose-400 transition-colors">ENFP 가치관</a>
+                    <a href="#yoga" class="hover:text-indigo-400 transition-colors">마인드 케어</a>
+                    <a href="#roadmap" class="hover:text-rose-400 transition-colors">꿈의 로드맵</a>
+                    <a href="#simulator" class="hover:text-indigo-400 transition-colors">밸런스 시뮬레이터</a>
+                    <a href="#dreamboard" class="hover:text-rose-400 transition-colors">드림보드</a>
+                </div>
+                <!-- Mini Tech Badge -->
+                <div class="bg-indigo-950/50 border border-indigo-500/30 rounded-full px-3 py-1 text-xs text-indigo-300 flex items-center space-x-1">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-ping"></span>
+                    <span>Future AI Researcher & Prof.</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen pt-24 pb-12 flex items-center justify-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/40 via-slate-950 to-slate-950">
+        <!-- Floating Ambient Gradients -->
+        <div class="absolute top-1/4 left-1/10 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/10 w-96 h-96 bg-rose-600/10 rounded-full blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Left Grid: Main Copy and Pitch -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <span class="inline-block px-4 py-1.5 bg-gradient-to-r from-indigo-500/20 to-rose-500/20 border border-indigo-500/30 rounded-full text-sm font-semibold text-rose-300 tracking-wide uppercase">
+                    Yoga × Cybersecurity × AI Researcher
+                </span>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight">
+                    보안을 지키는 요기니(<span class="text-rose-400 font-medium">Yogini</span>),<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-rose-400">인공지능의 윤리를 품다</span>
+                </h1>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
+                    안녕하세요! 세상을 안전하고 이롭게 만드는 <strong>보안학과 교수이자 AI 연구원</strong>을 꿈꾸는 고등학생입니다. 
+                    복잡한 알고리즘과 차가운 보안 데이터 속에서도, <strong>요가</strong>의 평온함과 <strong>ENFP</strong>만의 풍부한 공감 능력으로 따뜻한 미래 기술의 동반자가 되고 싶습니다.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#roadmap" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-rose-600 hover:from-indigo-500 hover:to-rose-500 text-white rounded-xl font-bold shadow-lg shadow-indigo-950/50 hover:shadow-indigo-500/20 transition-all text-center">
+                        나의 커리어 로드맵 보기
+                    </a>
+                    <a href="#yoga" class="w-full sm:w-auto px-8 py-4 bg-gray-800/80 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 text-gray-300 rounded-xl font-bold transition-all text-center">
+                        호흡 맞추러 가기 (요가)
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Grid: Concept Avatar / Dashboard Graphic -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96">
+                    <!-- Cosmic Outer Rings -->
+                    <div class="absolute inset-0 rounded-full border border-dashed border-indigo-500/20 animate-spin" style="animation-duration: 20s;"></div>
+                    <div class="absolute inset-4 rounded-full border border-dashed border-rose-500/20 animate-spin" style="animation-duration: 10s; animation-direction: reverse;"></div>
+                    
+                    <!-- Main Illustative Card (Inner Shield & Lotus Flower Glow) -->
+                    <div class="absolute inset-8 rounded-full bg-gradient-to-tr from-indigo-900/50 via-slate-900 to-rose-950/50 flex items-center justify-center shadow-2xl border border-gray-800">
+                        <div class="text-center space-y-4 px-6">
+                            <!-- Abstract SVG Vector: Shield morphing into a Lotus Leaf and AI Neurons -->
+                            <svg class="w-24 h-24 mx-auto text-indigo-400 drop-shadow-[0_0_15px_rgba(99,102,241,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12a3 3 0 013-3m0 0a3 3 0 013 3m-3-3v6m-3-3h6"></path>
+                            </svg>
+                            <div class="space-y-1">
+                                <div class="text-xs text-rose-400 font-bold uppercase tracking-widest">Mindful AI Security</div>
+                                <div class="text-lg font-bold text-gray-100">Peace × Safety × Code</div>
+                            </div>
+                            <div class="flex justify-center space-x-2 text-xs">
+                                <span class="px-2 py-0.5 bg-slate-800 rounded text-gray-400 border border-gray-700">ENFP</span>
+                                <span class="px-2 py-0.5 bg-slate-800 rounded text-gray-400 border border-gray-700">YOGA</span>
+                                <span class="px-2 py-0.5 bg-slate-800 rounded text-gray-400 border border-gray-700">FEMALE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About ENFP Power Section -->
+    <section id="about" class="py-24 bg-slate-950 border-t border-gray-900 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-400">ENFP Female Synergy</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-400">
+                    인기쟁이 ENFP 여성이 그릴 독보적인 시너지
+                </p>
+                <p class="mt-4 text-gray-400 font-light text-base">
+                    AI 모델의 편향성과 보안 위협은 단순한 연산의 오류가 아닌 인간 사회에 대한 이해 부족에서 나옵니다. 
+                    ENFP 특유의 초능력들을 결합했을 때, 혁신은 한층 더 완벽해집니다.
+                </p>
+            </div>
+
+            <!-- ENFP Trait Card Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Trait 1: Empathy & Ethics -->
+                <div class="gradient-border group hover:-translate-y-2 transition-all duration-300">
+                    <div class="gradient-border-inner p-8 flex flex-col justify-between h-full">
+                        <div class="space-y-4">
+                            <div class="w-12 h-12 bg-rose-950/50 border border-rose-500/30 rounded-xl flex items-center justify-center text-rose-400">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-100">윤리적 AI를 그리는 공감력</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                인간의 가치를 중요시하고 소통을 좋아하는 ENFP는 AI 연구에서 윤리적 한계를 가장 먼저 들여다볼 수 있는 공감형 리더로 활약합니다.
+                            </p>
+                        </div>
+                        <div class="mt-6 text-xs text-rose-300 font-semibold flex items-center">
+                            인간 가치 중심 연구 &rarr;
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trait 2: Inspirational Educator -->
+                <div class="gradient-border group hover:-translate-y-2 transition-all duration-300">
+                    <div class="gradient-border-inner p-8 flex flex-col justify-between h-full">
+                        <div class="space-y-4">
+                            <div class="w-12 h-12 bg-indigo-950/50 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-100">흡입력 강한 "보안공학 교수"</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                딱딱하고 지루한 암호학, 알고리즘 수업을 스토리텔링과 활기찬 아우라로 가르칩니다. 학생들에게 선한 영감을 심어주는 최고의 멘토형 교수가 됩니다.
+                            </p>
+                        </div>
+                        <div class="mt-6 text-xs text-indigo-300 font-semibold flex items-center">
+                            전인적 공학 교육 실현 &rarr;
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trait 3: Out-of-the-box Solutionist -->
+                <div class="gradient-border group hover:-translate-y-2 transition-all duration-300">
+                    <div class="gradient-border-inner p-8 flex flex-col justify-between h-full">
+                        <div class="space-y-4">
+                            <div class="w-12 h-12 bg-purple-950/50 border border-purple-500/30 rounded-xl flex items-center justify-center text-purple-400">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364.364l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-100">틀을 깨는 화이트 해킹 직관력</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                끊임없이 확장되는 상상력과 호기심으로 예측 불가능한 해커의 동선과 제로데이 취약점 시나리오를 누구보다 창의적으로 발견해 냅니다.
+                            </p>
+                        </div>
+                        <div class="mt-6 text-xs text-purple-300 font-semibold flex items-center">
+                            창의적 해킹 시나리오 구상 &rarr;
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Yoga Interactive Section -->
+    <section id="yoga" class="py-24 bg-slate-900 border-t border-gray-900 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Grid: The Interactive Breathing Box -->
+                <div class="lg:col-span-6 flex justify-center">
+                    <div class="w-full max-w-md bg-slate-950/80 border border-gray-800 rounded-2xl p-8 text-center relative overflow-hidden shadow-2xl">
+                        <!-- Breath Aura Effect Behind -->
+                        <div id="breath-aura" class="absolute inset-0 bg-rose-500/5 rounded-full filter blur-3xl transform scale-50 transition-transform duration-4000"></div>
+                        
+                        <div class="relative z-10 space-y-6">
+                            <span class="px-3 py-1 bg-rose-950/60 border border-rose-500/20 rounded-full text-xs text-rose-300 font-bold">
+                                4-4-4 Pranayama Guide
+                            </span>
+                            <h3 class="text-2xl font-bold text-gray-100">코딩 중에 마음을 차분히, 요가 호흡</h3>
+                            <p class="text-sm text-gray-400">
+                                과열된 인공지능과 지친 머리를 맑게 식혀주는 명상 가이드입니다.<br>
+                                아래 시작 버튼을 눌러 함께 호흡해 보세요.
+                            </p>
+
+                            <!-- Circular Breath Indicator -->
+                            <div class="relative w-48 h-48 mx-auto flex items-center justify-center">
+                                <svg class="absolute inset-0 w-full h-full transform -rotate-90">
+                                    <circle cx="96" cy="96" r="88" stroke="#1f2937" stroke-width="6" fill="transparent" />
+                                    <circle id="progress-ring" cx="96" cy="96" r="88" stroke="#f43f5e" stroke-width="6" fill="transparent" stroke-dasharray="552.92" stroke-dashoffset="552.92" class="transition-all duration-100 ease-linear" />
+                                </svg>
+                                
+                                <!-- Core Breathing Sphere -->
+                                <div id="breath-sphere" class="w-32 h-32 rounded-full bg-gradient-to-tr from-indigo-500/30 to-rose-500/30 border border-white/10 flex flex-col items-center justify-center transition-all duration-1000 ease-in-out">
+                                    <span id="breath-status" class="text-lg font-bold text-gray-100 tracking-wider">준비</span>
+                                    <span id="breath-timer" class="text-sm text-rose-300 font-semibold mt-1">START 클릭</span>
+                                </div>
+                            </div>
+
+                            <!-- Controls -->
+                            <div class="flex justify-center space-x-3">
+                                <button id="btn-start-breath" onclick="startBreathing()" class="px-6 py-2.5 bg-gradient-to-r from-rose-600 to-indigo-600 hover:from-rose-500 hover:to-indigo-500 text-white text-sm font-semibold rounded-lg transition-colors shadow">
+                                    호흡 시작하기
+                                </button>
+                                <button id="btn-stop-breath" onclick="stopBreathing()" class="px-6 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-semibold rounded-lg border border-gray-700 transition-colors hidden">
+                                    정지
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Grid: Narrative explaining Yoga's benefit to tech study -->
+                <div class="lg:col-span-6 space-y-6">
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-rose-400">Why Yoga for AI / Cyber Security?</h2>
+                    <h3 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-400">
+                        데이터를 흐르게 하고,<br>정신적 방어벽을 단단하게.
+                    </h3>
+                    <p class="text-gray-400 font-light leading-relaxed">
+                        화이트해커와 AI 모델러는 장시간 정밀한 집중력을 발휘해야 합니다. 
+                        격한 모니터 너머의 몰입 후 <strong>요가와 아사나(Asana)</strong>는 몸과 영혼에 활력을 줍니다.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span class="text-sm text-gray-300"><strong>거북목 & 어깨 피로 해소:</strong> 수많은 파이썬 코드 컴파일 대기 시간, 매트 위에 누워 '코브라 자세'로 척추를 세웁니다.</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span class="text-sm text-gray-300"><strong>정서적 디톡스(Mindfulness):</strong> 시스템 보안 침해 위기 상황에서도 떨리지 않는 차분한 평정심과 리더십을 제공합니다.</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-emerald-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span class="text-sm text-gray-300"><strong>비우며 떠오르는 창조성:</strong> 복잡하게 꼬여 있던 버그의 해답이 깊은 아기 자세(Child Pose) 명상 도중 스치듯 해결되기도 합니다.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Roadmap Timeline -->
+    <section id="roadmap" class="py-24 bg-slate-950 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-400">Dream Roadmap</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-extrabold text-gray-100">보안 연구교수를 향한 10개년 여정</p>
+                <p class="mt-4 text-gray-400 text-sm">
+                    각 카드 단계를 클릭하여 해당 단계에서 완수해야 하는 세부 보안 및 AI 학습 가이드를 활성화해 보세요!
+                </p>
+            </div>
+
+            <!-- Vertical / Responsive Timeline -->
+            <div class="relative border-l border-indigo-900/50 max-w-4xl mx-auto pl-6 sm:pl-10 space-y-12">
+                
+                <!-- Timeline Card 1 -->
+                <div class="relative group cursor-pointer" onclick="toggleRoadmapDetails(1)">
+                    <!-- Bullet -->
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-slate-950 border-4 border-indigo-500 group-hover:border-rose-400 transition-all z-20"></div>
+                    
+                    <div class="bg-slate-900 hover:bg-slate-900/80 border border-gray-800 hover:border-indigo-500/50 rounded-xl p-6 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <span class="px-2.5 py-0.5 bg-indigo-950/80 border border-indigo-500/30 text-xs text-indigo-300 font-bold rounded-md w-fit">고등학교 시절</span>
+                            <span class="text-xs text-gray-400 font-bold">현재 ~ 2028년</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-100 group-hover:text-indigo-400 transition-colors">컴퓨터공학 기본기와 체력 비축</h3>
+                        <p class="text-gray-400 text-sm mt-2">
+                            정보보안 및 인공지능 기초 서적을 읽고, C/Python 코딩 공부를 가벼운 기초 문제 위주로 습관화합니다. 주 3회 요가로 단단한 체력을 다집니다.
+                        </p>
+                        
+                        <!-- Collapsible Detail Zone -->
+                        <div id="roadmap-detail-1" class="hidden mt-4 pt-4 border-t border-gray-800 text-xs text-gray-400 space-y-2">
+                            <div class="flex items-center space-x-2 text-indigo-300 font-bold">
+                                <span>🎯 주요 목표:</span>
+                            </div>
+                            <ul class="list-disc pl-4 space-y-1">
+                                <li>정보처리기능사 취득 도전 또는 기본적인 리눅스 가상 머신(VM) 실습</li>
+                                <li>요가 플로우 매일 15분 아침 루틴 구축</li>
+                                <li>ENFP의 즉흥성을 이끌어줄 작은 해커톤 혹은 동아리 프로젝트 완수</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Card 2 -->
+                <div class="relative group cursor-pointer" onclick="toggleRoadmapDetails(2)">
+                    <!-- Bullet -->
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-slate-950 border-4 border-indigo-500 group-hover:border-rose-400 transition-all z-20"></div>
+                    
+                    <div class="bg-slate-900 hover:bg-slate-900/80 border border-gray-800 hover:border-indigo-500/50 rounded-xl p-6 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <span class="px-2.5 py-0.5 bg-purple-950/80 border border-purple-500/30 text-xs text-purple-300 font-bold rounded-md w-fit">대학교 학사 과정</span>
+                            <span class="text-xs text-gray-400 font-bold">2029년 ~ 2032년</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-100 group-hover:text-purple-400 transition-colors">정보보호 / 컴퓨터공학과 진학 및 연구 인턴</h3>
+                        <p class="text-gray-400 text-sm mt-2">
+                            컴퓨터 구조, 네트워크 보안, 머신러닝 교과에 집중합니다. 대학 학부 연구생 인턴으로 참여하며 보안 위협 차단 AI 모델 알고리즘 개발을 시작합니다.
+                        </p>
+                        
+                        <!-- Collapsible Detail Zone -->
+                        <div id="roadmap-detail-2" class="hidden mt-4 pt-4 border-t border-gray-800 text-xs text-gray-400 space-y-2">
+                            <div class="flex items-center space-x-2 text-purple-300 font-bold">
+                                <span>🎯 주요 목표:</span>
+                            </div>
+                            <ul class="list-disc pl-4 space-y-1">
+                                <li>대학 연합 보안 동아리(P.O.C, DEFCON 동아리 등) 활동</li>
+                                <li>요가 지도자 자격증(RYT 200)을 부전공 준비 느낌으로 틈틈이 취득</li>
+                                <li>머신러닝 알고리즘 및 딥러닝 적대적 사이버 공격(Adversarial Attack) 초록 논문 제출</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Card 3 -->
+                <div class="relative group cursor-pointer" onclick="toggleRoadmapDetails(3)">
+                    <!-- Bullet -->
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-slate-950 border-4 border-indigo-500 group-hover:border-rose-400 transition-all z-20"></div>
+                    
+                    <div class="bg-slate-900 hover:bg-slate-900/80 border border-gray-800 hover:border-indigo-500/50 rounded-xl p-6 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <span class="px-2.5 py-0.5 bg-rose-950/80 border border-rose-500/30 text-xs text-rose-300 font-bold rounded-md w-fit">석박사 통합 과정</span>
+                            <span class="text-xs text-gray-400 font-bold">2033년 ~ 2037년</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-100 group-hover:text-rose-400 transition-colors">인간 윤리 기반 AI 보안 연구 및 해외 연수</h3>
+                        <p class="text-gray-400 text-sm mt-2">
+                            개인정보 차분 프라이버시(Differential Privacy), 연합학습 보안 기법을 연구합니다. 전 세계 유명 보안 컨퍼런스(S&P, USENIX, CCS)에 주 저자로 활발히 투고합니다.
+                        </p>
+                        
+                        <!-- Collapsible Detail Zone -->
+                        <div id="roadmap-detail-3" class="hidden mt-4 pt-4 border-t border-gray-800 text-xs text-gray-400 space-y-2">
+                            <div class="flex items-center space-x-2 text-rose-300 font-bold">
+                                <span>🎯 주요 목표:</span>
+                            </div>
+                            <ul class="list-disc pl-4 space-y-1">
+                                <li>AI 신뢰성 향상을 위한 위협 완화 솔루션 오픈소스 깃허브 공개</li>
+                                <li>스트레스를 많이 받는 대학원 환경에서 학과생 대상 힐링 요가 클래스 주말 개방</li>
+                                <li>세계 석학들과의 교류를 위해 영어 소통 능력을 상시 유지</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Card 4 -->
+                <div class="relative group cursor-pointer" onclick="toggleRoadmapDetails(4)">
+                    <!-- Bullet -->
+                    <div class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-slate-950 border-4 border-indigo-500 group-hover:border-rose-400 transition-all z-20"></div>
+                    
+                    <div class="bg-slate-900 hover:bg-slate-900/80 border border-gray-800 hover:border-indigo-500/50 rounded-xl p-6 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <span class="px-2.5 py-0.5 bg-emerald-950/80 border border-emerald-500/30 text-xs text-emerald-300 font-bold rounded-md w-fit">꿈의 실현</span>
+                            <span class="text-xs text-gray-400 font-bold">2038년 ~</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-100 group-hover:text-emerald-400 transition-colors">AI 융합 보안전공 교수 & 연구실 이끄는 리더</h3>
+                        <p class="text-gray-400 text-sm mt-2">
+                            안정적이고 열린 시각을 갖춘 최연소 보안 교수가 됩니다. ENFP의 위트 넘치고 따뜻한 교수법으로 매 학기 우수 강의 평가를 휩쓰는 마인드풀 전임 교수가 됩니다.
+                        </p>
+                        
+                        <!-- Collapsible Detail Zone -->
+                        <div id="roadmap-detail-4" class="hidden mt-4 pt-4 border-t border-gray-800 text-xs text-gray-400 space-y-2">
+                            <div class="flex items-center space-x-2 text-emerald-300 font-bold">
+                                <span>🎯 주요 목표:</span>
+                            </div>
+                            <ul class="list-disc pl-4 space-y-1">
+                                <li>국내외 인공지능 보안 연구 센터장(Center of Excellence) 취임</li>
+                                <li>'마인드풀 테크' - 요가 호흡법과 프로그래밍을 융합한 뇌 힐링 교양 교과 개설</li>
+                                <li>세상에 선한 영향력을 전파하며 사회적 약자를 위한 무료 AI 프라이버시 상담 활동</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Balance Simulator Section -->
+    <section id="simulator" class="py-24 bg-slate-900 border-t border-gray-900 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-rose-400">Mind-Body Balancer</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-extrabold text-gray-100">일일 학습-요가 밸런스 시뮬레이터</p>
+                <p class="mt-4 text-gray-400 text-sm">
+                    슬라이더를 조작하여 하루 중 '코딩/연구'와 '요가/명상'의 밸런스를 맞춰보세요. 
+                    지속가능한 개발 능률 지수가 과학적으로 예측됩니다!
+                </p>
+            </div>
+
+            <!-- Simulator Card Layout -->
+            <div class="max-w-4xl mx-auto bg-slate-950 border border-gray-800 rounded-2xl p-8 sm:p-12 shadow-2xl relative">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    
+                    <!-- Sliders Block -->
+                    <div class="space-y-8">
+                        <h3 class="text-lg font-bold text-gray-200 border-b border-gray-800 pb-2">하루 일정 세팅</h3>
+                        
+                        <!-- Slider 1: Study Time -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <label for="slider-study" class="text-gray-300 font-medium">💻 전공 학습 및 코딩 시간</label>
+                                <span class="text-indigo-400 font-bold" id="study-val">6시간</span>
+                            </div>
+                            <input id="slider-study" type="range" min="1" max="14" value="6" oninput="calculateBalance()" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+                            <p class="text-xs text-gray-500">알고리즘 분석, 암호학, 파이썬 연구 등</p>
+                        </div>
+
+                        <!-- Slider 2: Yoga Time -->
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <label for="slider-yoga" class="text-gray-300 font-medium">🧘 요가, 스트레칭 및 명상 시간</label>
+                                <span class="text-rose-400 font-bold" id="yoga-val">1시간</span>
+                            </div>
+                            <input id="slider-yoga" type="range" min="0" max="4" step="0.5" value="1" oninput="calculateBalance()" class="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
+                            <p class="text-xs text-gray-500">아사나 빈야사 플로우, 호흡, 척추 관리</p>
+                        </div>
+                        
+                        <!-- ENFP social time modifier checkbox -->
+                        <div class="flex items-center space-x-3 pt-4">
+                            <input type="checkbox" id="check-social" onchange="calculateBalance()" class="w-4.5 h-4.5 rounded border-gray-800 text-indigo-600 focus:ring-indigo-500 bg-gray-900">
+                            <label for="check-social" class="text-sm text-gray-300">🎉 오늘 친구들이랑 카페 수다 떨었어요! (사교 활성화)</label>
+                        </div>
+                    </div>
+
+                    <!-- Output Indicators Block -->
+                    <div class="bg-slate-900/50 border border-gray-800/80 rounded-xl p-6 flex flex-col justify-between space-y-6">
+                        <h3 class="text-lg font-bold text-gray-200 border-b border-gray-800 pb-2">뇌 활성 예측 결과</h3>
+                        
+                        <!-- Metric 1: Brain Focus -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs font-semibold text-gray-400">
+                                <span>정신적 집중력 및 습득 지수</span>
+                                <span id="metric-focus-num" class="text-indigo-300">75%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2.5">
+                                <div id="metric-focus-bar" class="bg-indigo-500 h-2.5 rounded-full transition-all duration-500" style="width: 75%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Metric 2: Burnout Shield -->
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs font-semibold text-gray-400">
+                                <span>번아웃 방어 체력 (방어력)</span>
+                                <span id="metric-shield-num" class="text-rose-300">60%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2.5">
+                                <div id="metric-shield-bar" class="bg-rose-500 h-2.5 rounded-full transition-all duration-500" style="width: 60%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Output Feedback Text -->
+                        <div class="bg-slate-950 border border-gray-800 rounded-lg p-4">
+                            <span class="text-xs text-rose-400 font-bold block uppercase tracking-wider mb-1">Cyber-Yogini AI 가이드 조언</span>
+                            <p id="simulator-feedback" class="text-xs text-gray-300 leading-relaxed font-light">
+                                아주 건강한 조합입니다! 학습 시간이 충분하며, 하루 1시간 가량의 요가 명상을 통해 집중도를 유지하고 뇌의 신경 가소성을 깨워 암기가 우수해집니다.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Dream Board Section (Todo & Dream list utilizing local storage) -->
+    <section id="dreamboard" class="py-24 bg-slate-950 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-400">Interactive Dream Board</h2>
+                <p class="mt-2 text-3xl sm:text-4xl font-extrabold text-gray-100">나의 버킷리스트 & 꿈 저장소</p>
+                <p class="mt-4 text-gray-400 text-sm">
+                    마음에 간직해 둔 구체적인 꿈이나 당장 오늘 실천할 목표(예: '요가 머리서기 1분 성공', '파이썬 기초 끝내기')를 추가해보세요. <br>
+                    작성한 데이터는 브라우저(로컬 스토리지)에 소중히 보관되어 언제든 유지됩니다.
+                </p>
+            </div>
+
+            <!-- Dream Board UI Box -->
+            <div class="max-w-xl mx-auto bg-slate-900 border border-gray-800 rounded-2xl shadow-2xl p-6 sm:p-8">
+                <!-- Add Goal Input Form -->
+                <div class="space-y-3">
+                    <label for="dream-input" class="block text-sm font-semibold text-gray-200">✨ 새로운 꿈 / 데일리 버킷 등록</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="dream-input" placeholder="예) USENIX 보안 학회 논문 구상해보기" class="flex-1 bg-slate-950 border border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-600">
+                        <button onclick="addDreamGoal()" class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-rose-600 hover:from-indigo-500 hover:to-rose-500 text-white rounded-xl text-sm font-bold transition-all">
+                            추가
+                        </button>
+                    </div>
+                    <!-- Quick Tag Selectors -->
+                    <div class="flex flex-wrap gap-2 pt-1 text-xs">
+                        <button onclick="quickFillDream('🔮 요가 수련 루틴 지키기')" class="px-3 py-1 bg-slate-950 border border-gray-800 rounded-full hover:border-rose-400 transition-all text-gray-400 hover:text-rose-400">#요가수련</button>
+                        <button onclick="quickFillDream('🛡️ 칼리리눅스 설치 및 모의 침투 실습')" class="px-3 py-1 bg-slate-950 border border-gray-800 rounded-full hover:border-indigo-400 transition-all text-gray-400 hover:text-indigo-400">#사이버보안</button>
+                        <button onclick="quickFillDream('🤖 머신러닝 기초 - 회귀분석 개념 정리')" class="px-3 py-1 bg-slate-950 border border-gray-800 rounded-full hover:border-purple-400 transition-all text-gray-400 hover:text-purple-400">#AI기반학습</button>
+                        <button onclick="quickFillDream('🌈 ENFP 마인드맵: 새로운 융합 아이디어 1개 기획')" class="px-3 py-1 bg-slate-950 border border-gray-800 rounded-full hover:border-emerald-400 transition-all text-gray-400 hover:text-emerald-400">#ENFP아이디어</button>
+                    </div>
+                </div>
+
+                <!-- Dream Goals Render Area -->
+                <div class="mt-8">
+                    <h4 class="text-sm font-semibold text-gray-400 mb-4 flex items-center justify-between">
+                        <span>현재 저장된 꿈 리스트</span>
+                        <span id="dream-count" class="px-2 py-0.5 bg-indigo-950 border border-indigo-500/30 rounded text-xs text-indigo-300">0개</span>
+                    </h4>
+                    
+                    <div id="dream-list-container" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+                        <!-- Dynamic items are rendered here -->
+                        <div class="text-center py-8 text-gray-600 text-sm font-light">
+                            등록된 꿈이나 실천 목표가 아직 없습니다. <br> 위에서 멋지게 채워보세요!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section with Contacts & Interactive Toast Box -->
+    <footer class="bg-slate-950 border-t border-gray-900 py-12 text-center text-sm text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-6">
+            <div class="flex justify-center space-x-6 text-gray-400 font-semibold">
+                <a href="#about" class="hover:text-rose-400 transition-all">ENFP 가치관</a>
+                <a href="#yoga" class="hover:text-indigo-400 transition-all">마인드 수련</a>
+                <a href="#roadmap" class="hover:text-rose-400 transition-all">커리어 로드맵</a>
+                <a href="#dreamboard" class="hover:text-indigo-400 transition-all">마이드림보드</a>
+            </div>
+            <p class="font-light leading-relaxed max-w-xl mx-auto">
+                "몸을 유연하게 구부리는 요가처럼, 새로운 기술 변화 속에서 항상 유연하고 탄탄한 보안 기술을 가르치는 선한 연구가이자 교수가 될 것입니다."
+            </p>
+            <div class="text-xs text-gray-600">
+                &copy; 2026 The Cyber Yogini. All Rights Reserved. Designed for Future AI & Security Innovators.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Notification Toast Box -->
+    <div id="custom-toast" class="fixed bottom-6 right-6 z-50 glassmorphism border border-indigo-500/30 px-6 py-4 rounded-xl flex items-center space-x-3 transform translate-y-24 opacity-0 transition-all duration-300 shadow-2xl">
+        <div class="w-8 h-8 rounded-full bg-indigo-950 flex items-center justify-center text-indigo-400 border border-indigo-500/30">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div>
+            <div id="toast-title" class="text-xs font-bold text-gray-100">알림</div>
+            <div id="toast-msg" class="text-xs text-gray-400 mt-0.5">내용입니다.</div>
+        </div>
+    </div>
+
+
+    <!-- ============================================ -->
+    <!-- JAVASCRIPT LOGIC & APPS                      -->
+    <!-- ============================================ -->
+    <script>
+        
+        // Roadmap detail collapsing utility
+        function toggleRoadmapDetails(id) {
+            const detailBox = document.getElementById(`roadmap-detail-${id}`);
+            if (detailBox) {
+                const isHidden = detailBox.classList.contains('hidden');
+                // Hide all first for accordion behavior
+                for (let i = 1; i <= 4; i++) {
+                    const el = document.getElementById(`roadmap-detail-${i}`);
+                    if (el) el.classList.add('hidden');
+                }
+                // Toggle clicked
+                if (isHidden) {
+                    detailBox.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Custom Toast system to replace dangerous alert()
+        function showToast(title, msg) {
+            const toast = document.getElementById('custom-toast');
+            const tTitle = document.getElementById('toast-title');
+            const tMsg = document.getElementById('toast-msg');
+            
+            tTitle.innerText = title;
+            tMsg.innerText = msg;
+            
+            // Pop up
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            
+            // Auto hide after 3.5s
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3500);
+        }
+
+        // Web Audio API를 활용한 명상 차임벨 사운드 합성기
+        function playMeditationBell(stage) {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                osc.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                // 각 단계별 테라피 전용 주파수 할당
+                // 0: 들이쉬기 (확장/상승하는 솔 음계 - 783.99 Hz)
+                // 1: 멈춤 (의식을 고정하는 시 음계 - 987.77 Hz)
+                // 2: 내쉬기 (차분히 이완되는 미 음계 - 659.25 Hz)
+                let freq = 783.99;
+                if (stage === 1) freq = 987.77;
+                if (stage === 2) freq = 659.25;
+                
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                osc.type = 'sine'; // 가장 맑은 사인파 형태 선택
+                
+                // 부드러운 '딩~' 벨소리를 구현하기 위한 엔벨로프(Envelope) 세팅
+                gainNode.gain.setValueAtTime(0, ctx.currentTime);
+                // 어택(Attack): 튀는 클릭음 방지를 위해 0.05초간 부드럽게 상승
+                gainNode.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 0.05); 
+                // 디케이/릴리즈(Decay/Release): 1.5초에 걸쳐 고요하게 감쇄 처리 (공명 효과)
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.5);
+                
+                osc.start(ctx.currentTime);
+                // 사운드가 완전히 감쇄된 직후 정지
+                osc.stop(ctx.currentTime + 1.5);
+            } catch (e) {
+                console.warn("오디오 초기화 오류 (브라우저 상호작용 제약):", e);
+            }
+        }
+
+        // Breath Box State Variables
+        let breathingInterval = null;
+        let breathingSeconds = 0;
+        let breathingStage = 0; // 0: Inhale, 1: Hold, 2: Exhale
+        
+        const rRing = document.getElementById('progress-ring');
+        const bSphere = document.getElementById('breath-sphere');
+        const bStatus = document.getElementById('breath-status');
+        const bTimer = document.getElementById('breath-timer');
+        const btnStart = document.getElementById('btn-start-breath');
+        const btnStop = document.getElementById('btn-stop-breath');
+        const bAura = document.getElementById('breath-aura');
+
+        function startBreathing() {
+            btnStart.classList.add('hidden');
+            btnStop.classList.remove('hidden');
+            
+            breathingSeconds = 4;
+            breathingStage = 0;
+            updateBreathingUI();
+            
+            // 시작하자마자 첫 번째 들이쉬기 차임벨 소리 재생
+            playMeditationBell(0);
+            
+            breathingInterval = setInterval(() => {
+                breathingSeconds--;
+                if (breathingSeconds < 0) {
+                    // Next Stage
+                    breathingStage = (breathingStage + 1) % 3;
+                    breathingSeconds = 4; // 4 seconds for each step
+                    
+                    // 호흡 단계가 바뀔 때마다 각 단계에 특화된 차임 사운드 자동 재생
+                    playMeditationBell(breathingStage);
+                }
+                updateBreathingUI();
+            }, 1000);
+            
+            showToast("🧘 호흡 명상 시작", "마인드풀 사운드와 함께 4-4-4 호흡을 이어나갑니다.");
+        }
+
+        function stopBreathing() {
+            clearInterval(breathingInterval);
+            breathingInterval = null;
+            
+            btnStart.classList.remove('hidden');
+            btnStop.classList.add('hidden');
+            
+            bStatus.innerText = "준비";
+            bTimer.innerText = "START 클릭";
+            bSphere.style.transform = "scale(1.0)";
+            bAura.style.transform = "scale(0.5)";
+            setRingOffset(552.92); // Complete clear
+            
+            showToast("🧘 호흡 정지", "수고하셨습니다. 원할 때 언제든 다시 켜세요!");
+        }
+
+        function updateBreathingUI() {
+            // Circle Perimeter = 2 * PI * r = 2 * 3.14159 * 88 = 552.92
+            const maxPerim = 552.92;
+            const progress = (4 - breathingSeconds) / 4;
+            const offset = maxPerim - (progress * maxPerim);
+            setRingOffset(offset);
+
+            if (breathingStage === 0) {
+                // Inhale
+                bStatus.innerText = "들이쉬기";
+                bStatus.className = "text-lg font-bold text-rose-300 tracking-wider";
+                bTimer.innerText = `${breathingSeconds}초`;
+                bSphere.style.transform = "scale(1.25)";
+                bAura.style.transform = "scale(1.2)";
+                bAura.style.backgroundColor = "rgba(244, 63, 94, 0.15)";
+            } else if (breathingStage === 1) {
+                // Hold
+                bStatus.innerText = "호흡 멈춤";
+                bStatus.className = "text-lg font-bold text-purple-300 tracking-wider";
+                bTimer.innerText = `${breathingSeconds}초`;
+                bSphere.style.transform = "scale(1.25)";
+                bAura.style.transform = "scale(1.1)";
+                bAura.style.backgroundColor = "rgba(168, 85, 247, 0.15)";
+            } else {
+                // Exhale
+                bStatus.innerText = "내쉬기";
+                bStatus.className = "text-lg font-bold text-indigo-300 tracking-wider";
+                bTimer.innerText = `${breathingSeconds}초`;
+                bSphere.style.transform = "scale(0.9)";
+                bAura.style.transform = "scale(0.6)";
+                bAura.style.backgroundColor = "rgba(99, 102, 241, 0.15)";
+            }
+        }
+
+        function setRingOffset(offset) {
+            rRing.style.strokeDashoffset = offset;
+        }
+
+        // Balance Calculator logic based on Study & Yoga sliders
+        function calculateBalance() {
+            const studyH = parseFloat(document.getElementById('slider-study').value);
+            const yogaH = parseFloat(document.getElementById('slider-yoga').value);
+            const isSocialActive = document.getElementById('check-social').checked;
+            
+            // Render text feedback values
+            document.getElementById('study-val').innerText = `${studyH}시간`;
+            document.getElementById('yoga-val').innerText = `${yogaH}시간`;
+            
+            // Calculations
+            // Formula: Maximum productivity when study is 6-9 hrs, supported by yoga >= 1 hr.
+            let focusScore = 0;
+            let burnDefense = 0;
+            let advice = "";
+
+            // Study Influence
+            if (studyH <= 4) {
+                focusScore = studyH * 15; // Low study hours
+            } else if (studyH <= 8) {
+                focusScore = 70 + (studyH - 4) * 5; // Good sweet spot
+            } else {
+                focusScore = 90 - (studyH - 8) * 4; // Overstudying drops efficiency
+            }
+
+            // Yoga Influence (Relieves fatigue, increases learning absorption)
+            if (yogaH === 0) {
+                burnDefense = 15;
+                focusScore -= 10; // Minus for lack of brain detox
+            } else {
+                burnDefense = Math.min(100, 20 + (yogaH * 25));
+                focusScore += (yogaH * 8); // Synergic boost
+            }
+
+            // ENFP Socializing influence
+            if (isSocialActive) {
+                burnDefense += 15;
+                focusScore += 5; // Social charging unlocks ENFP focus
+            }
+
+            // Keep bounds
+            focusScore = Math.max(0, Math.min(100, Math.round(focusScore)));
+            burnDefense = Math.max(0, Math.min(100, Math.round(burnDefense)));
+
+            // Update UI elements
+            document.getElementById('metric-focus-num').innerText = `${focusScore}%`;
+            document.getElementById('metric-focus-bar').style.width = `${focusScore}%`;
+            
+            document.getElementById('metric-shield-num').innerText = `${burnDefense}%`;
+            document.getElementById('metric-shield-bar').style.width = `${burnDefense}%`;
+
+            // Give tailored ENFP advice
+            if (studyH > 9 && yogaH < 1) {
+                advice = "⚠️ 비상 상황! 너무 높은 전공 공부에 대비해 요가/명상이 턱없이 모자랍니다. 장시간 앉아 있으면 척추 피로와 뇌 번아웃이 발생할 수 있습니다. 15분이라도 매트 위로 가세요!";
+            } else if (studyH >= 5 && studyH <= 9 && yogaH >= 1) {
+                advice = "👑 최고의 퍼포먼스 상태! 충분한 프로그래밍 집중과 요가를 통한 마인드 수련이 결합되어 뇌 가소성과 암기 역량이 완벽한 융합 곡선을 이룹니다. 이대로 일상을 이어나가세요!";
+            } else if (studyH < 4) {
+                advice = "🌱 기초를 튼튼히 할 시간입니다. 코딩 연습을 조금만 더 늘려 전공에 익숙해져 보세요. 풍부한 체력(요가)이 바탕이 되었을 때 빠른 몰입이 수월해집니다.";
+            } else {
+                advice = "✨ 균형 잡힌 하루입니다. 적절한 학습량과 기분 좋은 스트레칭 및 명상 조화를 통해 최적의 신뢰성 높은 마인드를 구축했습니다.";
+            }
+
+            if (isSocialActive && burnDefense > 80) {
+                advice += " 친구들과의 소다 시간으로 ENFP 인공 세포가 완벽히 자극받았네요! 에너지가 넘칩니다.";
+            }
+
+            document.getElementById('simulator-feedback').innerText = advice;
+        }
+
+        // Storage Keys
+        const STORAGE_KEY = 'cyber_yogini_dreams';
+        let dreamList = [];
+
+        // Load dreams on start
+        window.onload = function() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    dreamList = JSON.parse(stored);
+                } catch(e) {
+                    dreamList = [];
+                }
+            } else {
+                // Seed items for amazing initial look
+                dreamList = [
+                    { id: 1, text: "🧘‍♀️ 매일 아침 빈야사 요가 플로우 20분 실습", completed: true },
+                    { id: 2, text: "🛡️ 칼리 리눅스로 모의 웹 해킹 취약점 원리 파헤치기", completed: false },
+                    { id: 3, text: "🤖 텐서플로우로 나만의 이미지 검출 AI 코드 구현하기", completed: false }
+                ];
+                saveToStorage();
+            }
+            renderDreams();
+            calculateBalance(); // Initial run
+        };
+
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dreamList));
+        }
+
+        function renderDreams() {
+            const container = document.getElementById('dream-list-container');
+            const countBadge = document.getElementById('dream-count');
+            
+            if (dreamList.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-600 text-sm font-light">
+                        등록된 꿈이나 실천 목표가 아직 없습니다. <br> 위에서 멋지게 채워보세요!
+                    </div>
+                `;
+                countBadge.innerText = "0개";
+                return;
+            }
+
+            countBadge.innerText = `${dreamList.length}개`;
+            container.innerHTML = ''; // Clear
+
+            dreamList.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `flex items-center justify-between p-3.5 rounded-xl border transition-all ${
+                    item.completed 
+                    ? 'bg-slate-950/40 border-gray-900 opacity-60' 
+                    : 'bg-slate-950 border-gray-800 hover:border-indigo-500/30'
+                }`;
+
+                itemDiv.innerHTML = `
+                    <div class="flex items-center space-x-3 flex-1 min-w-0">
+                        <input type="checkbox" ${item.completed ? 'checked' : ''} onchange="toggleDream(${item.id})" class="w-4.5 h-4.5 rounded border-gray-800 text-indigo-600 focus:ring-indigo-500 bg-gray-900 cursor-pointer">
+                        <span class="text-xs sm:text-sm text-gray-200 truncate ${item.completed ? 'line-through text-gray-500' : ''}">
+                            ${item.text}
+                        </span>
+                    </div>
+                    <button onclick="deleteDream(${item.id})" class="ml-2 text-gray-600 hover:text-rose-400 text-xs transition-colors p-1" title="삭제">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        function addDreamGoal() {
+            const input = document.getElementById('dream-input');
+            const txt = input.value.trim();
+            if (!txt) {
+                showToast("⚠️ 입력 오류", "추가하려는 버킷리스트나 꿈 내용을 적어주세요!");
+                return;
+            }
+
+            const newDream = {
+                id: Date.now(),
+                text: txt,
+                completed: false
+            };
+
+            dreamList.unshift(newDream);
+            saveToStorage();
+            renderDreams();
+            input.value = ''; // Reset
+            showToast("✨ 꿈 등록 성공", "목표가 드림 보드에 소중히 기록되었습니다.");
+        }
+
+        function toggleDream(id) {
+            dreamList = dreamList.map(item => {
+                if (item.id === id) {
+                    const nextState = !item.completed;
+                    if (nextState) {
+                        showToast("🎉 미션 달성!", "한 걸음 더 꿈에 가까워졌습니다. 멋져요!");
+                    }
+                    return { ...item, completed: nextState };
+                }
+                return item;
+            });
+            saveToStorage();
+            renderDreams();
+        }
+
+        function deleteDream(id) {
+            dreamList = dreamList.filter(item => item.id !== id);
+            saveToStorage();
+            renderDreams();
+            showToast("🗑️ 삭제 완료", "꿈 리스트에서 성공적으로 삭제했습니다.");
+        }
+
+        function quickFillDream(text) {
+            document.getElementById('dream-input').value = text;
+        }
+    </script>
+</body>
+</html>

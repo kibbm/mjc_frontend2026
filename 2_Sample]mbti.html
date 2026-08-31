@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>중학생 MBTI 쿠키런 킹덤 테스트 🍪</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for cute typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            background: linear-gradient(135deg, #fbcfe8 0%, #e0e7ff 50%, #fef08a 100%);
+            min-height: 100vh;
+        }
+        .font-jua {
+            font-family: 'Jua', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.7);
+        }
+        .btn-bounce {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .btn-bounce:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.98);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        .progress-bar-fill {
+            transition: width 0.4s ease-in-out;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4 min-h-screen">
+
+    <div class="w-full max-w-md mx-auto">
+        
+        <!-- START SCREEN -->
+        <div id="start-screen" class="glass-card rounded-3xl p-6 sm:p-8 text-center shadow-xl relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-28 h-28 bg-pink-200 rounded-full blur-2xl opacity-60"></div>
+            <div class="absolute -bottom-10 -left-10 w-28 h-28 bg-amber-200 rounded-full blur-2xl opacity-60"></div>
+
+            <div class="inline-block p-4 bg-amber-100 text-amber-600 rounded-full mb-4 floating-icon text-5xl shadow-sm">
+                🍪🥛🍦
+            </div>
+
+            <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-600 rounded-full text-xs font-bold mb-3">
+                중학생 맞춤 성격 테스트 ✨
+            </span>
+
+            <h1 class="text-3xl font-extrabold text-slate-800 mb-3 leading-tight font-jua">
+                나를 닮은 <br>
+                <span class="text-amber-500 text-4xl">쿠키런 킹덤 쿠키</span>는?
+            </h1>
+
+            <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                솔직하고 솔깃한 마음으로 16개의 질문에 답해보세요!<br>
+                용감한 쿠키처럼 왕국 속 내 성격을 찾아줄게요 🏰
+            </p>
+
+            <div class="bg-white/80 rounded-2xl p-4 mb-6 border border-amber-200 text-left text-xs text-slate-600 space-y-2 shadow-inner">
+                <div class="flex items-center gap-2">
+                    <span class="text-amber-500 font-bold">✓</span>
+                    <span>질문 개수: 총 16문항 (매번 랜덤 출제)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-amber-500 font-bold">✓</span>
+                    <span>정답은 없어요! 편안하고 솔직하게 선택해줘요</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-amber-500 font-bold">✓</span>
+                    <span>16가지 인기 쿠키런 킹덤 캐릭터 진단</span>
+                </div>
+            </div>
+
+            <button onclick="startTest()" class="w-full py-4 bg-gradient-to-r from-amber-400 via-pink-400 to-indigo-400 hover:from-amber-500 hover:to-indigo-500 text-white font-bold text-lg rounded-2xl shadow-lg btn-bounce font-jua tracking-wide">
+                쿠키 테스트 시작하기 🚀
+            </button>
+        </div>
+
+        <!-- QUESTION SCREEN -->
+        <div id="question-screen" class="hidden glass-card rounded-3xl p-6 sm:p-8 shadow-xl relative">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center text-xs font-bold text-slate-500 mb-2">
+                    <span id="question-number" class="text-indigo-600 font-jua text-sm">질문 1/16</span>
+                    
+                    <!-- TTS Audio Read Aloud Button -->
+                    <button id="tts-btn" onclick="toggleSpeech()" class="flex items-center gap-1.5 px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-full text-xs font-bold transition-all border border-indigo-200 shadow-sm active:scale-95">
+                        <i id="tts-icon" class="fa-solid fa-volume-high"></i>
+                        <span id="tts-text">읽어주기</span>
+                    </button>
+
+                    <span id="progress-percent" class="text-amber-500 font-jua text-sm">6%</span>
+                </div>
+                <div class="w-full bg-slate-200/80 rounded-full h-3 overflow-hidden p-0.5">
+                    <div id="progress-bar" class="bg-gradient-to-r from-amber-400 via-pink-400 to-indigo-400 h-full rounded-full progress-bar-fill w-0"></div>
+                </div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="min-h-[110px] flex items-center justify-center text-center my-4">
+                <h2 id="question-text" class="text-lg sm:text-xl font-bold text-slate-800 leading-snug">
+                    질문 내용이 여기에 들어갑니다.
+                </h2>
+            </div>
+
+            <!-- Options Box -->
+            <div class="space-y-3 mt-6">
+                <button onclick="selectOption('A')" id="option-a" class="w-full p-4 bg-white hover:bg-amber-50 text-slate-700 font-medium text-sm sm:text-base rounded-2xl border-2 border-amber-100 hover:border-amber-300 transition-all text-left flex items-start gap-3 shadow-sm btn-bounce">
+                    <span class="bg-amber-100 text-amber-600 font-bold rounded-lg px-2.5 py-1 text-xs shrink-0 mt-0.5">A</span>
+                    <span id="option-a-text" class="leading-snug">선택지 A</span>
+                </button>
+
+                <button onclick="selectOption('B')" id="option-b" class="w-full p-4 bg-white hover:bg-indigo-50 text-slate-700 font-medium text-sm sm:text-base rounded-2xl border-2 border-indigo-100 hover:border-indigo-300 transition-all text-left flex items-start gap-3 shadow-sm btn-bounce">
+                    <span class="bg-indigo-100 text-indigo-600 font-bold rounded-lg px-2.5 py-1 text-xs shrink-0 mt-0.5">B</span>
+                    <span id="option-b-text" class="leading-snug">선택지 B</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- LOADING SCREEN -->
+        <div id="loading-screen" class="hidden glass-card rounded-3xl p-8 text-center shadow-xl py-16">
+            <div class="inline-block text-6xl mb-6 floating-icon">
+                🍪
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 mb-2 font-jua">
+                왕국에서 나와 꼭 닮은 <br>쿠키를 굽고 있어요...
+            </h2>
+            <p class="text-xs text-slate-500 animate-pulse">
+                네 마음속 재료를 오븐에 굽는 중이야 💖
+            </p>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div id="result-screen" class="hidden glass-card rounded-3xl p-6 sm:p-8 shadow-xl text-center relative overflow-hidden">
+            <div class="inline-block px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold mb-2">
+                나의 MBTI 쿠키런 캐릭터
+            </div>
+
+            <!-- Cookie Icon & MBTI Code -->
+            <div id="result-emoji" class="text-7xl my-3 floating-icon">🍦</div>
+            <h3 id="result-mbti" class="text-xl font-extrabold text-indigo-600 font-jua tracking-wider">INFJ</h3>
+            <h2 id="result-title" class="text-2xl font-bold text-slate-800 mb-4 font-jua">퓨어바닐라 쿠키</h2>
+
+            <!-- Character Description -->
+            <div class="bg-white/80 rounded-2xl p-4 mb-5 border border-purple-100 text-left text-sm text-slate-700 leading-relaxed shadow-inner">
+                <p id="result-desc">캐릭터 설명이 보여집니다.</p>
+            </div>
+
+            <!-- Strengths -->
+            <div class="mb-5 text-left">
+                <h4 class="text-xs font-bold text-slate-500 mb-2 flex items-center gap-1">
+                    <span>⭐</span> 나의 토핑 & 매력 스킬
+                </h4>
+                <div id="result-strengths" class="flex flex-wrap gap-2">
+                    <!-- Dynamic badges -->
+                </div>
+            </div>
+
+            <!-- Warm Advice -->
+            <div class="bg-amber-50/80 rounded-2xl p-4 mb-6 border border-amber-200 text-left text-xs text-amber-900 leading-relaxed">
+                <span class="font-bold block mb-1 text-amber-700">💌 왕국 설탕노움의 따뜻한 조언</span>
+                <p id="result-advice">응원 메시지가 보여집니다.</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <button onclick="restartTest()" class="w-full py-3.5 bg-gradient-to-r from-amber-400 via-pink-400 to-indigo-400 hover:from-amber-500 hover:to-indigo-500 text-white font-bold rounded-2xl shadow-md btn-bounce font-jua">
+                    다시 테스트하기 🔄
+                </button>
+                <button onclick="copyShareLink()" class="w-full py-3 bg-white text-slate-700 font-bold text-sm rounded-2xl border border-slate-200 hover:bg-slate-50 shadow-sm btn-bounce flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-share-nodes text-amber-500"></i> 친구에게 결과 자랑하기
+                </button>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast-modal" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-5 py-2.5 rounded-full text-xs font-medium opacity-0 transition-opacity duration-300 pointer-events-none shadow-lg z-50">
+            링크가 복사되었어요! 친구에게 전해보세요 🍪
+        </div>
+
+    </div>
+
+    <script>
+        // ... existing questions array and cookieResults object ...
+        const questions = [
+            // E vs I (4 questions)
+            {
+                dimension: 'EI',
+                text: '쉬는 시간이나 주말에 너는 어떤 시간을 더 좋아해?',
+                optionA: '친구들과 다 같이 어울려서 떠들고 놀기!',
+                optionB: '혼자 방에서 조용히 음악 듣거나 유튜브/웹툰 보기!'
+            },
+            {
+                dimension: 'EI',
+                text: '새 학기 첫 날, 새로 같은 반이 된 친구들을 만났을 때 너는?',
+                optionA: '먼저 다가가서 "안녕! 이름이 뭐야?" 하고 말을 건넨다.',
+                optionB: '누군가 나에게 먼저 다가와서 말을 걸어주길 기다린다.'
+            },
+            {
+                dimension: 'EI',
+                text: '시험이나 큰 행사가 끝난 날, 너의 에너지를 충전하는 방법은?',
+                optionA: '친구들과 맛있는 것 먹으러 가고 노래방 가기!',
+                optionB: '집에 일찍 돌아와서 편한 옷 입고 푹 쉬기!'
+            },
+            {
+                dimension: 'EI',
+                text: '여러 친구들과 함께 대화할 때 너의 모습에 더 가까운 것은?',
+                optionA: '대화를 주도하며 적극적으로 이야기나 리액션을 나눈다.',
+                optionB: '주로 대화 내용을 지켜보며 꼭 필요한 순간에 말을 건넨다.'
+            },
+
+            // S vs N (4 questions)
+            {
+                dimension: 'SN',
+                text: '시험 공부나 과제를 시작할 때 너의 스타일은?',
+                optionA: '플래너나 교재 순서대로 차근차근 계획표를 따라간다.',
+                optionB: '전체적인 흐름부터 파악하고 나만의 재미있는 공부 방식을 찾는다.'
+            },
+            {
+                dimension: 'SN',
+                text: '멍을 때리거나 딴생각을 할 때 너의 머릿속은?',
+                optionA: '오늘 저녁 뭐 먹지? 내일 무슨 과목 있지? 같은 현실적인 생각',
+                optionB: '만약 우주선이 타임머신이면? 내일 지구가 멈추면? 같은 무한한 상상'
+            },
+            {
+                dimension: 'SN',
+                text: '선생님이나 친구가 어떤 사건이나 이야기를 설명해줄 때 너는?',
+                optionA: '실제로 일어난 핵심 사실과 구체적인 순서가 중요하다.',
+                optionB: '그 이야기 뒤에 숨겨진 의미나 전체적인 느낌이 더 중요하다.'
+            },
+            {
+                dimension: 'SN',
+                text: '새로운 게임이나 모바일 앱을 접했을 때 너는?',
+                optionA: '튜토리얼이나 설명서를 차근차근 읽고 순서대로 실행해본다.',
+                optionB: '일단 직접 이것저것 눌러보며 직감적으로 규칙을 익힌다.'
+            },
+
+            // T vs F (4 questions)
+            {
+                dimension: 'TF',
+                text: '친구가 "나 오늘 시험 망쳐서 너무 속상해..." 라고 할 때 너는?',
+                optionA: '"어쩌다가? 몇 점 받았는데? 무슨 문제 틀렸어?" (이유 파악)',
+                optionB: '"아이구 어떡해... 많이 속상했지? 토닥토닥..." (감정 공감)'
+            },
+            {
+                dimension: 'TF',
+                text: '조별 과제를 할 때 친구와 의견이 갈린다면 너에게 더 중요한 것은?',
+                optionA: '어떤 아이디어가 논리적이고 더 효율적인가!',
+                optionB: '서로 기분 상하지 않고 사이좋게 협력하는가!'
+            },
+            {
+                dimension: 'TF',
+                text: '친구가 나에게 생일 선물을 해주었을 때 더 감동적인 것은?',
+                optionA: '내가 평소에 꼭 필요로 했던 실용적인 선물일 때',
+                optionB: '나를 생각하며 적어준 따뜻한 손편지나 정성이 느껴질 때'
+            },
+            {
+                dimension: 'TF',
+                text: '친구가 실수했거나 잘못된 행동을 했을 때 너는?',
+                optionA: '솔직하고 객관적으로 어떤 점을 고쳐야 하는지 말해준다.',
+                optionB: '친구의 기분이 상할까 봐 마음이 상하지 않게 다정하게 말해준다.'
+            },
+
+            // J vs P (4 questions)
+            {
+                dimension: 'JP',
+                text: '주말에 친구들과 놀러 가기로 했을 때 너는?',
+                optionA: '몇 시에 어디서 만나고 뭐 할지 미리 시간표처럼 정해둔다.',
+                optionB: '일단 만나서 그날 기분 따라 마음 가는 곳으로 간다.'
+            },
+            {
+                dimension: 'JP',
+                text: '방학 숙제나 제출 기한이 있는 과제가 생겼을 때 너는?',
+                optionA: '미루면 불안하니까 밀리지 않고 미리미리 조금씩 해둔다.',
+                optionB: '마감 직전 초인적인 집중력을 발휘해서 한 번에 끝낸다!'
+            },
+            {
+                dimension: 'JP',
+                text: '방 정리를 하거나 책상 위를 둘러보았을 때 너의 상태는?',
+                optionA: '물건마다 제자리가 정해져 있어서 항상 정돈되어 있다.',
+                optionB: '조금 어질러져 있어도 어디에 뭐가 있는지 나만 알면 상관없다.'
+            },
+            {
+                dimension: 'JP',
+                text: '갑자기 예정에 없던 일정이나 계획이 변경되었을 때 너는?',
+                optionA: '원래 계획이 틀어져서 당황스럽고 조금 스트레스를 받는다.',
+                optionB: '"오 오히려 좋아!" 하며 유연하고 즐겁게 새 계획에 맞춘다.'
+            }
+        ];
+
+        const cookieResults = {
+            'ISTJ': {
+                emoji: '☕',
+                title: '철두철미한 원두의 미학자, 에스프레소맛 쿠키',
+                desc: '완벽한 커피 한 잔을 추출하듯 일과 공부도 차근차근 완벽하게 해내는 능력자야! 규칙과 약속을 철저히 지키며, 완벽함으로 왕국 친구들에게 두터운 신뢰를 받아.',
+                strengths: ['완벽주의 스킬', '강한 책임감', '철두철미함'],
+                advice: '가끔은 계획대로 되지 않더라도 자책하지 마! 쓰디쓴 커피 뒤에는 달콤한 휴식이 필요한 법이야.'
+            },
+            'ISFJ': {
+                emoji: '🥛',
+                title: '따뜻하고 든든한 수호자, 우유맛 쿠키',
+                desc: '친구들이 위험에 처하면 누구보다 먼저 방패를 들고 뛰어가는 따뜻한 성품이야! 남을 위해 헌신하고 세심하게 주변을 보살피는 단단한 마음을 가졌어.',
+                strengths: ['세심한 배려', '든든한 수호력', '따뜻한 온기'],
+                advice: '남을 지키느라 네 마음이 상하지 않도록, 네 자신도 따스하게 꼭 아껴주렴!'
+            },
+            'INFJ': {
+                emoji: '🍦',
+                title: '평화와 빛을 품은 구원자, 퓨어바닐라 쿠키',
+                desc: '친구들의 마음속 슬픔을 이해하고 모두가 행복한 평화를 꿈꾸는 인자한 리더야! 따뜻한 온기와 깊은 통찰력으로 왕국의 온 누리를 다정하게 비춰줘.',
+                strengths: ['깊은 공감 능력', '온화한 리더십', '높은 통찰력'],
+                advice: '왕국의 모든 걱정을 혼자 짊어지려 하지 마! 가끔은 친구들에게 푹 기대어 쉬어도 좋아.'
+            },
+            'INTJ': {
+                emoji: '🔍',
+                title: '냉철하고 예리한 탐정, 아몬드맛 쿠키',
+                desc: '아무리 어려운 사건이 터져도 논리적인 이성과 추리력으로 사건을 신속히 해결해내는 능구렁이 베테랑이야! 냉철하고 명확한 판단력이 남달라.',
+                strengths: ['논리적 추리력', '냉철한 판단', '높은 문제해결'],
+                advice: '가끔은 마음의 문을 조금 더 열고, 사건 너머의 따스한 감정도 둘러봐!'
+            },
+            'ISTP': {
+                emoji: '🦅',
+                title: '묵직하고 침착한 마을의 파수꾼, 블랙레이즌맛 쿠키',
+                desc: '말보다는 행동으로 보여주는 멋진 실전파! 긴박한 상황에서도 침착하게 상황을 판단하고, 내 사람과 마을을 지키는 데 누구보다 든든한 가디언이야.',
+                strengths: ['빠른 상황 판단', '과묵한 듬직함', '뛰어난 적응력'],
+                advice: '속마음을 너무 숨기지 말고, 친한 친구에게는 네 마음을 조금씩 열어봐!'
+            },
+            'ISFP': {
+                emoji: '🌿',
+                title: '느긋하고 온화한 식물학자, 허브맛 쿠키',
+                desc: '"디바인~!" 햇살과 따스한 풀잎을 사랑하는 완벽한 힐러 스타일! 다툼을 싫어하고 따뜻한 감성과 예술적 감각으로 친구들에게 늘 평안함을 줘.',
+                strengths: ['온화함', '예술적 감수성', '평화주의'],
+                advice: '거절하기 어렵더라도 너의 솔직한 기분을 당당하게 표현하는 연습을 해보자!'
+            },
+            'INFP': {
+                emoji: '🍀',
+                title: '꿈과 노래를 전하는 낭만 시인, 클로버맛 쿠키',
+                desc: '기타를 튕기며 머릿속 예쁜 이야기와 감성을 노래하는 순수한 영혼이야! 타인의 가치를 소중히 여기며 마음속 깊고 아름다운 꿈을 간직하고 있어.',
+                strengths: ['풍부한 감수성', '순수한 마음', '깊은 공감력'],
+                advice: '상상 속 반짝이는 생기들을 망설이지 말고 현실에서 작게나마 실행해봐!'
+            },
+            'INTP': {
+                emoji: '🧪',
+                title: '호기심 가득한 천재 연구가, 연금술사맛 쿠키',
+                desc: '어떤 현상이든 원리와 공식을 파헤치는 지적 호기심의 대명사! 남들이 생각지 못한 독창적인 아이디어와 비판적 사고로 수수께끼를 풀어내.',
+                strengths: ['지적 호기심', '독창적 아이디어', '원리 탐구력'],
+                advice: '머릿속에 떠오른 좋은 공식들을 글과 행동으로 실천하면 멋진 결과가 나올 거야!'
+            },
+            'ESTP': {
+                emoji: '🌶️',
+                title: '화끈하게 정면돌파하는 와일드 모험가, 칠리맛 쿠키',
+                desc: '매콤하고 화끈한 스릴을 즐기며 행동부터 먼저 옮기는 분위기 메이커! 순발력이 엄청나고 지루한 건 절대 참지 못하는 매력만점 와일드 쿠키야.',
+                strengths: ['넘치는 순발력', '과감한 행동력', '당당함'],
+                advice: '돌진하기 전에 딱 3초만 더 깊이 생각하는 습관을 기르면 무적이 될 거야!'
+            },
+            'ESFP': {
+                emoji: '🎤',
+                title: '사랑과 멜로디의 팝스타, 파르페맛 쿠키',
+                desc: '"너를 위한 토핑이 되어줄게!" 진심을 담은 노래로 왕국 전체를 순식간에 밝히는 긍정의 아이콘! 사랑스러움과 인성이 돋보이는 분위기 메이커야.',
+                strengths: ['해피 바이러스', '무한 긍정 에너지', '화려한 스타성'],
+                advice: '순간의 즐거움도 좋지만 미래의 나를 위한 작은 준비도 함께 해두자!'
+            },
+            'ENFP': {
+                emoji: '🦈',
+                title: '통통 튀는 호기심의 바다 모험가, 샤벳상어맛 쿠키',
+                desc: '"뽀글뽀글! 우와아!" 무한한 호기심과 긍정적인 에너지를 품고 신대륙으로 튀어 오르는 열정파! 어디서나 사람들과 금방 친해지는 귀염둥이야.',
+                strengths: ['친근함', '뛰어난 친화력', '열정적인 모험심'],
+                advice: '시작한 신나는 모험들을 끝까지 멋지게 완주하는 열매도 맺어보렴!'
+            },
+            'ENTP': {
+                emoji: '🍷',
+                title: '위트 있고 자유로운 센스쟁이, 뱀파이어맛 쿠키',
+                desc: '포도주스를 마시며 유유자적 인생을 즐기는 기발한 낭만파! 유머와 위트가 넘쳐나고 규칙에 매이지 않아 창의적인 센스로 친구들을 배꼽 잡게 해.',
+                strengths: ['뛰어난 센스', '유연한 사고력', '위트와 유머'],
+                advice: '귀찮다고 미루지 말고 가끔은 네 숨겨진 능력을 발휘해 멋지게 성공해봐!'
+            },
+            'ESTJ': {
+                emoji: '🛡️',
+                title: '당당하고 기품 넘치는 기사단장, 마들렌맛 쿠키',
+                desc: '"빛이 나를 이끈다!" 자신감과 기사도 정신이 넘쳐나는 리더! 약속을 철저히 지키며 목표를 향해 정정당당하게 전진하는 의리파 승리자야.',
+                strengths: ['당당한 자존감', '탁월한 리더십', '철저한 지휘력'],
+                advice: '다른 쿠키들의 생각과 방식을 유연하게 존중해준다면 더욱 훌륭한 리더가 될 거야!'
+            },
+            'ESFJ': {
+                emoji: '👑',
+                title: '사랑과 발랄함의 파티 리더, 공주맛 쿠키',
+                desc: '상큼발랄한 에너지를 전파하며 모두가 즐거운 파티를 만드는 왕국의 활력소! 다정다감하고 사람들을 챙기는 걸 좋아해 친구들에게 인기가 아주 많아.',
+                strengths: ['친화력 대장', '다정함과 친절', '화기애애한 분위기'],
+                advice: '남을 기쁘게 해주는 것도 좋지만, 가끔은 네 진짜 기분을 최우선으로 챙겨봐!'
+            },
+            'ENFJ': {
+                emoji: '🌺',
+                title: '호탕하고 열정적인 유대감의 여왕, 홀리베리 쿠키',
+                desc: '따뜻한 호탕함과 깊은 우정으로 동료들을 이끄는 대족장 같은 쿠키! 친구들의 성장을 진심으로 기뻐하고 어떠한 고난도 함께 이겨내는 열정이 있어.',
+                strengths: ['따뜻한 카리스마', '진정성 있는 공감', '강한 유대감'],
+                advice: '모든 사람의 고충을 혼자 떠안으려 하지 마! 네 자신을 먼저 따스하게 보살펴줘.'
+            },
+            'ENTJ': {
+                emoji: '📜',
+                title: '원대한 비전의 차세대 리더, 클롯드크림 쿠키',
+                desc: '명확한 규칙과 정교한 비전으로 조직을 승리로 이끄는 유능한 외교관/리더! 빠른 두뇌 회전과 과감한 추진력으로 원하는 바를 이루어내는 당찬 쿠키야.',
+                strengths: ['원대한 비전', '명확한 결단력', '탁월한 추진력'],
+                advice: '목표 달성도 좋지만 함께 걸어가는 친구들의 발걸음 속도에도 눈길을 주렴!'
+            }
+        };
+
+        let currentQuestionIndex = 0;
+        let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+        let activeQuestions = [];
+        let isSpeaking = false;
+
+        // Fisher-Yates 알고리즘을 사용한 질문 셔플 함수
+        function shuffleQuestions(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function cancelSpeech() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+            isSpeaking = false;
+            updateTtsButton();
+        }
+
+        function toggleSpeech() {
+            if (!('speechSynthesis' in window)) {
+                showToast("이 브라우저는 음성 읽어주기 기능을 지원하지 않아요 😢");
+                return;
+            }
+
+            if (window.speechSynthesis.speaking || isSpeaking) {
+                cancelSpeech();
+            } else {
+                speakCurrentQuestion();
+            }
+        }
+
+        function speakCurrentQuestion() {
+            if (!('speechSynthesis' in window)) return;
+
+            // 기존 음성 멈춤
+            window.speechSynthesis.cancel();
+
+            const q = activeQuestions[currentQuestionIndex];
+            if (!q) return;
+
+            const textToSpeak = `${q.text}. 선택지 에이. ${q.optionA}. 선택지 비. ${q.optionB}.`;
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.lang = 'ko-KR';
+            utterance.rate = 0.95; // 편안한 속도
+
+            utterance.onstart = () => {
+                isSpeaking = true;
+                updateTtsButton();
+            };
+
+            utterance.onend = () => {
+                isSpeaking = false;
+                updateTtsButton();
+            };
+
+            utterance.onerror = () => {
+                isSpeaking = false;
+                updateTtsButton();
+            };
+
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function updateTtsButton() {
+            const btn = document.getElementById('tts-btn');
+            const icon = document.getElementById('tts-icon');
+            const text = document.getElementById('tts-text');
+
+            if (!btn || !icon || !text) return;
+
+            if (isSpeaking) {
+                btn.className = 'flex items-center gap-1.5 px-3 py-1 bg-pink-500 hover:bg-pink-600 text-white rounded-full text-xs font-bold transition-all border border-pink-600 shadow-sm animate-pulse active:scale-95';
+                icon.className = 'fa-solid fa-square';
+                text.innerText = '정지';
+            } else {
+                btn.className = 'flex items-center gap-1.5 px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-full text-xs font-bold transition-all border border-indigo-200 shadow-sm active:scale-95';
+                icon.className = 'fa-solid fa-volume-high';
+                text.innerText = '읽어주기';
+            }
+        }
+
+        function startTest() {
+            cancelSpeech();
+            currentQuestionIndex = 0;
+            scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+            
+            // 질문을 시작할 때 무작위로 섞음
+            activeQuestions = shuffleQuestions(questions);
+
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('question-screen').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            cancelSpeech();
+            const q = activeQuestions[currentQuestionIndex];
+            const total = activeQuestions.length;
+            const progress = Math.round(((currentQuestionIndex + 1) / total) * 100);
+
+            document.getElementById('question-number').innerText = `질문 ${currentQuestionIndex + 1}/${total}`;
+            document.getElementById('progress-percent').innerText = `${progress}%`;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            document.getElementById('question-text').innerText = q.text;
+            document.getElementById('option-a-text').innerText = q.optionA;
+            document.getElementById('option-b-text').innerText = q.optionB;
+        }
+
+        function selectOption(option) {
+            cancelSpeech();
+            const currentQ = activeQuestions[currentQuestionIndex];
+            const dim = currentQ.dimension; // e.g. 'EI'
+
+            if (option === 'A') {
+                scores[dim[0]]++;
+            } else {
+                scores[dim[1]]++;
+            }
+
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < activeQuestions.length) {
+                renderQuestion();
+            } else {
+                showLoadingAndResult();
+            }
+        }
+
+        function showLoadingAndResult() {
+            cancelSpeech();
+            document.getElementById('question-screen').classList.add('hidden');
+            document.getElementById('loading-screen').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.remove('hidden');
+                calculateResult();
+            }, 1500);
+        }
+
+        function calculateResult() {
+            const mbti = 
+                (scores.E >= scores.I ? 'E' : 'I') +
+                (scores.S >= scores.N ? 'S' : 'N') +
+                (scores.T >= scores.F ? 'T' : 'F') +
+                (scores.J >= scores.P ? 'J' : 'P');
+
+            const result = cookieResults[mbti] || cookieResults['INFJ'];
+
+            document.getElementById('result-emoji').innerText = result.emoji;
+            document.getElementById('result-mbti').innerText = mbti;
+            document.getElementById('result-title').innerText = result.title;
+            document.getElementById('result-desc').innerText = result.desc;
+            document.getElementById('result-advice').innerText = result.advice;
+
+            // Render Strengths / Skills
+            const strengthsContainer = document.getElementById('result-strengths');
+            strengthsContainer.innerHTML = '';
+            result.strengths.forEach(str => {
+                const badge = document.createElement('span');
+                badge.className = 'px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-xl border border-amber-200';
+                badge.innerText = `# ${str}`;
+                strengthsContainer.appendChild(badge);
+            });
+        }
+
+        function restartTest() {
+            cancelSpeech();
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-modal');
+            toast.innerText = msg;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 2500);
+        }
+
+        function copyShareLink() {
+            const dummy = document.createElement('input');
+            document.body.appendChild(dummy);
+            dummy.value = window.location.href;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+
+            showToast('링크가 복사되었어요! 친구에게 전해보세요 🍪');
+        }
+    </script>
+</body>
+</html>
