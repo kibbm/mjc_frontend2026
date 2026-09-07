@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>웹 프로그래밍 과제 모음</title>
+
+    <style>
+        /* 여백과 테두리를 요소 크기에 포함 */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background-color: #f4f6fa;
+            color: #243047;
+            font-family: "맑은 고딕", sans-serif;
+            line-height: 1.6;
+        }
+
+        /* 내용을 가운데 배치 */
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 48px 20px;
+        }
+
+        header {
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 0;
+            color: #596579;
+        }
+
+        /* 주차별 과제 영역 */
+        section {
+            margin-bottom: 24px;
+            padding: 24px;
+            background-color: white;
+            border: 1px solid #dce2eb;
+            border-radius: 12px;
+        }
+
+        h2 {
+            margin: 0 0 16px;
+            font-size: 20px;
+        }
+
+        .week {
+            margin: 0 0 4px;
+            color: #345fc5;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* 과제 목록 */
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        li + li {
+            margin-top: 10px;
+        }
+
+        a {
+            display: block;
+            padding: 12px 16px;
+            border: 1px solid #e1e6ef;
+            border-radius: 8px;
+            color: #244fae;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+        }
+
+        /* 마우스를 올리거나 키보드로 선택했을 때 */
+        a:hover,
+        a:focus-visible {
+            background-color: #eef3ff;
+            border-color: #345fc5;
+            text-decoration: underline;
+        }
+
+        a:focus-visible {
+            outline: 2px solid #345fc5;
+            outline-offset: 3px;
+        }
+
+        footer {
+            margin-top: 32px;
+            color: #596579;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* 학생별 학습 기록 */
+footer {
+    margin-top: 40px;
+    padding: 28px;
+    border: 1px solid #dce2eb;
+    border-top: 4px solid #345fc5;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ffffff, #eaf0ff);
+}
+
+.footer-label {
+    margin: 0 0 16px;
+    color: #345fc5;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.footer-profile {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.footer-avatar {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    background-color: #345fc5;
+    color: white;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.footer-name {
+    margin: 0;
+    font-size: 22px;
+    overflow-wrap: anywhere;
+}
+
+.footer-id {
+    margin: 4px 0 0;
+    color: #596579;
+    font-size: 14px;
+}
+
+.footer-message {
+    margin: 20px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid #ccd7eb;
+    color: #596579;
+    font-size: 14px;
+}
+    </style>
+</head>
+
+<body>
+    <main>
+        <header>
+            <h1>웹 프로그래밍 과제 모음</h1>
+            <p>주차별로 학습한 내용과 실습 결과를 정리합니다.</p>
+        </header>
+
+        <!-- 1주차 과제 -->
+        <section>
+            <p class="week">WEEK 01</p>
+            <h2>1주차 과제</h2>
+
+            <ul>
+                <li>
+                    <a href="chapter_1/1_Lecture]web_front_ot_security_slides_v9.html">OT 교안</a>
+                </li>
+
+                <li>
+                    <a href="chapter_1/sample]ppt2Slide.html">슬라이드 만들기</a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 2주차 과제 -->
+        <section>
+            <p class="week">WEEK 02-HTML Basics</p>
+            <h2>2주차 과제</h2>
+
+            <ul>
+                <li>
+                    <a href="chapter_2/주석.html">1. 주석 연습</a>
+                </li>
+                <li>
+                    <a href="chapter_2/HTMLPage.html">2. HTML 페이지</a>
+                </li>
+                <li>
+                    <a href="chapter_2/HTMLPageWithStyle.html">3. HTMLPageWithStyle.html</a>
+                </li>
+                <li>
+                    <a href="chapter_2/HTMLPageWithLink.html">4. HTMLPageWithLink.html</a>
+                </li>
+                <li>
+                    <a href="chapter_2/HTMLPageWithScript.html">5. HTMLPageWithScript.html</a>  
+                </li>
+                <li>
+                    <a href="chapter_2/HTMLPageWithOuterScript.html">6. HTMLPageWithOuterScript.html</a>
+                </li>
+                <li>
+                    <a href="chapter_2/note_HTMLPageWithError.html">7. note_HTMLPageWithError.html</a>  
+            </ul>
+        </section>
+
+ <!-- 3주차 과제 -->
+        <section>
+            <p class="week">WEEK 3-HTML Basic Page</p>
+            <h2>3주차 과제</h2>
+
+            <ul>
+                <li>
+                    <a href="chapter_3/text_header.html">1. text_header</a>
+                </li>
+                <li>
+                    <a href="chapter_3/text_paragraph.html">2. text_paragraph</a>
+                </li>
+                <li>
+                    <a href="chapter_3/text_content.html">3. text_content</a>
+                </li>
+                <li>
+                    <a href="chapter_3/text_textWithNbspSpace.html">4. text_textWithNbspSpace</a>
+            </ul>
+        </section>
+
+        <footer>
+    <p class="footer-label">MY LEARNING PORTFOLIO</p>
+
+    <div class="footer-profile">
+        <!-- 학생 이름의 첫 글자 -->
+        <span class="footer-avatar" aria-hidden="true">A</span>
+
+        <div>
+            <h2 class="footer-name">Alegria</h2>
+            <p class="footer-id">학번 · 2021123456</p>
+        </div>
+    </div>
+
+    <!-- 학생마다 자신만의 학습 목표로 변경 -->
+    <p class="footer-message">
+        직접 작성한 코드를 스스로 설명할 수 있도록 배우겠습니다.
+    </p>
+</footer>
+    </main>
+</body>
+</html>

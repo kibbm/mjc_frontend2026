@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPT 1장을 HTML 슬라이드로 바꾸기</title>
+    <style>
+    /* 하단 버튼 영역 */
+    button-group{
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;  
+    }
+
+    button{
+        background-color: #4CAF50;
+        color:whitesmoke;
+        border: none;
+        padding: 10px 20px;
+        font-size:14px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    button:hover{
+        background-color: #45a049;
+    }
+
+    button:disabled{
+        background-color:#ccc;
+        cursor: not-allowed;
+    }
+
+    </style>
+</head>
+
+<body>
+    <h1>1.Web Development Basic</h1>
+    <p>웹 프로그래밍의 기초를 구성하는 3가지 핵심요소입니다.</p>
+
+    <div class="slide active">
+        <div>HTML(구조)</div>
+        <div>CSS(표현)</div>
+        <div>JavaScript(동작)</div>
+    </div>
+
+    <div class="button-group">
+        <button onclick="nextSlide()">다음 슬라이드 &rarr;</button>
+    </div>
+</body>
+
+<script>
+    let currentSlide = 1;
+    const totalSlides = 2; // 총 슬라이드 수
+    function showSlide(slideNumber){
+        // 모든 슬라이드의 active 클래스를 제거
+        for (let i=1; i<=totalSlides; i++){
+            document.querySelector(`.slide:nth-child(${i})`).classList.remove('active');
+        }
+        // 지정된 슬라이드에 active 클래스 추가
+        document.querySelector(`.slide:nth-child(${slideNumber})`).classList.add('active');
+        
+    }
+
+    function nextSlide(){
+        if(currentSlide < totalSlides){
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+    }
+</script>
+
+</html>

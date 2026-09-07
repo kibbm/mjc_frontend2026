@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>브라우저는 나를 얼마나 알고 있을까?</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <h1>브라우저는 나를 얼마나 알고 있을까?</h1>
+    <p>
+      JavaScript와 Browser API를 이용해 브라우저가 확인할 수 있는
+      정보와 권한이 필요한 정보를 직접 살펴봅니다.
+    </p>
+  </header>
+
+  <main>
+    <!-- STEP 1. 자동으로 확인 가능한 정보 -->
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <span class="step">STEP 1</span>
+          <h2>권한 없이 확인 가능한 정보</h2>
+        </div>
+        <button id="basicInfoBtn">내 정보 확인</button>
+      </div>
+
+      <div id="basicInfo" class="card-grid">
+        <p class="guide">버튼을 누르면 브라우저가 제공하는 환경 정보가 나타납니다.</p>
+      </div>
+    </section>
+
+    <!-- STEP 2. 미디어 장치 목록 -->
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <span class="step">STEP 2</span>
+          <h2>미디어 장치 확인</h2>
+        </div>
+        <button id="deviceBtn">장치 목록 보기</button>
+      </div>
+
+      <p class="description">
+        카메라, 마이크, 오디오 출력 장치를 확인합니다.
+        권한이 없으면 장치 이름이 숨겨질 수 있습니다.
+      </p>
+
+      <div id="deviceList" class="result-box">
+        아직 장치를 확인하지 않았습니다.
+      </div>
+    </section>
+
+    <!-- STEP 3. 마이크 권한 -->
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <span class="step">STEP 3</span>
+          <h2>권한 요청하기</h2>
+        </div>
+        <button id="micBtn">마이크 권한 요청</button>
+      </div>
+
+      <p class="description">
+        브라우저가 권한 창을 보여줍니다.
+        이 프로젝트는 권한 확인 직후 오디오 스트림을 바로 종료합니다.
+      </p>
+
+      <div id="permissionResult" class="result-box">
+        아직 권한을 요청하지 않았습니다.
+      </div>
+    </section>
+
+    <!-- STEP 4. Bluetooth -->
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <span class="step">STEP 4</span>
+          <h2>Web Bluetooth 체험</h2>
+        </div>
+        <button id="bluetoothBtn">Bluetooth 장치 선택</button>
+      </div>
+
+      <p class="description">
+        지원되는 브라우저에서 사용자가 직접 장치를 선택해야 합니다.
+        웹페이지가 PC의 모든 Bluetooth 장치 목록을 마음대로 읽는 기능은 아닙니다.
+      </p>
+
+      <div id="bluetoothResult" class="result-box">
+        아직 Bluetooth 장치를 선택하지 않았습니다.
+      </div>
+    </section>
+
+    <!-- STEP 5. 수집된 데이터 확인 -->
+    <section class="panel">
+      <div class="section-title">
+        <div>
+          <span class="step">STEP 5</span>
+          <h2>웹사이트가 저장할 수 있는 형태로 보기</h2>
+        </div>
+        <button id="jsonBtn">JSON 보기</button>
+      </div>
+
+      <p class="description warning">
+        이 예제는 서버로 정보를 전송하지 않습니다.
+        현재 페이지에서 수집한 값만 JSON 형태로 보여줍니다.
+      </p>
+
+      <pre id="jsonResult">{ }</pre>
+    </section>
+
+    <!-- 수업 토론 -->
+    <section class="panel discussion">
+      <span class="step">THINK</span>
+      <h2>보안 관점에서 생각해 보기</h2>
+      <ol>
+        <li>왜 CPU 코어 수와 화면 크기는 별도 허락 없이 알 수 있을까?</li>
+        <li>왜 마이크는 사용자의 권한이 필요할까?</li>
+        <li>여러 정보를 조합하면 한 사용자를 구별하는 데 이용할 수 있을까?</li>
+        <li>웹사이트가 수집한 정보를 서버로 보내면 어떤 문제가 생길 수 있을까?</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    웹 프로그래밍 · Browser API · 개인정보보호 실습
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
