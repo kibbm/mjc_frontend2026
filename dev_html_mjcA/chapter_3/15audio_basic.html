@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>15멀티미디어 삽입</title>
+</head>
+<body>
+    <h1>15. aduio_basic : 멀티미디어(오디오) 삽입</h1>
+    <!-- <audio src="Kalimba.mp3" controls="controls"></audio> -->
+    <audio src="Kalimba.ogg"></audio>   <!--안 뜸!-->
+
+    <hr>
+    <h1>16. 웹 브라우저 제약이 없도록 음악 삽입하기</h1>
+    <audio controls="controls">
+        <!-- <source src="Kalimba.mp3" type="audio/mp3"> -->
+        <source src="Kalimba.ogg" type="audio/ogg">
+    </audio>
+
+    <hr>
+    <h1>17. 동영상 삽입하기 (Wildlife.mp4, Wildlife.webm)</h1>
+    <video controls="controls">
+        <source src="Wildlife.mp4" type="video/mp4">
+        <source src="Wildlife.webm" type="video/webm">
+    </video>
+
+    <hr>
+    <h1>18. 동영상 불러오는 동안 다른 이미지 보여주기</h1>
+    <!-- <video controls="controls" poster="http://via.placeholder.com/1280x720"> -->
+        <video controls="controls" poster="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAtiaOuaFGUPWwx4wA_xvxzA0-ZmzEmReE9oXdkJD10keS0ItoSp_Jocd_pYGmMOoYXmrvgZtfPenmLiPU-8hkkAFCXIFWQDQuhGNsw52DjQ&s=10">
+        <!-- https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAtiaOuaFGUPWwx4wA_xvxzA0-ZmzEmReE9oXdkJD10keS0ItoSp_Jocd_pYGmMOoYXmrvgZtfPenmLiPU-8hkkAFCXIFWQDQuhGNsw52DjQ&s=10 -->
+        <source src="Wildlife.mp4" type="video/mp4">
+        <source src="Wildlife.webm" type="video/webm">
+    </video>
+</body>
+</html>
