@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+    <html lang="ko">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+      <title>3D Flappy Bird - Side View (Pure HTML/JS/CSS)</title>
+      <style>
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          user-select: none;
+          -webkit-user-select: none;
+        }
+        body {
+          background: #0f172a;
+          color: #fff;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          overflow: hidden;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          width: 100vw;
+        }
+        #game-container {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          max-width: 960px;
+          max-height: 640px;
+          aspect-ratio: 3 / 2;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 0 2px rgba(255,255,255,0.1);
+          border-radius: 14px;
+          overflow: hidden;
+          background: #000;
+        }
+        canvas {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+        .ui-layer {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          pointer-events: none;
+          text-shadow: 0 4px 10px rgba(0,0,0,0.6);
+        }
+        .score-board {
+          position: absolute;
+          top: 20px;
+          display: flex;
+          gap: 24px;
+          font-size: 26px;
+          font-weight: 800;
+          letter-spacing: 1px;
+          z-index: 10;
+        }
+        .score-badge {
+          background: rgba(15, 23, 42, 0.6);
+          backdrop-filter: blur(8px);
+          padding: 8px 24px;
+          border-radius: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .modal-box {
+          background: rgba(15, 23, 42, 0.88);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 16px;
+          padding: 36px 48px;
+          text-align: center;
+          max-width: 460px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+          animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+          from { transform: scale(0.85); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
+        }
+        h1 {
+          font-size: 40px;
+          font-weight: 900;
+          margin-bottom: 12px;
+          background: linear-gradient(135deg, #facc15, #f97316);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        p {
+          color: #94a3b8;
+          font-size: 15px;
+          line-height: 1.6;
+          margin-bottom: 24px;
+        }
+        .btn {
+          display: inline-block;
+          background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+          color: #fff;
+          font-size: 18px;
+          font-weight: 700;
+          padding: 14px 36px;
+          border-radius: 10px;
+          border: none;
+          cursor: pointer;
+          pointer-events: auto;
+          box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+          transition: all 0.2s;
+        }
+        .btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+        }
+        .btn:active {
+          transform: translateY(1px);
+        }
+        .tips {
+          margin-top: 16px;
+          font-size: 13px;
+          color: #64748b;
+        }
+        .key-badge {
+          display: inline-block;
+          background: #334155;
+          color: #e2e8f0;
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-family: monospace;
+          font-size: 12px;
+        }
+      </style>
+    </head>
+    <body>
+
+    <div id="game-container">
+      <canvas id="canvas"></canvas>
+
+      <div class="score-board">
+        <div class="score-badge">점수: <span id="current-score">0</span></div>
+        <div class="score-badge" style="color: #facc15;">최고: <span id="best-score">0</span></div>
+      </div>
+
+      <!-- 시작 화면 -->
+      <div id="start-screen" class="ui-layer">
+        <div class="modal-box">
+          <h1>3D FLAPPY BIRD</h1>
+          <p>직관적인 <strong>횡스크롤 3D 쿼터뷰</strong> 모드입니다.<br>다가오는 파이프의 틈새를
+  시원하게 통과해보세요!</p>
+          <button class="btn" id="start-btn">비행 시작</button>
+          <div class="tips">
+            조작: <span class="key-badge">Space</span> 키 또는 <span class="key-badge">화면 클릭 /
+  터치</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 게임 오버 화면 -->
+      <div id="gameover-screen" class="ui-layer" style="display: none;">
+        <div class="modal-box">
+          <h1 style="background: linear-gradient(135deg, #ef4444, #f97316); -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;">GAME OVER</h1>
+          <p>장애물에 충돌했습니다!<br>최종 점수: <strong id="final-score" style="color: #fff; font-size:
+  22px;">0</strong></p>
+          <button class="btn" id="restart-btn" style="background: linear-gradient(135deg, #10b981,
+  #059669);">다시 비행하기</button>
+          <div class="tips">
+            <span class="key-badge">Space</span> 키를 눌러 즉시 재시작
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    /**
+     * 3D Flappy Bird - Side-Scrolling Perspective 3D Engine
+     * Pure HTML5 Canvas 2D + Custom Vector 3D Mathematics
+     */
+
+    // --- 1. Web Audio API 신시사이저 ---
+    class SoundSynth {
+      constructor() {
+        this.ctx = null;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playFlap() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const now = this.ctx.currentTime;
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(620, now + 0.1);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      }
+      playScore() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [523.25, 659.25].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + i * 0.08);
+          gain.gain.setValueAtTime(0.2, now + i * 0.08);
+          gain.gain.linearRampToValueAtTime(0.01, now + i * 0.08 + 0.18);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.2);
+        });
+      }
+      playHit() {
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.exponentialRampToValueAtTime(45, now + 0.28);
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.28);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.28);
+      }
+    }
+    const sound = new SoundSynth();
+
+    // --- 2. 3D 벡터 및 투영 렌더러 ---
+    class Vector3 {
+      constructor(x = 0, y = 0, z = 0) {
+        this.x = x; this.y = y; this.z = z;
+      }
+      add(v) { return new Vector3(this.x + v.x, this.y + v.y, this.z + v.z); }
+      sub(v) { return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z); }
+      cross(v) {
+        return new Vector3(
+          this.y * v.z - this.z * v.y,
+          this.z * v.x - this.x * v.z,
+          this.x * v.y - this.y * v.x
+        );
+      }
+      dot(v) { return this.x * v.x + this.y * v.y + this.z * v.z; }
+      normalize() {
+        const len = Math.hypot(this.x, this.y, this.z) || 1;
+        return new Vector3(this.x / len, this.y / len, this.z / len);
+      }
+    }
+
+    class Renderer3D {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.fov = 480; // 초점 거리
+        // 사선 위쪽에서 비추는 메인 디렉셔널 라이트
+        this.lightDir = new Vector3(-0.4, -0.8, -0.5).normalize();
+        this.facesToRender = [];
+      }
+
+      resize() {
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width;
+        this.canvas.height = rect.height;
+        this.cx = this.canvas.width / 2;
+        this.cy = this.canvas.height / 2;
+      }
+
+      clear() {
+        this.facesToRender = [];
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        gradient.addColorStop(0, '#38bdf8');   // 맑은 상공
+        gradient.addColorStop(0.68, '#bae6fd'); // 지평선 하늘
+        gradient.addColorStop(0.72, '#4ade80'); // 지평선 풀밭
+        gradient.addColorStop(1, '#15803d');    // 짙은 잔디밭
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      }
+
+      // 3D 점 -> 2D 캔버스 원근 투영
+      project(p, cam) {
+        const x = p.x - cam.x;
+        const y = p.y - cam.y;
+        const z = p.z - cam.z;
+        if (z <= 10) return null; // 카메라 클리핑
+        const scale = this.fov / z;
+        return {
+          x: this.cx + x * scale,
+          y: this.cy + y * scale,
+          z: z
+        };
+      }
+
+      addPolygon(points, baseColor, cam) {
+        if (points.length < 3) return;
+        const projPoints = [];
+        let avgZ = 0;
+        for (let p of points) {
+          const proj = this.project(p, cam);
+          if (!proj) return;
+          projPoints.push(proj);
+          avgZ += proj.z;
+        }
+        avgZ /= points.length;
+
+        // 표면 법선 벡터 계산
+        const edge1 = points[1].sub(points[0]);
+        const edge2 = points[2].sub(points[0]);
+        const normal = edge1.cross(edge2).normalize();
+
+        // 백페이스 컬링 (카메라 등진 면 제거)
+        const viewVec = points[0].sub(new Vector3(cam.x, cam.y, cam.z)).normalize();
+        if (normal.dot(viewVec) >= 0) return;
+
+        // 플랫 셰이딩 (Lambertian diffuse + ambient)
+        const diff = Math.max(0, -normal.dot(this.lightDir));
+        const intensity = 0.38 + diff * 0.62;
+
+        this.facesToRender.push({
+          pts: projPoints,
+          color: this.shadeColor(baseColor, intensity),
+          z: avgZ
+        });
+      }
+
+      shadeColor(color, factor) {
+        const num = parseInt(color.slice(1), 16);
+        let r = Math.min(255, Math.floor(((num >> 16) & 255) * factor));
+        let g = Math.min(255, Math.floor(((num >> 8) & 255) * factor));
+        let b = Math.min(255, Math.floor((num & 255) * factor));
+        return `rgb(${r},${g},${b})`;
+      }
+
+      addBox(pos, size, color, cam, rotZ = 0) {
+        const hw = size.x / 2, hh = size.y / 2, hd = size.z / 2;
+        const localCorners = [
+          new Vector3(-hw, -hh, -hd), new Vector3(hw, -hh, -hd),
+          new Vector3(hw, hh, -hd),   new Vector3(-hw, hh, -hd),
+          new Vector3(-hw, -hh, hd),  new Vector3(hw, -hh, hd),
+          new Vector3(hw, hh, hd),    new Vector3(-hw, hh, hd)
+        ];
+
+        // Z축 회전 (상하 피치 각도)
+        const worldCorners = localCorners.map(p => {
+          let v = p;
+          if (rotZ !== 0) {
+            const cos = Math.cos(rotZ), sin = Math.sin(rotZ);
+            v = new Vector3(v.x * cos - v.y * sin, v.x * sin + v.y * cos, v.z);
+          }
+          return v.add(pos);
+        });
+
+        const faces = [
+          [0, 1, 2, 3], // 앞면 (-Z)
+          [5, 4, 7, 6], // 뒷면 (+Z)
+          [4, 0, 3, 7], // 좌측면 (-X)
+          [1, 5, 6, 2], // 우측면 (+X)
+          [4, 5, 1, 0], // 상단면 (-Y)
+          [3, 2, 6, 7]  // 하단면 (+Y)
+        ];
+
+        for (let face of faces) {
+          this.addPolygon(face.map(idx => worldCorners[idx]), color, cam);
+        }
+      }
+
+      // 깊이 정렬(화가 알고리즘) 후 캔버스 렌더링
+      render() {
+        this.facesToRender.sort((a, b) => b.z - a.z);
+        for (let face of this.facesToRender) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(face.pts[0].x, face.pts[0].y);
+          for (let i = 1; i < face.pts.length; i++) {
+            this.ctx.lineTo(face.pts[i].x, face.pts[i].y);
+          }
+          this.ctx.closePath();
+          this.ctx.fillStyle = face.color;
+          this.ctx.fill();
+        }
+      }
+    }
+
+    // --- 3. 횡스크롤 게임 엔티티 및 로직 ---
+    const STATE = { START: 0, PLAYING: 1, GAMEOVER: 2 };
+    let currentState = STATE.START;
+
+    const canvas = document.getElementById('canvas');
+    const renderer = new Renderer3D(canvas);
+
+    let score = 0;
+    let bestScore = parseInt(localStorage.getItem('flappy3d_best') || '0', 10);
+    document.getElementById('best-score').innerText = bestScore;
+
+    // 새 (화면 좌측 X: -160 에 고정 비행)
+    const bird = {
+      pos: new Vector3(-160, 0, 0),
+      velY: 0,
+      gravity: 1100,
+      jumpPower: -360,
+      pitch: 0,
+      wingAngle: 0,
+      radius: 18,
+      reset() {
+        this.pos = new Vector3(-160, -20, 0);
+        this.velY = 0;
+        this.pitch = 0;
+        this.wingAngle = 0;
+      },
+      flap() {
+        this.velY = this.jumpPower;
+        sound.playFlap();
+      }
+    };
+
+    // 횡스크롤 3D 쿼터뷰 카메라
+    // 새보다 약간 오른쪽(+X), 약간 위(-Y), 앞쪽(-Z)에서 비스듬히 조망
+    const camera = {
+      x: -40,
+      y: -50,
+      z: -520
+    };
+
+    // 파이프 매니저 (오른쪽에서 생성 -> 왼쪽으로 전진)
+    class PipeManager {
+      constructor() {
+        this.pipes = [];
+        this.speed = 190;
+        this.spacingX = 290;
+        this.pipeWidth = 64;
+        this.pipeDepth = 64;
+        this.gap = 175; // 통과 틈새 높이
+        this.groundY = 160;
+        this.ceilingY = -230;
+      }
+
+      reset() {
+        this.pipes = [];
+        for (let i = 0; i < 4; i++) {
+          this.spawnPipe(180 + i * this.spacingX);
+        }
+      }
+
+      spawnPipe(x) {
+        const centerY = -120 + Math.random() * 160;
+        this.pipes.push({
+          x: x,
+          centerY: centerY,
+          passed: false
+        });
+      }
+
+      update(dt, birdObj) {
+        for (let p of this.pipes) {
+          p.x -= this.speed * dt;
+
+          // 점수 획득
+          if (!p.passed && p.x < birdObj.pos.x) {
+            p.passed = true;
+            score++;
+            document.getElementById('current-score').innerText = score;
+            sound.playScore();
+            if (score > bestScore) {
+              bestScore = score;
+              localStorage.setItem('flappy3d_best', bestScore);
+              document.getElementById('best-score').innerText = bestScore;
+            }
+          }
+
+          // 충돌 검사 (횡스크롤 AABB)
+          const inX = Math.abs(p.x - birdObj.pos.x) < (this.pipeWidth / 2 + birdObj.radius);
+          if (inX) {
+            const topPipeBottom = p.centerY - this.gap / 2;
+            const bottomPipeTop = p.centerY + this.gap / 2;
+            if (birdObj.pos.y - birdObj.radius < topPipeBottom || birdObj.pos.y + birdObj.radius >
+  bottomPipeTop) {
+              return true; // 파이프 충돌
+            }
+          }
+        }
+
+        // 왼쪽 화면 밖으로 벗어난 파이프 순환 재배치
+        if (this.pipes.length > 0 && this.pipes[0].x < -480) {
+          this.pipes.shift();
+          const lastX = this.pipes[this.pipes.length - 1].x;
+          this.spawnPipe(lastX + this.spacingX);
+        }
+
+        // 바닥 및 천장 충돌
+        if (birdObj.pos.y + birdObj.radius >= this.groundY || birdObj.pos.y - birdObj.radius <= this.
+  ceilingY) {
+          return true;
+        }
+        return false;
+      }
+
+      draw(rend, cam) {
+        for (let p of this.pipes) {
+          // 상단 파이프
+          const topHeight = Math.max(10, (p.centerY - this.gap / 2) - this.ceilingY);
+          const topY = this.ceilingY + topHeight / 2;
+          rend.addBox(new Vector3(p.x, topY, 0), new Vector3(this.pipeWidth, topHeight, this.pipeDepth),
+  '#22c55e', cam);
+          // 상단 파이프 림 (테두리 머리)
+          rend.addBox(new Vector3(p.x, p.centerY - this.gap / 2 - 12, 0), new Vector3(this.pipeWidth + 14,
+  24, this.pipeDepth + 14), '#16a34a', cam);
+
+          // 하단 파이프
+          const bottomHeight = Math.max(10, this.groundY - (p.centerY + this.gap / 2));
+          const bottomY = (p.centerY + this.gap / 2) + bottomHeight / 2;
+          rend.addBox(new Vector3(p.x, bottomY, 0), new Vector3(this.pipeWidth, bottomHeight, this.
+  pipeDepth), '#22c55e', cam);
+          // 하단 파이프 림 (테두리 머리)
+          rend.addBox(new Vector3(p.x, p.centerY + this.gap / 2 + 12, 0), new Vector3(this.pipeWidth + 14,
+  24, this.pipeDepth + 14), '#16a34a', cam);
+        }
+      }
+    }
+    const pipeManager = new PipeManager();
+
+    // 3D 지면 렌더링 (좌측으로 이동하는 체커보드)
+    let groundScroll = 0;
+    function drawGround(rend, cam, dt) {
+      if (currentState === STATE.PLAYING) {
+        groundScroll = (groundScroll + pipeManager.speed * dt) % 100;
+      }
+      const groundY = pipeManager.groundY;
+      const tileW = 100;
+      const tileD = 80;
+
+      for (let x = -600; x <= 600; x += tileW) {
+        const renderX = x - groundScroll;
+        for (let z = -120; z <= 240; z += tileD) {
+          const isEven = (Math.floor(x / tileW) + Math.floor(z / tileD)) % 2 === 0;
+          const color = isEven ? '#15803d' : '#166534';
+          const p1 = new Vector3(renderX, groundY, z);
+          const p2 = new Vector3(renderX + tileW, groundY, z);
+          const p3 = new Vector3(renderX + tileW, groundY, z + tileD);
+          const p4 = new Vector3(renderX, groundY, z + tileD);
+          rend.addPolygon([p1, p2, p3, p4], color, cam);
+        }
+      }
+    }
+
+    // 3D 새 렌더링 (오른쪽 +X를 바라보는 3차원 플래피 버드)
+    function drawBird(rend, b, cam) {
+      // 1. 몸통 (노란색 박스)
+      rend.addBox(b.pos, new Vector3(36, 28, 28), '#facc15', cam, b.pitch);
+
+      // 2. 부리 (오른쪽 +X 방향으로 돌출된 주황색 박스)
+      const beakCos = Math.cos(b.pitch), beakSin = Math.sin(b.pitch);
+      const beakLocal = new Vector3(24, 2, 0);
+      const beakRot = new Vector3(
+        beakLocal.x * beakCos - beakLocal.y * beakSin,
+        beakLocal.x * beakSin + beakLocal.y * beakCos,
+        0
+      );
+      rend.addBox(b.pos.add(beakRot), new Vector3(16, 10, 16), '#f97316', cam, b.pitch);
+
+      // 3. 눈 (오른쪽 앞 측면)
+      const eyeLocal = new Vector3(12, -6, -14); // 카메라 쪽 측면 눈
+      const eyeRot = new Vector3(
+        eyeLocal.x * beakCos - eyeLocal.y * beakSin,
+        eyeLocal.x * beakSin + eyeLocal.y * beakCos,
+        eyeLocal.z
+      );
+      rend.addBox(b.pos.add(eyeRot), new Vector3(8, 8, 4), '#ffffff', cam, b.pitch);
+      // 눈동자
+      const pupilLocal = new Vector3(15, -6, -16);
+      const pupilRot = new Vector3(
+        pupilLocal.x * beakCos - pupilLocal.y * beakSin,
+        pupilLocal.x * beakSin + pupilLocal.y * beakCos,
+        pupilLocal.z
+      );
+      rend.addBox(b.pos.add(pupilRot), new Vector3(4, 4, 2), '#0f172a', cam, b.pitch);
+
+      // 4. 날개 (카메라 쪽 앞날개 펄럭임)
+      const wingY = Math.sin(b.wingAngle) * 9;
+      const wingLocal = new Vector3(-2, wingY, -16);
+      const wingRot = new Vector3(
+        wingLocal.x * beakCos - wingLocal.y * beakSin,
+        wingLocal.x * beakSin + wingLocal.y * beakCos,
+        wingLocal.z
+      );
+      rend.addBox(b.pos.add(wingRot), new Vector3(20, 6, 8), '#eab308', cam, b.pitch);
+
+      // 반대쪽 뒷날개
+      const backWingLocal = new Vector3(-2, wingY, 16);
+      const backWingRot = new Vector3(
+        backWingLocal.x * beakCos - backWingLocal.y * beakSin,
+        backWingLocal.x * beakSin + backWingLocal.y * beakCos,
+        backWingLocal.z
+      );
+      rend.addBox(b.pos.add(backWingRot), new Vector3(20, 6, 8), '#ca8a04', cam, b.pitch);
+    }
+
+    // 배경 원경 3D 구름
+    const clouds = [
+      { pos: new Vector3(-250, -220, 300), size: new Vector3(140, 36, 60), speed: 25 },
+      { pos: new Vector3(150, -260, 450), size: new Vector3(190, 42, 70), speed: 18 },
+      { pos: new Vector3(480, -210, 350), size: new Vector3(160, 38, 65), speed: 22 }
+    ];
+
+    function drawClouds(rend, cam, dt) {
+      for (let c of clouds) {
+        if (currentState === STATE.PLAYING) {
+          c.pos.x -= c.speed * dt;
+          if (c.pos.x < -650) c.pos.x = 650;
+        }
+        rend.addBox(c.pos, c.size, '#ffffff', cam);
+      }
+    }
+
+    // --- 4. 메인 루프 & 사용자 입력 ---
+    let lastTime = performance.now();
+
+    function gameLoop(time) {
+      const dt = Math.min((time - lastTime) / 1000, 0.05);
+      lastTime = time;
+
+      renderer.clear();
+
+      if (currentState === STATE.PLAYING) {
+        bird.velY += bird.gravity * dt;
+        bird.pos.y += bird.velY * dt;
+
+        // 비행 피치 각도 (상승 시 위쪽, 하강 시 아래쪽)
+        const targetPitch = Math.max(-0.45, Math.min(0.75, bird.velY / 380));
+        bird.pitch += (targetPitch - bird.pitch) * 12 * dt;
+        bird.wingAngle += 20 * dt;
+
+        const hit = pipeManager.update(dt, bird);
+        if (hit) {
+          sound.playHit();
+          currentState = STATE.GAMEOVER;
+          document.getElementById('final-score').innerText = score;
+          document.getElementById('gameover-screen').style.display = 'flex';
+        }
+      } else if (currentState === STATE.START) {
+        // 시작 전 둥실둥실 호버링
+        bird.pos.y = -20 + Math.sin(time * 0.004) * 14;
+        bird.wingAngle += 6 * dt;
+        bird.pitch = 0;
+      }
+
+      // 3D 오브젝트 렌더 큐 등록
+      drawClouds(renderer, camera, dt);
+      drawGround(renderer, camera, dt);
+      pipeManager.draw(renderer, camera);
+      drawBird(renderer, bird, camera);
+
+      // 깊이 소팅 및 캔버스 출력
+      renderer.render();
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    // 사용자 액션 처리 (점프 / 시작)
+    function handleAction() {
+      sound.init();
+      if (currentState === STATE.START) {
+        currentState = STATE.PLAYING;
+        document.getElementById('start-screen').style.display = 'none';
+        score = 0;
+        document.getElementById('current-score').innerText = '0';
+        pipeManager.reset();
+        bird.reset();
+        bird.flap();
+      } else if (currentState === STATE.PLAYING) {
+        bird.flap();
+      } else if (currentState === STATE.GAMEOVER) {
+        currentState = STATE.PLAYING;
+        document.getElementById('gameover-screen').style.display = 'none';
+        score = 0;
+        document.getElementById('current-score').innerText = '0';
+        pipeManager.reset();
+        bird.reset();
+        bird.flap();
+      }
+    }
+
+    // 이벤트 리스너 등록
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        handleAction();
+      }
+    });
+    canvas.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      handleAction();
+    });
+
+    document.getElementById('start-btn').addEventListener('click', handleAction);
+    document.getElementById('restart-btn').addEventListener('click', handleAction);
+
+    window.addEventListener('resize', () => renderer.resize());
+    renderer.resize();
+    pipeManager.reset();
+    bird.reset();
+    requestAnimationFrame(gameLoop);
+    </script>
+    </body>
+    </html>
