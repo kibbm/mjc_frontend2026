@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>CSS3 Selector Basic</title>
+    <style>
+        /* 0번 */
+        #header h1 {
+            color: red;
+        }
+
+        #section h1 {
+            color: orange;
+        }
+
+        /* 1번: 선택자 여러개를 함께 사용할 때, 후손 선택자를 1처럼 활용 */
+        /* #header h1, h2 {color: red;} */
+
+        /* 2번: header 태그의 후손인 h1태그와 header태그의 후손인 h2태그를 선택하고 싶다면 2처럼 활용 */
+        /* #header h1,
+        #header h2 {
+            color: red;
+        }  */
+    </style>
+</head>
+
+<body>
+    <h2>4. 후손 선택자와 자손 선택자</h2>
+    <h3>4.1 후손 선택자</h3>
+    <p> . 선택자A 선택자B : 선택자A의 후손인 선택자B 선택</p>
+    <hr>
+
+    <div id="header">
+        <h1 class="title">Lorem ipsum</h1>
+        <div id="nav">
+            <h1>Navigation</h1>
+            <h2>*header안의 h2 -CSS3 Selector Basic</h2>
+        </div>
+    </div>
+    <div id="section">
+        <h1 class="title">Lorem ipsum</h1>
+        <p>dolor sit, amet consectetur adipisicing elit. Voluptatem vero voluptate eos consequatur illo aut dolorem
+            omnis recusandae! Rerum maiores maxime minus molestias harum corrupti tenetur distinctio hic dignissimos
+            quidem.</p>
+        <h2>*section안의 h2 -CSS3 Selector Basic</h2>
+    </div>
+
+</body>
+
+</html>

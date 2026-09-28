@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>15etc_state</title>
+    <style>
+        /* input태그가 사용 가능할 때 background-color 속성에 white키워드를 적용합니다. */
+        input:enabled {
+            background-color: white;
+        }
+
+        /* input태그가 사용 불가능할 때 background-color 속성에 gray키워드를 적용합니다. */
+        input:disabled {
+            background-color: gray;
+        }
+
+        /* input태그에 포커스를 맞출 때 background-color 속성에 orange키워드를 적용합니다. */
+        input:focus {
+            background-color: orange;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>5. 반응/상태/구조 선택자</h2>
+    <h3>5.2 상태 선택자</h3>
+    <hr>
+
+    <p>상태 선택자: 입력 양식의 상태를 선택할 때 사용 <br>
+        :checked 체크 상태의 input 태그 선택<br>
+        :focus 포커스를 맞춘 input 태그 선택<br>
+        :enabled 사용 가능한 input 태그 선택<br>
+        :disabled 사용 불가능한 input 태그 선택
+    </p>
+
+    <h2>사용 가능</h2>
+    <input>
+
+    <h2>사용 불가능</h2>
+    <input disabled="disabled">
+</body>
+
+</html>

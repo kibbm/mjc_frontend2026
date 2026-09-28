@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>17etc_structureFalse / 18etc_structureTrue</title>
+    <style>
+        /* 모든 a태그에 빨간색이 적용?! 
+        =>  li태그의 첫번째 자손에 해당하는 a태그를 선택했으므로, a태그 5개가 전부 이 조건에 해당됨.
+        li > a:first-child { color:red; }         */
+
+        /* 올바른 수정: 첫번째 a태그에만 빨간 색을 적용하기. */
+        li:first-child > a { color:red; }
+    </style>
+</head>
+
+<body>
+    <h2>5. 반응/상태/구조 선택자</h2>
+    <h3>5.3 구조 선택자</h3>
+    <hr>
+
+    <ul>
+        <li><a href="#">주의 사항</a></li>
+        <li><a href="#">주의 사항</a></li>
+        <li><a href="#">주의 사항</a></li>
+        <li><a href="#">주의 사항</a></li>
+        <li><a href="#">주의 사항</a></li>
+    </ul>
+</body>
+
+</html>
