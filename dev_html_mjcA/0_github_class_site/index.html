@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026-2 Web Programming | Student Pages</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--line:#e5e7eb;--green:#13795b;--green-bg:#e9f8f1;--orange:#a15c00;--orange-bg:#fff3d9;--red:#b42318;--red-bg:#feeceb;--gray:#667085;--gray-bg:#eef2f6;--blue:#185adb;--blue-bg:#eaf1ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.wrap{max-width:1200px;margin:0 auto;padding:28px 18px 60px}h1{margin:0;font-size:clamp(1.65rem,3vw,2.35rem)}.subtitle{margin:7px 0 0;color:var(--muted)}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:16px}.stat b{display:block;font-size:1.8rem}.stat span{font-size:.88rem;color:var(--muted)}
+.guide{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 18px;line-height:1.65}.guide strong{display:block;margin-bottom:5px}.legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.legend span,.badge{border-radius:999px;padding:5px 9px;font-weight:750;font-size:.75rem}.s-ok{background:var(--green-bg);color:var(--green)}.s-name{background:var(--red-bg);color:var(--red)}.s-index{background:var(--orange-bg);color:var(--orange)}.s-missing{background:var(--gray-bg);color:var(--gray)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:18px 0 24px}.filter{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 13px;cursor:pointer}.filter.active{background:#172033;color:#fff;border-color:#172033}input{flex:1;min-width:210px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:1rem}
+.class-title{display:flex;align-items:baseline;gap:8px;margin:28px 0 11px}.class-title h2{margin:0}.count{color:var(--muted);font-size:.9rem}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:12px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;min-height:170px}.card.name{border-color:#f4a19a}.card.index{border-color:#f5c469}.card.missing{opacity:.72}.top{display:flex;align-items:center;justify-content:space-between;gap:8px}.sid{font-size:1.08rem;font-weight:850}.links{display:flex;gap:7px;flex-wrap:wrap;margin:13px 0 12px}a.btn{text-decoration:none;font-weight:800;font-size:.82rem;border-radius:8px;padding:8px 10px}.web{background:var(--blue-bg);color:var(--blue)}.code{background:#f0edff;color:#4938c5}.submitted{background:#f3f4f6;color:#374151}.note{font-size:.82rem;color:#5d6675;line-height:1.5}.raw{margin-top:10px;font-size:.72rem;color:#8a94a3;word-break:break-all}.hidden{display:none!important}footer{margin-top:34px;color:var(--muted);font-size:.8rem}
+@media(max-width:720px){.summary{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body><div class="wrap">
+<h1>2026-2 Web Programming</h1>
+<p class="subtitle">학생 GitHub Pages · 2026-10-03 수동 점검 기준</p>
+<div class="summary">
+ <div class="stat"><b id="total">-</b><span>전체</span></div>
+ <div class="stat"><b id="ok">-</b><span>정상형식</span></div>
+ <div class="stat"><b id="needs">-</b><span>수정/확인 필요</span></div>
+ <div class="stat"><b id="missing">-</b><span>미제출</span></div>
+</div>
+<div class="guide"><strong>분류 기준</strong>
+정상형식은 저장소 이름 규칙이 아니라 실제 배포/index 사용 상태를 기준으로 표시합니다. 저장소명이 달라도 사이트와 링크가 정상이라면 정상형식입니다.
+<div class="legend"><span class="s-ok">정상형식</span><span class="s-name">이름 확인</span><span class="s-index">index에 링크 없음</span><span class="s-missing">미제출</span></div></div>
+
+<!-- Notice -->
+<!-- <div class="notice">
+<b>교수자용 점검:</b> 노란색 카드는 주소 형식·저장소 이름·배포 여부를 확인해야 합니다.
+<b>CODE</b>가 열리는데 <b>WEB</b>이 404이면 학생에게
+<b>Settings → Pages → Deploy from a branch → main / root</b>를 확인하게 하세요.
+</div> -->
+
+<div class="toolbar">
+<button class="filter active" data-filter="all">전체</button>
+<button class="filter" data-filter="정상형식">정상형식</button>
+<button class="filter" data-filter="이름 확인">이름 확인</button>
+<button class="filter" data-filter="index에 링크 없음">index에 링크 없음</button>
+<button class="filter" data-filter="미제출">미제출</button>
+<button class="filter" data-filter="A">A반</button><button class="filter" data-filter="B">B반</button><button class="filter" data-filter="C">C반</button>
+<input id="search" placeholder="A04, C14 검색">
+</div>
+
+<!-- Links to check when they don't open -->
+<details>
+<summary>링크가 안 열릴 때 self-check</summary>
+<ol>
+<li><b>CODE도 안 열림</b> → GitHub 사용자명, Repository 이름, Public 여부 확인</li>
+<li><b>CODE는 열리고 WEB만 404</b> → Settings → Pages → main / root 배포 확인</li>
+<li><b>소스 URL만 제출</b> → Pages 배포 후 <code>https://사용자명.github.io/저장소명/</code> 주소 제출</li>
+</ol>
+</details>
+
+<main id="app"></main>
+<footer>
+    수정할 데이터 파일: github_students_checked.csv <br>
+    copyright &copy;<b>Alegria</b> <i>FrontEnd설계 2026-2</i>
+    <!-- · HTML은 status를 자동 추정하지 않고 CSV의 수동 점검 결과를 그대로 표시합니다. -->
+</footer>
+</div>
+<script>
+const CSV='github_students_checked.csv';
+function csvParse(text){
+ const rows=[];let row=[],field='',q=false;
+ text=text.replace(/^\uFEFF/,'');
+ for(let i=0;i<text.length;i++){
+  const c=text[i];
+  if(q){if(c==='"'&&text[i+1]==='"'){field+='"';i++;}else if(c==='"'){q=false;}else field+=c;}
+  else{if(c==='"')q=true;else if(c===','){row.push(field);field='';}else if(c==='\n'){row.push(field.replace(/\r$/,''));rows.push(row);row=[];field='';}else field+=c;}
+ }
+ if(field.length||row.length){row.push(field.replace(/\r$/,''));rows.push(row)}
+ const head=rows.shift()||[];
+ return rows.filter(r=>r.some(x=>x.trim())).map(r=>Object.fromEntries(head.map((h,i)=>[h.trim(),(r[i]||'').trim()])));
+}
+function links(pages){
+ const raw=(pages||'').trim(); if(!raw||raw==='-')return {web:'',code:'',raw:''};
+ try{
+  const u=new URL(/^https?:\/\//i.test(raw)?raw:'https://'+raw), host=u.hostname.toLowerCase(), parts=u.pathname.split('/').filter(Boolean);
+  if(host==='github.com'&&parts.length>=2){return {web:'',code:`https://github.com/${parts[0]}/${parts[1].replace(/\.git$/i,'')}`,raw}}
+  if(host.endsWith('.github.io')&&parts.length>=1){const owner=host.slice(0,-10);return {web:raw,code:`https://github.com/${owner}/${parts[0]}`,raw}}
+  return {web:'',code:'',raw};
+ }catch(e){return {web:'',code:'',raw}}
+}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+function cssStatus(s){return s==='정상형식'?'ok':s==='이름 확인'?'name':s==='index에 링크 없음'?'index':'missing'}
+function badgeStatus(s){return s==='정상형식'?'s-ok':s==='이름 확인'?'s-name':s==='index에 링크 없음'?'s-index':'s-missing'}
+function render(data){
+ app.innerHTML=['A','B','C'].map(cls=>{const list=data.filter(x=>x.class===cls);return `<section class="class-section"><div class="class-title"><h2>${cls}반</h2><span class="count">${list.length}명</span></div><div class="grid">${list.map(x=>{
+  const l=links(x.pages); let btn='';
+  if(l.web)btn+=`<a class="btn web" href="${esc(l.web)}" target="_blank" rel="noopener">WEB</a>`;
+  if(l.code)btn+=`<a class="btn code" href="${esc(l.code)}" target="_blank" rel="noopener">CODE</a>`;
+  if(!l.web&&!l.code&&l.raw)btn+=`<a class="btn submitted" href="${esc(l.raw)}" target="_blank" rel="noopener">제출 URL</a>`;
+  return `<article class="card ${cssStatus(x.status)}" data-class="${esc(x.class)}" data-status="${esc(x.status)}" data-id="${esc(x.id)}"><div class="top"><span class="sid">${esc(x.id)}</span><span class="badge ${badgeStatus(x.status)}">${esc(x.status)}</span></div><div class="links">${btn}</div><div class="note">${esc(x.note)}</div>${l.raw?`<div class="raw">${esc(l.raw)}</div>`:''}</article>`
+ }).join('')}</div></section>`}).join('');
+}
+function apply(filter,q=''){q=q.trim().toLowerCase();document.querySelectorAll('.card').forEach(c=>{const f=filter==='all'||c.dataset.status===filter||c.dataset.class===filter;const s=!q||c.dataset.id.toLowerCase().includes(q);c.classList.toggle('hidden',!(f&&s))});document.querySelectorAll('.class-section').forEach(sec=>sec.classList.toggle('hidden',![...sec.querySelectorAll('.card')].some(c=>!c.classList.contains('hidden'))))}
+fetch(CSV).then(r=>{if(!r.ok)throw Error();return r.text()}).then(t=>{const d=csvParse(t);render(d);total.textContent=d.length;ok.textContent=d.filter(x=>x.status==='정상형식').length;missing.textContent=d.filter(x=>x.status==='미제출').length;needs.textContent=d.filter(x=>x.status!=='정상형식'&&x.status!=='미제출').length;let f='all';const q=document.getElementById('search');document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');f=b.dataset.filter;apply(f,q.value)});q.oninput=()=>apply(f,q.value)}).catch(()=>{app.innerHTML='<div class="guide">github_students_checked.csv를 읽지 못했습니다. index.html과 CSV를 같은 폴더에 올려 주세요.</div>'});
+</script></body></html>
