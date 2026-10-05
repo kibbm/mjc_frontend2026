@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>5. 위치 속성</title>
+    <style>
+        /*[예제6-37]left속성과 top속성 적용하기*/
+        .box {
+            width: 100px;   height: 100px;
+            position: absolute;
+        }
+
+        .box:nth-of-type(1) {
+            background-color: red;
+            left: 10px;      top: 10px;
+            z-index: 100;
+        }
+
+        .box:nth-of-type(2) {
+            background-color: green;
+            left: 50px;      top: 50px;
+            z-index: 50;
+        }
+
+        .box:nth-of-type(3) {
+            background-color: blue;
+            left: 90px;    top: 90px;
+            z-index: 10;
+        }
+
+        /*[예제6-38]position_formulaHeight*/
+        body > div{
+            width:400px; height:100px;
+            border:3px solid black;
+            position:relative;
+            /*overflow:hidden; [예제6-40]1.hidden: 영역을 벗어나는 부분 감춤*/
+            /*overflow:scroll; [예제6-41]2. scroll: 영역을 벗어나는 부분 스크롤바 표시*/
+            overflow-y:scroll; /*[예제6-42]overflow-x와 overflow-y 속성 적용하기*/
+
+        }
+    </style>
+</head>
+
+<body>   
+    <h1>Lorem ipsum dolor sit amet</h1>
+    <div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+    </div>
+    <h1>Lorem ipsum dolor sit amet</h1>
+
+    <hr>
+        <h2>6.5.2 위치 속성 공식(예제6-37~6-39)*중요* </h2>
+    <h4> 2가지 문제 발생!!</h4>
+    <h4>. 문제1_h1태그 2개가 붙어 있습니다...div태그가 영역을 차지하지 않습니다. </h4>
+    <h5>  ==>(해결 공식!) "자손의 position속성에 absolute키워드를 적용하려면, 부모에 height속성을 입력합니다." </h5>
+    <h4>. 문제2_색상이 적용된 상자가 자신의 부모를 기준으로 위치를 잡지 않습니다.</h4>
+    <h5>  ==>(해결 공식!) "자손의 position속성에 absolute키워드를 적용하려면, 부모에 position속성에 relative키워드를 입력합니다." </h5>
+
+    <h2>6.5.3 내용이 요소 크기를 벗어날 때 처리 방법</h2>
+    <h4>1. hidden: 영역을 벗어나는 부분 감춤(예제6-40)</h4>
+    <h4>2. scroll: 영역을 벗어나는 부분 스크롤바 표시(예제6-41)</h4>
+    <h4>3. overflow-x와 overflow-y 속성 적용하기(예제6-42)</h4>
+
+</body>
+
+</html>

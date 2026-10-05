@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">    
+    <title>5. 위치 속성</title>
+    <style>
+        /*[예제6-34]absolute키워드: 절대 위치로 요소 이동
+        .box{
+            width:100px; height:100px;
+            position:absolute;
+        }
+        .box:nth-of-type(1){ background-color:red; }
+        .box:nth-of-type(2){ background-color:green; }
+        .box:nth-of-type(3){ background-color:blue; }    */    
+        /* 교재에서 nth-child를 사용했지만 nth-of-type을 사용하는 것이 더 적절합니다.(앞에 있는 h2, h3, hr도 순서에 포함되므로)
+        .box:nth-child(1) { background-color: red; }
+        .box:nth-child(2) { background-color: green; }
+        .box:nth-child(3) { background-color: blue; }
+        */
+
+        /*[예제6-35]left속성과 top속성 적용하기*/
+        /*[예제6-36]z-index속성 적용하기: 실행 결과에서 도형 순서를 변경하고 싶을 때는 z-index속성을 사용합니다. 
+                    z-index는 요소가 겹칠 때의 표시 순서를 결정합니다. (숫자가 클수록 위에 표시됩니다.)*/
+        .box{
+            width:100px; height:100px;
+            position:absolute;
+        }
+        .box:nth-of-type(1){ 
+            background-color:red; 
+            /*left: 10px;      top: 10px; (교재)*/
+            left:510px; top:510px;
+            z-index:100;
+        }
+        .box:nth-of-type(2){ 
+            background-color:green; 
+            /*left: 60px;      top: 60px; (교재)*/
+            left:550px; top:550px;    
+            z-index:50;
+        }
+        .box:nth-of-type(3){ 
+            background-color:blue; 
+            /*left: 100px;      top: 100px; (교재)*/
+            left:600px; top:600px; 
+            z-index:10;
+        }
+
+
+        
+        
+    </style>
+</head>
+<body>
+    <h2>6.5.1 요소의 고정 위치 설정(예제6-34)</h2>
+    <h3> 1. position속성</h3>    
+    <h4>. position: absolute; - 요소를 절대 위치로 이동</h4>
+    <h4>. position: fixed; - 화면을 기준으로 절대 위치 좌표 설정</h4>
+    <h4>. position: relative; - 요소를 상대 위치로 이동</h4>
+    <h4>. position: static; - 요소를 정적 위치로 이동</h4>
+    <h3> 2. left속성과 top속성 적용하기(예제6-35)</h3>
+    <h3> 3. z-index속성 적용하기(예제6-36)</h3>
+
+    <hr>
+    <h3>[예제6-34]absolute키워드: 절대 위치로 요소 이동</h3>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>7.그림자와 그레이디언트 속성</title>
+    <style>
+        /*[예제6-48]text-shadow속성 적용하기*/
+        p{ 
+            text-shadow: 5px 5px 5px #0000ff; 
+        }
+
+        /*[예제6-49]박스에 그림자 만들기
+        h1{         
+            border: 3px solid black;
+            text-shadow: 5px 5px 5px black; 
+            box-shadow: 10px 10px 30px #0000ff;            
+        }*/
+
+        /*[예제6-50]중첩 그림자 만들기*/
+        .box{         
+            border: 3px solid black;
+            box-shadow: 10px 10px 10px black, 10px 10px 10px   orange, 10px 10px 10px   red; 
+            text-shadow: 5px 5px 5px black, 5px 5px 5px orange, 5px 5px 5px red;
+        }
+
+        /*[예제6-51] 그레이디언트 생성기 사용하기*/
+        .gradient{
+            font-family: 'Times New Roman';
+            height:60px;
+            line_height:60px;
+            text-align: center;
+
+            /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#f0b7a1+0,8c3310+50,752201+67,bf6e4e+100 */
+background: linear-gradient(to bottom,  #f0b7a1 0%,#8c3310 50%,#752201 67%,#bf6e4e 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
+
+        }
+    </style>
+</head>
+<body>
+    <h2>7.7. 그림자와 그레이디언트 속성</h2>
+    <h3>1. text-shadow 속성</h3>
+    <h3>2. box-shadow 속성</h3>
+
+    <hr>
+    <p>이 문장은 그림자가 있습니다.</p>
+    <div class="box">
+        <h1>이 요소는 그림자가 있습니다.</h1>
+    </div>
+
+    <hr>
+    <div class="gradient">
+        <h1>CSS3 그레이디언트</h1>
+    </div>
+</body>
+</html>
