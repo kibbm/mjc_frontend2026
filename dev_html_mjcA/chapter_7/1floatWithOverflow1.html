@@ -1,11 +1,30 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-    <meta charset="UTF-8">    
-    <title>ch7Layout</title>
+    <meta charset="UTF-8">
+
+    <title>1floatWithOverflow1</title>
     <style>
+        /* 코드7-1 1floatWithOverflow1
+        ...Overflow 속성을 왜 지정해야 하는지 간단히 비교해서 알아보기…
+        ...Width속성과 height속성을 입력하지 않고 overflow속성을 적용하면 자손이 차지하는 너비를 모두 감싸므로 요소 위쪽과 아래쪽에 글자가 출력됨. 
+
         div.container{
             overflow: hidden;
+        }
+        div.item{
+            float: left;
+            margin: 0 3px;
+            padding: 10px;
+            border: 1px solid black;
+        }*/
+
+        /* 코드7-2 2floatWithoutOverflow 
+        ...Overflow속성을 적용하지 않고 실행하면, 실행결과처럼 요소가 떠다님. 
+        */
+        div.container{
+            /* overflow: hidden; */
         }
         div.item{
             float: left;
@@ -15,19 +34,20 @@
         }
     </style>
 </head>
+
 <body>
+    <h2>ch7_1정렬...수평, 중앙, One True정렬 레이아웃</h2>
+    <h3>ch7_1_1수평 정렬 레이아웃</h3>
+    <hr>
 
-    <h2>7.1 수평, 중앙, One True 정렬 레이아웃</h2>
-        <h3>1. 수평정렬 레이아웃1</h3>
-        <hr>
-
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore accusamus quos eveniet consectetur, officia nemo maiores. Unde doloremque quam, aperiam nam quos iste quae dolores, at adipisci labore vero est?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat voluptatibus error rem laborum necessitatibus amet ipsam magnam quia maxime voluptates? Laborum aperiam recusandae praesentium sequi voluptate magni, ipsum cum possimus.</p>
     <div class="container">
         <div class="item">메뉴-1</div>
-        <div class="item">메뉴-1</div>
-        <div class="item">메뉴-1</div>
-        <div class="item">메뉴-1</div>
+        <div class="item">메뉴-2</div>
+        <div class="item">메뉴-3</div>
+        <div class="item">메뉴-4</div>
     </div>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore accusamus quos eveniet consectetur, officia nemo maiores. Unde doloremque quam, aperiam nam quos iste quae dolores, at adipisci labore vero est?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat voluptatibus error rem laborum necessitatibus amet ipsam magnam quia maxime voluptates? Laborum aperiam recusandae praesentium sequi voluptate magni, ipsum cum possimus.</p>
 </body>
+
 </html>
