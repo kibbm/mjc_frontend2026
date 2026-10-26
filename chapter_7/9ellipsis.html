@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>9ellipsis</title>
+    <style>
+        h1, p{
+            width: 300px;
+        }
+
+        .ellipsis{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>ch7_3글자 생략</h2>
+    <h3>ch7_3글자 생략...너비를 넘어가는 글자 생략</h3>
+    <hr>
+
+    <h1 class="ellipsis">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </h1>
+    <p class="ellipsis">Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
+</body>
+
+</html>

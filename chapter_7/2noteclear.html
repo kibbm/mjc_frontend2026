@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>clear: both를 사용한 수평 정렬 레이아웃</title>
+    <style>
+        /* note>> clear: both를 사용한 수평 정렬 레이아웃
+        ...Overflow속성 이외에도 clear속성을 활용할 수 있음. 
+        ...수평정렬하고 싶은 대상의 양쪽 아래에 div태그를 배치하고, 
+        이 div태그의 clear속성을 both로 지정하는 방법. 
+        */
+        div.item{
+            float: left;
+            margin: 0 3px;
+            padding: 10px;
+            border: 1px solid black;
+        }
+
+        div.container{
+            clear:both;
+        }
+
+        
+    </style>
+</head>
+<body>
+    <body>
+    <h2>ch7_1정렬...수평, 중앙, One True정렬 레이아웃</h2>
+    <h3>ch7_1_1수평 정렬 레이아웃</h3>
+    <hr>
+
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat voluptatibus error rem laborum necessitatibus amet ipsam magnam quia maxime voluptates? Laborum aperiam recusandae praesentium sequi voluptate magni, ipsum cum possimus.</p>
+    <div class="container">
+        <div class="item">메뉴-1</div>
+        <div class="item">메뉴-2</div>
+        <div class="item">메뉴-3</div>
+        <div class="item">메뉴-4</div>
+    </div>
+    <div class="container"></div>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat voluptatibus error rem laborum necessitatibus amet ipsam magnam quia maxime voluptates? Laborum aperiam recusandae praesentium sequi voluptate magni, ipsum cum possimus.</p>
+</body>
+</body>
+</html>

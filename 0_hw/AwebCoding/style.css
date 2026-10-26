@@ -1,0 +1,157 @@
+/* 기본 설정 */
+* {box-sizing: border-box;}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #222;
+}
+
+
+/* 헤더 */
+header {
+    background-color: #263238;
+    color: white;
+    padding: 35px 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin-bottom: 10px;
+}
+
+.notice {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+
+/* 본문 공통 */
+main {
+    width: 90%;
+    max-width: 1000px;
+    margin: 30px auto;
+}
+
+section {
+    background-color: white;
+    margin-bottom: 25px;
+    padding: 25px;
+    border-radius: 10px;
+}
+
+
+/* 체크포인트 카드 */
+.card-container {
+    display: flex;
+    gap: 15px;
+}
+
+.card {
+    flex: 1;
+    padding: 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+.card h3 {    margin-top: 0; }
+
+
+/* 입력 영역 */
+label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-weight: bold;
+}
+
+textarea {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #aaa;
+    border-radius: 6px;
+
+    font-size: 16px; }
+
+textarea:focus {    outline: 2px solid #1976d2; }
+
+/* 버튼 */
+button {
+    margin-top: 15px;
+
+    padding: 12px 20px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #1976d2;
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;}
+
+button:hover,
+button:focus {    background-color: #0d47a1;}
+
+
+/* 결과 */
+.result-box {
+    padding: 20px;
+
+    border: 2px solid #ccc;
+    border-radius: 8px;
+
+    background-color: #f7f7f7;}
+
+
+/* 결과 단계 */
+.safe {
+    border-color: #2e7d32;
+    background-color: #e8f5e9;}
+
+.warning {
+    border-color: #f9a825;
+    background-color: #fff8e1;}
+
+.danger {
+    border-color: #c62828;
+    background-color: #ffebee;}
+
+
+/* 목록 */
+.safe-section li {
+    margin-bottom: 10px;}
+
+
+/* 푸터 */
+footer {
+    padding: 20px;
+
+    text-align: center;
+
+    background-color: #263238;
+    color: white;
+
+    font-size: 14px;}
+
+
+/* 작은 화면 */
+@media (max-width: 700px) {
+    .card-container {        flex-direction: column;    }
+    main {        width: 95%;    }
+
+}
+
+/*class 선택자
+→ margin / padding / border
+→ Flex
+→ hover / focus
+→ Media Query
+정도입니다.
+Ch6의 박스 속성에서는 실제로 width, height, border, margin, padding을 함께 적용하는 구조를 다루고 있습니다.  Chapter 06_CSS3 속성(1) Ch7 교안에도 Flex 기반 레이아웃 예제가 포함되어 있고,  Chapter 07_다양한 레이아웃의 구성과기능(1) Ch8에서는 viewport와 media query가 반응형 웹의 핵심으로 제시됩니다.*/
