@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0">
+    <title>Viewport Meta</title>
+        <style>
+        a{text-decoration: none; }
+    </style>
+</head>
+<body>
+    <!-- PC 브라우저에서는 차이가 거의 없고, 모바일 모드로 비교해야 명확해요.
+    1. Chrome에서 두 파일을 각각 엽니다.
+    2. F12 → Ctrl + Shift + M으로 기기 모드를 켭니다.
+    3. 상단 Dimensions에서 스마트폰을 선택합니다. 예를 들어 iPhone 12 Pro는 세로 폭이 390px입니다.
+    4. 각 파일을 새로고침한 뒤 제목 크기와 본문의 줄바꿈을 비교합니다.
+    Responsive를 쓴다면 기기 유형이 Mobile인지 확인하세요. ⋮ → Add device type에서 표시할 수 있습니다. -->
+
+
+    <!-- . 메타타그가 없으면 모바일 브라우저는 넓은 가상화면에 페이지를 배치한 뒤 화면에 맞춰 축소하기 때문 
+         . document.documentElement.clientWidth (js)를 확인하면 980px 정도로 나옵니다. 
+    -->
+    <h2>ch8_1반응형 웹 소개</h2>
+    <h2>ch8_2반응형 웹을 위한 설정</h2>
+    <h3><ol>
+        <li><a href="1without_meta.html">메타태그 없는 경우</a></li>
+        <li><a href="2with_meta.html">메타태그 있는 경우</a></li>
+        <li><a href="2_1note_meta.html">메타태그 속성 테스트</a></li>
+    </ol></h3>
+
+    <hr>
+
+    <h1>Lorem ipsum dolor sit amet</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla viverra ex a augue porta, quis luctus eros sollicitudin. Nullam in turpis semper, lacinia justo a, facilisis lacus. Nunc odio nisi, lobortis sit amet diam et, vestibulum posuere risus. Donec viverra, risus a ultricies fringilla, lectus purus aliquet quam, sit amet commodo nisl mi vitae nunc. Nulla cursus non urna eu elementum. Integer at mi auctor mi suscipit dapibus nec non orci. Sed at libero non augue ultricies euismod a non erat. Nunc ipsum nulla, scelerisque id enim nec, lobortis ornare leo. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras suscipit egestas felis, vitae bibendum mi ullamcorper at. Integer scelerisque cursus nunc, ultricies tincidunt ante tempus ut. Nam id convallis justo. Donec sagittis, magna at laoreet blandit, dolor lectus rutrum augue, in accumsan velit orci vitae elit. Vestibulum diam lectus, convallis porttitor velit eget, dignissim ullamcorper felis.</p>
+</body>
+</html>
