@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Viewport Meta</title>
+        <style>
+        a{text-decoration: none; }
+    </style>
+</head>
+<body>    
+<!-- 
+    . js로 테스트 방법
+    ({
+        viewport: document.querySelector('meta[name="viewport"]')?.content ?? "없음",
+        width: document.documentElement.clientWidth,
+        scale: window.visualViewport?.scale
+    }) 
+
+    . --<예상결과>--
+     | 파일                 | 배치 폭 `width` | 초기 배율 `scale` |     
+     | `1without_meta.html` | 보통 약 980     | 약 0.4           |
+     | `2with_meta.html`    | 약 390          | 1                |
+     | `2_1note_meta.html`  | 약 390          | 1                |   
+
+    . 세 파일의 역할을 명확히 나눠 실습하려면, 2번만 아래처럼 바꾸는 구성이 좋습니다.
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    그러면 1번 ↔ 2번은 처음 표시되는 크기와 줄바꿈, 2번 ↔ 2_1번은 실제 휴대폰에서 두 손가락 확대 제한을 비교할 수 있습니다.
+    -->
+
+    <h2>ch8_1반응형 웹 소개</h2>
+    <h2>ch8_2반응형 웹을 위한 설정</h2>
+    <h3><ol>
+        <li><a href="1without_meta.html">메타태그 없는 경우</a></li>
+        <li><a href="2with_meta.html">메타태그 있는 경우</a></li>
+        <li><a href="2_1note_meta.html">메타태그 속성 테스트</a></li>
+    </ol></h3>
+
+    <hr>
+
+    <h1>Lorem ipsum dolor sit amet</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla viverra ex a augue porta, quis luctus eros sollicitudin. Nullam in turpis semper, lacinia justo a, facilisis lacus. Nunc odio nisi, lobortis sit amet diam et, vestibulum posuere risus. Donec viverra, risus a ultricies fringilla, lectus purus aliquet quam, sit amet commodo nisl mi vitae nunc. Nulla cursus non urna eu elementum. Integer at mi auctor mi suscipit dapibus nec non orci. Sed at libero non augue ultricies euismod a non erat. Nunc ipsum nulla, scelerisque id enim nec, lobortis ornare leo. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras suscipit egestas felis, vitae bibendum mi ullamcorper at. Integer scelerisque cursus nunc, ultricies tincidunt ante tempus ut. Nam id convallis justo. Donec sagittis, magna at laoreet blandit, dolor lectus rutrum augue, in accumsan velit orci vitae elit. Vestibulum diam lectus, convallis porttitor velit eget, dignissim ullamcorper felis.</p>
+</body>
+</html>
