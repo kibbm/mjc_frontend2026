@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>마지막 편지 — 1인 독백 연극 무대 | Three.js</title>
+<style>
+:root{--ink:#ebe4d9;--muted:#ada99e;--line:rgba(255,245,226,.16);--glass:rgba(13,15,19,.70);--gold:#d8b47d}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#07090d;font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;color:var(--ink)}
+#scene{position:fixed;inset:0}canvas{display:block;outline:none}#vignette{pointer-events:none;position:fixed;inset:0;background:radial-gradient(ellipse 70% 75% at 50% 46%,transparent 48%,rgba(0,0,0,.40) 100%)}
+.header{position:absolute;top:27px;left:34px;z-index:5;pointer-events:none}.kicker{font-size:11px;letter-spacing:.27em;color:var(--gold);font-weight:700}.header h1{font-family:Georgia,"Noto Serif KR",serif;font-size:clamp(24px,3.6vw,46px);font-weight:500;margin:9px 0 5px;letter-spacing:-.04em}.subtitle{font-size:12px;color:rgba(239,232,220,.75);letter-spacing:.025em}.pill{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:1px solid var(--line);background:rgba(10,11,15,.49);border-radius:100px;font-size:11px;color:#ece6db;backdrop-filter:blur(12px)}.lightdot{width:6px;height:6px;background:#d9ae70;border-radius:50%;box-shadow:0 0 10px #e0a957}
+.topright{position:absolute;top:30px;right:28px;display:flex;gap:8px;z-index:8}.action{color:var(--ink);border:1px solid var(--line);background:var(--glass);padding:11px 15px;cursor:pointer;border-radius:9px;font:inherit;font-size:12px;transition:background .2s,border .2s;backdrop-filter:blur(12px)}.action:hover,.action:focus-visible{background:rgba(64,53,48,.9);border-color:rgba(238,199,140,.64);outline:none}.action.gold{color:#1e1810;background:#dcc18f;border-color:#e6cc9f;font-weight:750}.action.gold:hover{background:#f0d4a3}
+.controlwrap{position:absolute;left:24px;bottom:23px;right:24px;display:flex;align-items:end;justify-content:space-between;gap:16px;pointer-events:none;z-index:7}.panel{pointer-events:auto;background:var(--glass);border:1px solid var(--line);border-radius:15px;padding:15px 17px;backdrop-filter:blur(20px);box-shadow:0 10px 60px rgba(0,0,0,.21)}.panel-title{font-weight:750;font-size:10px;letter-spacing:.14em;color:var(--gold);margin-bottom:10px}.btnrow{display:flex;flex-wrap:wrap;gap:6px}.choice{font-size:11px;padding:8px 11px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);color:#c8c4bd;border-radius:7px;cursor:pointer;font-family:inherit}.choice:hover{color:#fff;background:rgba(255,255,255,.15)}.choice.active{border-color:rgba(227,184,120,.7);background:rgba(180,130,65,.25);color:#ffe4b3}.right-panel{min-width:265px}.range-row{display:flex;align-items:center;gap:10px;font-size:11px;color:#d5cbbd}.range-row input{flex:1;accent-color:#d9b57d}.row2{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:8px}.toggle{display:flex;gap:7px;align-items:center;color:#d2c6b5;font-size:11px;cursor:pointer}.toggle input{accent-color:#d9b57d}.footnote{font-size:10px;color:#c0b6a7;opacity:.8;margin-top:9px}.status{position:absolute;left:50%;transform:translateX(-50%);top:25px;padding:8px 12px;border-radius:50px;color:rgba(255,244,225,.8);border:1px solid rgba(255,255,255,.12);background:rgba(4,6,9,.5);font-size:10px;letter-spacing:.13em;pointer-events:none;z-index:7;white-space:nowrap}.loading{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:#09090d;color:#eee8df;flex-direction:column;gap:11px;transition:opacity .45s}.loading b{font-family:Georgia,serif;font-size:27px;font-weight:500;letter-spacing:.05em}.loading span{font-size:12px;color:#a9a299}.loading.hidden{opacity:0;pointer-events:none}.error{font-size:12px;line-height:1.7;color:#efbdac;max-width:440px;text-align:center;padding:12px}.micro{position:absolute;right:30px;bottom:166px;font-size:10px;color:#e1d8cc;opacity:.6;letter-spacing:.02em;pointer-events:none;z-index:6}
+@media(max-width:790px){.header{left:19px;top:19px}.header h1{font-size:26px}.topright{top:17px;right:15px;flex-direction:column}.topright .action{font-size:10px;padding:8px 10px}.status{display:none}.controlwrap{left:10px;right:10px;bottom:10px;flex-direction:column;align-items:stretch;gap:7px}.panel{padding:11px 12px}.btnrow{gap:5px}.choice{padding:7px 8px;font-size:10px}.right-panel{min-width:0}.micro{display:none}.subtitle{max-width:240px}.kicker{font-size:9px}}
+@media(max-height:580px){.header h1{font-size:24px;margin:4px 0}.subtitle{display:none}.panel{padding:10px 12px}.controlwrap{bottom:8px}.footnote{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"}}</script>
+</head>
+<body>
+<div id="scene" aria-label="Three.js 3D 연극 무대"></div><div id="vignette"></div>
+<header class="header"><div class="kicker">ONE ACTOR · ONE STAGE</div><h1>마지막 편지</h1><div class="subtitle">한 사람의 독백이 시작되는 밤 · 사실적인 무대 조명과 소품</div></header>
+<div class="status"><span class="lightdot" style="display:inline-block;margin-right:6px"></span>THEATRE SCENE / BLENDER-READY REFERENCE</div>
+<div class="topright"><button class="action" id="exportJson" title="블렌더 재구성용 장면 사양(JSON) 내려받기">장면 사양 JSON</button><button class="action gold" id="capture" title="현재 시점을 PNG로 저장">화면 PNG 저장</button></div>
+<div class="micro">마우스 드래그: 회전 · 휠: 확대 · 우클릭: 이동</div>
+<div class="controlwrap">
+ <div class="panel"><div class="panel-title">CAMERA · 시점 선택</div><div class="btnrow" id="viewButtons"><button class="choice active" data-view="front">객석 정면</button><button class="choice" data-view="close">배우 가까이</button><button class="choice" data-view="side">측면 시점</button><button class="choice" data-view="high">조명 설비</button></div><div class="footnote">장면 내 인물은 배우 한 명만 배치되어 있습니다.</div></div>
+ <div class="panel right-panel"><div class="panel-title">LIGHT &amp; SET · 무대 조절</div><div class="range-row"><span>주 스포트라이트</span><input id="lightRange" type="range" min="30" max="170" value="100" step="1" aria-label="주 스포트라이트 밝기"><span id="lightVal">100%</span></div><div class="row2"><label class="toggle"><input type="checkbox" id="actorToggle" checked> 배우 표시</label><label class="toggle"><input type="checkbox" id="hazeToggle" checked> 무대 안개</label><button class="choice" id="modeToggle">공연 조명</button></div></div>
+</div>
+<div id="loading" class="loading"><b>THE LAST LETTER</b><span>3D 무대 장면을 준비하고 있습니다</span></div>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/*
+ * BLENDER REFERENCE GUIDE
+ * Units: metres / right-handed / +Y vertical / +Z toward audience.
+ * Scene object names, dimensions, positions and colors are documented in SCENE_SPEC.
+ * Press [장면 사양 JSON] to export the independent machine-readable reference.
+ * Rendered fabrics, brick, wood, spotlight pools, dust are PROCEDURAL, no textures to download.
+ */
+const SCENE_SPEC = {
+  title: '마지막 편지 / The Last Letter',
+  version: '1.0',
+  purpose: 'Realistic solo monologue theater stage; reference for Blender Python reconstruction',
+  units: 'metres',
+  axes: '+X stage right (audience view), +Y up, +Z toward audience',
+  viewerDirection: 'from +Z toward -Z',
+  renderer: { colorManagement:'sRGB', toneMapping:'ACES Filmic', exposure:1.08, shadows:'soft PCF', baseResolution:[1600,900] },
+  stage: { width:14.8, depth:9.2, elevation:0.82, surfaceY:0.82, center:[0,0,0], frontZ:4.6, rearZ:-4.6, floorMaterial:'dark honey oak plank', floorHex:'#765039' },
+  proscenium: { width:15.4, openingWidth:10.0, height:8.75, depthZ:4.86, material:'dark walnut/antique bronze', curtains:'deep burgundy velvet, side pleats', curtainColor:'#581e2a', upperValanceY:7.70 },
+  backdrop: { x:0, z:-4.35, height:7.35, texture:'matte charcoal teal plaster', color:'#273238', rearWindow:{position:[3.15,3.58,-4.24],size:[2.23,3.7],nightBlue:'#34495b'} },
+  actor: { count:1, position:[0.18,0.82,0.22], height:1.86, facing:'+Z', pose:'standing, slight head tilt, holding single paper letter', costume:'graphite tailored jacket, black trousers and dark brown shoes', visible:true },
+  props: [
+    {name:'Empty_Bentwood_Chair',position:[-2.45,0.82,0.15],material:'aged warm walnut',description:'unoccupied wooden chair, backrest and four legs'},
+    {name:'Letter_Table',position:[2.62,0.82,-0.38],material:'dark walnut',size:[1.05,0.81,0.58]},
+    {name:'Table_Lamp',position:[2.42,1.63,-0.45],description:'warm vintage lamp on the table'},
+    {name:'Single_Letter',position:[0.42,1.96,0.31],description:'cream letter held by actor; parented under Actor'}
+  ],
+  lighting: [
+    {name:'Warm_Main_Spotlight',type:'SPOT',position:[-0.55,8.3,1.85],target:[0.18,1.45,0.22],color:'#ffcc93',powerWattsApprox:1150,coneDegrees:31,shadows:true},
+    {name:'Cool_Back_Rim',type:'SPOT',position:[4.55,6.6,-3.45],target:[0.18,1.5,0.22],color:'#7daccb',powerWattsApprox:550,coneDegrees:43},
+    {name:'Amber_Side_Fill',type:'SPOT',position:[-5.25,5.7,2.05],target:[-0.25,1.6,0.15],color:'#eeb278',powerWattsApprox:420,coneDegrees:45},
+    {name:'Lamp_Practical',type:'POINT',position:[2.42,1.86,-0.45],color:'#ffd09a',powerWattsApprox:55},
+    {name:'Low_Ambient',type:'AMBIENT',color:'#7b8492',strength:0.20}
+  ],
+  camera: {name:'Main_Audience_Camera',position:[0.1,4.45,19],lookAt:[0,3.36,0],fov:39,focalLengthHintMm:29},
+  palette: {curtain:'#581e2a',goldTrim:'#b89461',floor:'#765039',walls:'#273238',costume:'#34383b',moonlight:'#7daccb',keyLight:'#ffcc93'},
+  animation: {actor:'subtle breathing and one paper-hand movement only', dust:'slow drifting particles', camera:'interactive orbit', lighting:'adjustable intensity'},
+  objectGroups: ['Theatre_Shell','Proscenium','Velvet_Curtains','Stage_Floor_Planks','Backdrop','Window_Set','Lighting_Rig','Actor_Solo','Bentwood_Chair','Writing_Table','Practical_Lamp','Spotlight_Haze','Audience_Rows']
+};
+window.MONOLOGUE_SCENE_SPEC = SCENE_SPEC;
+
+const host = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({antialias:true, alpha:false, preserveDrawingBuffer:true, powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.85));
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.08;
+renderer.setClearColor(0x090c12,1);
+host.appendChild(renderer.domElement);
+
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x080a10);scene.fog=new THREE.FogExp2(0x0b1018,0.009);
+const camera=new THREE.PerspectiveCamera(39,innerWidth/innerHeight,.1,125);
+camera.position.set(.1,4.45,19);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.target.set(0,3.36,0);controls.enableDamping=true;controls.dampingFactor=.055;controls.minDistance=4.1;controls.maxDistance=46;
+controls.minPolarAngle=.12;controls.maxPolarAngle=Math.PI/2.05;controls.enablePan=true;controls.update();
+
+const root=new THREE.Group();root.name='Solo_Monologue_Theatre';scene.add(root);
+const GR={};const stageY=.82;
+function addNamed(obj,name,parent=root){obj.name=name;parent.add(obj);return obj}
+function group(name,parent=root){return addNamed(new THREE.Group(),name,parent)}
+function mat(color,rough=.78,metal=0){return new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal})}
+function box(parent,name,w,h,d,material,x=0,y=0,z=0,shadow=true){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);o.position.set(x,y,z);o.castShadow=shadow;o.receiveShadow=true;return addNamed(o,name,parent)}
+function ellipsoid(parent,name,x,y,z,sx,sy,sz,material){const o=new THREE.Mesh(new THREE.SphereGeometry(1,24,16),material);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.castShadow=true;o.receiveShadow=true;return addNamed(o,name,parent)}
+function cyl(parent,name,rt,rb,h,material,x=0,y=0,z=0,segments=16){const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,segments),material);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;return addNamed(o,name,parent)}
+function rod(parent,name,a,b,r,material,segments=10){const pa=new THREE.Vector3(...a),pb=new THREE.Vector3(...b),v=pb.clone().sub(pa);const m=cyl(parent,name,r,r,v.length(),material,...pa.clone().add(pb).multiplyScalar(.5).toArray(),segments);m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),v.normalize());return m}
+function lineTube(parent,name,pts,r,material){const g=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map(p=>new THREE.Vector3(...p))),32,r,7,false);const m=new THREE.Mesh(g,material);m.castShadow=true;return addNamed(m,name,parent)}
+function cvs(w=512,h=512){const c=document.createElement('canvas');c.width=w;c.height=h;return [c,c.getContext('2d')]}
+function tex(canvas,repeatX=1,repeatY=1){const t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(repeatX,repeatY);t.anisotropy=8;return t}
+function rng(seed){let s=seed>>>0;return ()=>((s=(Math.imul(1664525,s)+1013904223)>>>0)/4294967296)}
+
+// Procedural canvas grain, woven velvet and battered wall plaster textures.
+const woodCanvas=(()=>{const [c,x]=cvs(1024,256),rand=rng(189);x.fillStyle='#806049';x.fillRect(0,0,c.width,c.height);for(let i=0;i<3800;i++){let px=rand()*c.width,py=rand()*c.height;const a=rand()*.11;x.strokeStyle=rand()>.52?`rgba(32,18,11,${a})`:`rgba(244,205,151,${a*.9})`;x.lineWidth=.3+rand()*1.4;x.beginPath();x.moveTo(px,py);x.bezierCurveTo(px+30,py+(rand()-.5)*5,px+100,py+(rand()-.5)*6,px+180*rand(),py);x.stroke()}return c})();
+const woodMap=tex(woodCanvas,1,1);
+const velvetCanvas=(()=>{const [c,x]=cvs(512,1024),rand=rng(9);x.fillStyle='#702936';x.fillRect(0,0,c.width,c.height);for(let j=0;j<512;j++){let a=.04+.045*Math.sin(j*.13);x.fillStyle=`rgba(14,0,6,${Math.max(0,a)})`;x.fillRect(j,0,1,c.height)}for(let i=0;i<7000;i++){x.fillStyle=rand()>.5?'rgba(255,175,174,.028)':'rgba(10,1,8,.04)';x.fillRect(rand()*512,rand()*1024,.6,6+rand()*60)}return c})();
+const velvetMap=tex(velvetCanvas,2,1);
+const plasterCanvas=(()=>{const [c,x]=cvs(768,768),r=rng(44);x.fillStyle='#344048';x.fillRect(0,0,768,768);for(let i=0;i<27000;i++){const v=r()>.48?240:14;x.fillStyle=`rgba(${v},${v},${v},${r()*.045})`;x.fillRect(r()*768,r()*768,1+r()*5,1+r()*5)}for(let i=0;i<55;i++){x.strokeStyle=`rgba(8,12,16,${r()*.05})`;x.beginPath();const xx=r()*768,yy=r()*768;x.moveTo(xx,yy);x.lineTo(xx+80*r(),yy+70*r());x.stroke()}return c})();
+const plasterMap=tex(plasterCanvas,2.2,1.4);
+const walnut=mat('#38251f',.6,.05), woodTrim=mat('#4b3028',.57,.04), brass=mat('#aa8450',.32,.74), brassDark=mat('#635035',.42,.66);
+const darkMetal=mat('#1d2025',.36,.72), darkVelvet=mat('#4b1824',.94), stageBase=mat('#16171a',.85);
+
+const shell=group('Theatre_Shell');
+box(shell,'Theatre_Left_Wall',.4,10,20,mat('#191c24',1),-8.9,4.2,3,false);
+box(shell,'Theatre_Right_Wall',.4,10,20,mat('#191c24',1),8.9,4.2,3,false);
+box(shell,'Theatre_Rear_Wall',18,11,.45,mat('#161923',1),0,4.0,-5.1,false);
+box(shell,'Theatre_Ceiling',18,.3,22,mat('#090b10',1),0,9.8,3,false);
+box(shell,'Audience_Concrete',19,.25,26,mat('#15151a',.9),0,-.25,10,false);
+
+const stage=group('Stage_Floor_Planks');
+box(stage,'Stage_Raised_Platform',14.8,.78,9.2,stageBase,0,.39,0);
+box(stage,'Stage_Front_Fascia',14.8,.68,.14,walnut,0,.42,4.60);
+box(stage,'Stage_Gold_Edge',14.8,.035,.065,brassDark,0,.805,4.57);
+const floorMats=[];for(let i=0;i<8;i++){const ma=new THREE.MeshStandardMaterial({map:woodMap,color:new THREE.Color().setHSL(.075,.17,.62+i*.010),roughness:.64,metalness:.025});floorMats.push(ma)}
+const randFloor=rng(210);const rows=26;
+for(let iz=0;iz<rows;iz++){const z=-4.38+(iz+.5)*(8.81/rows);const split=(iz%2===0?[-7.38,-2.8,1.35,7.38]:[-7.38,-4.5,.6,7.38]);for(let j=0;j<split.length-1;j++){const xx=(split[j]+split[j+1])/2,w=split[j+1]-split[j]-.024;let plank=box(stage,`Oak_Plank_${String(iz+1).padStart(2,'0')}_${j+1}`,w,.085,.324,floorMats[Math.floor(randFloor()*8)],xx,.797,z,false);plank.receiveShadow=true}}
+for(let i=0;i<12;i++){const xx=-6.5+i*1.18;box(stage,`Floor_Subtle_Seam_${i}`, .012,.004,8.82,mat('#30241e',.9),xx,.847,0,false)}
+
+// Proscenium (in front of curtain) and small old-theatre ornament.
+const pro=group('Proscenium');
+box(pro,'Left_Proscenium_Pillar',.88,8.7,.71,woodTrim,-7.28,4.38,4.84);
+box(pro,'Right_Proscenium_Pillar',.88,8.7,.71,woodTrim,7.28,4.38,4.84);
+box(pro,'Proscenium_Top_Lintel',15.45,1.12,.82,woodTrim,0,8.22,4.86);
+for(const s of [-1,1]){box(pro,`Pillar_Gold_Inner_${s}`, .055,8.12,.082,brass,s*6.83,4.29,5.22,false);box(pro,`Pillar_Gold_Outer_${s}`, .05,8.20,.07,brassDark,s*7.74,4.3,5.2,false);box(pro,`Pillar_Capital_${s}`,1.22,.21,.87,walnut,s*7.28,8.24,4.86)}
+box(pro,'Proscenium_Gold_Top_Fillet',15.28,.095,.09,brass,0,7.7,5.32,false);
+box(pro,'Proscenium_Upper_Gold_Line',15.3,.08,.09,brassDark,0,8.76,5.30,false);
+for(let i=-6;i<=6;i++){const ornament=ellipsoid(pro,`Gold_Motif_${i}`,i*1.1,8.22,5.315,.125,.058,.04,brass);ornament.castShadow=false}
+
+// Top drape plus pleated side curtains. The geometry has real folds, not flat paintings.
+const curtain=group('Velvet_Curtains');
+const redVelvet=new THREE.MeshStandardMaterial({map:velvetMap,color:'#9c5b66',roughness:.98,metalness:0,side:THREE.DoubleSide});
+function pleatedCurtain(parent,name,x1,x2,z,upper,lower,phase=0){const across=72,down=28,positions=[],uv=[],indices=[];for(let iy=0;iy<=down;iy++){const t=iy/down,y=upper-(upper-lower)*t;for(let ix=0;ix<=across;ix++){const u=ix/across,x=x1+(x2-x1)*u;const folds=.16*Math.cos(u*Math.PI*12+phase)+.057*Math.sin(u*Math.PI*23+phase*.5);const billow=(1-.36*t)*folds;const bottomSag=t> .92 ? .065*Math.sin(u*27):0;positions.push(x,y-bottomSag,z+billow);uv.push(u,t)}}for(let iy=0;iy<down;iy++){for(let ix=0;ix<across;ix++){const a=iy*(across+1)+ix,b=a+across+1;indices.push(a,b,a+1,b,b+1,a+1)}}const g=new THREE.BufferGeometry();g.setIndex(indices);g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.computeVertexNormals();const m=new THREE.Mesh(g,redVelvet);m.castShadow=true;m.receiveShadow=true;return addNamed(m,name,parent)}
+pleatedCurtain(curtain,'Crimson_Curtain_Left',-6.80,-4.70,4.23,8.08,.84,.1);
+pleatedCurtain(curtain,'Crimson_Curtain_Right',4.70,6.80,4.23,8.08,.84,1.7);
+pleatedCurtain(curtain,'Red_Upper_Valance',-6.90,6.90,4.25,7.93,6.97,2.1);
+for(const sign of [-1,1]){const x=sign*5.54;lineTube(curtain,`Curtain_Bronze_Tie_${sign}`,[[x-.45,3.97,4.49],[x,3.88,4.57],[x+.46,3.97,4.49]],.035,brass);cyl(curtain,`Tie_Tassel_${sign}`,.056,.014,.31,brass,x,3.70,4.57,12)}
+
+const back=group('Backdrop');
+const plaster=new THREE.MeshStandardMaterial({map:plasterMap,color:'#657079',roughness:1,metalness:0});
+box(back,'Aged_Painted_Back_Wall',13.8,7.65,.27,plaster,0,4.58,-4.38,false);
+for(let i=-2;i<=2;i++){box(back,`Vertical_Backdrop_Beam_${i}`, .08,7.65,.13,mat('#21282c',1),i*2.5,4.58,-4.20,false)}
+box(back,'Rear_Skirting',13.8,.26,.23,walnut,0,.98,-4.19,false);
+for(let i=0;i<5;i++){box(back,`Rear_Wall_Upper_Beam_${i}`,13.8,.07,.12,mat('#3a3838',.8),0,2.2+i*1.15,-4.19,false)}
+
+// A moonlit scenic window on stage right; glass and silhouettes are procedural geometry.
+const windowSet=group('Window_Set');
+const wx=3.27,wz=-4.185,wy=3.49, ww=2.22,wh=3.8;
+const moonCanvas=(()=>{const [c,x]=cvs(512,1024);const gr=x.createLinearGradient(0,0,0,1024);gr.addColorStop(0,'#102337');gr.addColorStop(.53,'#24405b');gr.addColorStop(1,'#536278');x.fillStyle=gr;x.fillRect(0,0,512,1024);const rad=x.createRadialGradient(335,245,5,335,245,205);rad.addColorStop(0,'rgba(209,222,224,.54)');rad.addColorStop(.19,'rgba(177,195,205,.30)');rad.addColorStop(1,'rgba(101,126,149,0)');x.fillStyle=rad;x.fillRect(0,0,512,1024);x.fillStyle='#1e2c3b';const rr=rng(34);for(let i=0;i<22;i++){const xx=i*27,hh=70+rr()*160;x.fillRect(xx,1024-hh,26,hh);if(rr()>.6){x.fillStyle='rgba(235,207,140,.30)';x.fillRect(xx+8,1024-hh+26,4,7);x.fillStyle='#1e2c3b'}}return c})();
+const backdropGlass=new THREE.MeshBasicMaterial({map:tex(moonCanvas),toneMapped:false,color:'#9fb1bc'});
+box(windowSet,'Window_Cold_Glass',ww,wh,.019,backdropGlass,wx,wy,wz+.185,false);
+for(const s of [-1,1]){box(windowSet,`Window_Frame_Side_${s}`,.14,wh+.19,.17,walnut,wx+s*(ww/2),wy,wz+.29,false);box(windowSet,`Window_Frame_Horizontal_${s}`,ww+.19,.12,.16,walnut,wx,wy+s*(wh/2),wz+.29,false)}
+box(windowSet,'Window_Vertical_Mullion',.085,wh,.16,woodTrim,wx,wy,wz+.30,false);
+for(let i=-1;i<=1;i++)box(windowSet,`Window_Horizontal_Mullion_${i}`,ww,.067,.16,woodTrim,wx,wy+i*.89,wz+.31,false);
+box(windowSet,'Window_Sill',ww+.43,.12,.38,walnut,wx,wy-wh/2-.055,wz+.43,false);
+const moonGlow=new THREE.PointLight('#749bc6',.8,7,2);moonGlow.position.set(wx,4,wz+1);addNamed(moonGlow,'Window_Blue_Glow',windowSet);
+
+// Uneven scenic timber door on the opposite side.
+const doorSet=group('Old_Scenic_Door');
+const dx=-4.15;
+box(doorSet,'Door_Recess',1.72,3.6,.14,mat('#151c20',.88),dx,2.68,-4.12,false);
+box(doorSet,'Door_Old_Wood',1.53,3.48,.14,mat('#493831',.85),dx,2.68,-3.95,false);
+for(const s of [-1,1]){box(doorSet,`Door_Frame_Side_${s}`,.16,3.70,.23,walnut,dx+s*.86,2.7,-3.89,false);box(doorSet,`Door_Panel_H_${s}`,1.08,.055,.10,woodTrim,dx,2.68+s*.79,-3.82,false)}
+box(doorSet,'Door_Frame_Top',1.85,.18,.24,woodTrim,dx,4.52,-3.88,false);
+ellipsoid(doorSet,'Door_Brass_Knob',dx+.58,2.57,-3.77,.064,.064,.06,brass);
+
+// Single empty bentwood chair.
+const chair=group('Bentwood_Chair');chair.position.set(-2.45,stageY,.15);chair.rotation.y=-.29;
+const cwood=mat('#553a2a',.53,.03),worn=mat('#32251f',.84);
+box(chair,'Chair_Seat',.56,.105,.54,cwood,0,.57,0);
+box(chair,'Chair_Seat_Cushion',.44,.024,.45,mat('#3f352f',.98),0,.636,0);
+for(const xx of [-.215,.215])for(const zz of [-.19,.19]){rod(chair,`Chair_Leg_${xx}_${zz}`,[xx*.98,.58,zz],[xx*1.08,.045,zz*1.29],.032,cwood)}
+for(const xx of [-.22,.22])rod(chair,`Chair_Back_Upright_${xx}`,[xx,.57,-.20],[xx*1.13,1.43,-.26],.038,cwood);
+lineTube(chair,'Chair_Back_Curved_Top',[[-.245,1.38,-.26],[-.12,1.54,-.27],[.12,1.54,-.27],[.245,1.38,-.26]],.046,cwood);
+lineTube(chair,'Chair_Back_Bottom_Rail',[[-.22,.95,-.26],[0,.92,-.29],[.22,.95,-.26]],.034,cwood);
+rod(chair,'Chair_Rear_Support',[-.20,.40,-.17],[.20,.40,-.17],.019,worn);
+
+// Table with lamp, a silent prop on far stage right.
+const table=group('Writing_Table');table.position.set(2.62,stageY,-.38);table.rotation.y=.13;
+box(table,'Walnut_Tabletop',1.05,.085,.59,cwood,0,.79,0);
+box(table,'Walnut_Table_Apron',.87,.17,.42,walnut,0,.66,0);
+for(const xx of [-.42,.42])for(const zz of [-.21,.21])rod(table,`Table_Leg_${xx}_${zz}`,[xx,.70,zz],[xx*1.04,.05,zz*1.05],.028,cwood);
+const lamp=group('Practical_Lamp',table);lamp.position.set(-.23,.845,-.045);
+cyl(lamp,'Lamp_Brass_Base',.135,.16,.048,brass,0,.018,0,28);
+rod(lamp,'Lamp_Shaft',[0,.04,0],[0,.28,0],.016,brass);
+const lampShadeMat=new THREE.MeshStandardMaterial({color:'#bb916a',roughness:.90,side:THREE.DoubleSide,emissive:'#f3bd78',emissiveIntensity:.23});
+const shade=cyl(lamp,'Fabric_Lamp_Shade',.094,.205,.27,lampShadeMat,0,.35,0,32);shade.castShadow=false;
+ellipsoid(lamp,'Lamp_Lit_Bulb',0,.26,0,.064,.065,.064,new THREE.MeshBasicMaterial({color:'#ffe5ac'}));
+const lampLight=new THREE.PointLight('#ffbe77',3.1,3.8,1.4);lampLight.position.set(0,.3,.03);addNamed(lampLight,'Lamp_Practical',lamp);
+box(table,'Table_Folded_Paper',.22,.007,.13,mat('#dfcba8',.96),.22,.841,-.10,false).rotation.y=-.16;
+
+// Human figure: one unique actor, carefully proportioned and shaded in dark theatre costume.
+const actor=group('Actor_Solo');actor.position.set(.18,stageY,.22);actor.rotation.y=-.12;actor.scale.setScalar(.885);
+const jacket=mat('#35393b',.90),jacketSide=mat('#292d30',.91),pants=mat('#2a2d31',.97),shoe=mat('#1f1c1c',.6,.05),shirt=mat('#c8bcab',.98),skin=mat('#947361',.96),hair=mat('#292321',.96);
+for(const s of [-1,1]){
+  const hipx=s*.125,footx=s*.145;
+  rod(actor,`Trouser_Leg_${s}`,[hipx,.95,0],[footx,.20,s*.03],.117,pants,18);
+  ellipsoid(actor,`Leather_Shoe_${s}`,footx,.114,.098+s*.01,.135,.102,.225,shoe);
+  ellipsoid(actor,`Trouser_Knee_${s}`,hipx,.55,0,.12,.15,.12,pants);
+}
+const torso=cyl(actor,'Tailored_Jacket_Torso',.31,.257,.79,jacket,0,1.303,0,24);
+const chest=ellipsoid(actor,'Shoulder_Contour',0,1.58,0,.34,.16,.17,jacket);chest.scale.z=.20;
+box(actor,'White_Shirt_Opening',.115,.40,.018,shirt,0,1.47,.251,false);
+const tie=box(actor,'Dark_Wine_Tie',.041,.34,.018,mat('#4a3436',.99),0,1.45,.272,false);tie.rotation.z=.02;
+for(const s of [-1,1]){
+  // lapel triangles near front of costume
+  const shp=new THREE.Shape();shp.moveTo(0,0);shp.lineTo(s*.115,.28);shp.lineTo(s*.165,-.07);shp.closePath();
+  const geom=new THREE.ShapeGeometry(shp);const lap=new THREE.Mesh(geom,jacketSide);lap.position.set(0,1.42,.282);lap.castShadow=false;addNamed(lap,`Coat_Lapel_${s}`,actor);
+}
+for(const s of [-1,1]){
+  let shoulder=[s*.30,1.57,-.02],elbow=[s*.39,1.23,.065],hand=[s*.36,.95,.16];
+  if(s===1){elbow=[.42,1.25,.16];hand=[.34,1.075,.35]}
+  rod(actor,`Coat_Upper_Arm_${s}`,shoulder,elbow,.115,jacket,18);
+  rod(actor,`Coat_Forearm_${s}`,elbow,hand,.095,jacket,18);
+  ellipsoid(actor,`Hand_${s}`,hand[0],hand[1]-.065,hand[2]+.025,.073,.115,.065,skin);
+}
+cyl(actor,'Neck',.08,.086,.16,skin,0,1.74,.012,20);
+const head=group('Head',actor);head.position.set(.015,1.91,.020);head.rotation.x=.105;
+ellipsoid(head,'Face',0,0,0,.132,.174,.116,skin);
+ellipsoid(head,'Hair_Cap',0,.10,-.015,.142,.096,.12,hair);
+ellipsoid(head,'Hair_Side_Left',-.115,.054,-.020,.036,.090,.09,hair);
+ellipsoid(head,'Hair_Side_Right',.115,.054,-.020,.036,.090,.09,hair);
+ellipsoid(head,'Nose',0,-.008,.114,.020,.031,.027,skin);
+for(const s of [-1,1]){ellipsoid(head,`Ear_${s}`,s*.13,-.015,-.008,.029,.055,.028,skin);ellipsoid(head,`Eye_Shadow_${s}`,s*.058,.011,.106,.028,.010,.006,mat('#4e3a33',.99))}
+ellipsoid(head,'Mouth_Shadow',0,-.078,.105,.032,.004,.004,mat('#60413b',1));
+const letter=new THREE.Mesh(new THREE.PlaneGeometry(.19,.25),new THREE.MeshStandardMaterial({color:'#dfd4bd',side:THREE.DoubleSide,roughness:.92}));
+letter.position.set(.377,1.077,.435);letter.rotation.set(-.24,-.16,.18);letter.castShadow=true;addNamed(letter,'Single_Letter_In_Hand',actor);
+for(let i=0;i<4;i++){const stripe=box(actor,`Letter_Written_Line_${i}`,.11,.003,.001,mat('#777166',.9),.388,1.135-i*.042,.439,false);stripe.rotation.set(-.24,-.16,.18)}
+
+// Theater lighting: physically plausible spotlights with warm main key and cool sculpting rim.
+const rig=group('Lighting_Rig');
+rod(rig,'Overhead_Front_Bar',[-6.65,8.29,2.50],[6.65,8.29,2.50],.08,darkMetal,12);
+rod(rig,'Overhead_Rear_Bar',[-6.65,8.05,-2.60],[6.65,8.05,-2.60],.065,darkMetal,12);
+for(let i=-5;i<=5;i++){const xx=i*1.1;const fixture=cyl(rig,`Stage_Lighting_Can_${i}`,.15,.23,.49,darkMetal,xx,8.04,2.48,16);fixture.rotation.x=.32;ellipsoid(rig,`Stage_Lighting_Lens_${i}`,xx,7.78,2.64,.11,.045,.13,mat('#5b4e3a',.25,.6)).castShadow=false}
+const target=new THREE.Object3D();target.position.set(.18,1.46,.22);scene.add(target);
+const mainSpot=new THREE.SpotLight('#ffcb97',155,33,Math.PI/6.2,.60,1.6);mainSpot.position.set(-.55,8.3,1.85);mainSpot.target=target;mainSpot.castShadow=true;mainSpot.shadow.mapSize.set(2048,2048);mainSpot.shadow.bias=-.00013;mainSpot.shadow.normalBias=.018;mainSpot.shadow.camera.near=.7;mainSpot.shadow.camera.far=23;addNamed(mainSpot,'Warm_Main_Spotlight',rig);
+const coolTarg=new THREE.Object3D();coolTarg.position.set(.2,1.4,.2);scene.add(coolTarg);
+const coolSpot=new THREE.SpotLight('#88afd3',82,20,Math.PI/4,.85,1.5);coolSpot.position.set(4.55,6.6,-3.45);coolSpot.target=coolTarg;addNamed(coolSpot,'Cool_Back_Rim',rig);
+const sideTarg=new THREE.Object3D();sideTarg.position.set(-.25,1.6,.15);scene.add(sideTarg);
+const sideSpot=new THREE.SpotLight('#eeb278',56,21,Math.PI/4.2,.90,1.6);sideSpot.position.set(-5.25,5.7,2.05);sideSpot.target=sideTarg;addNamed(sideSpot,'Amber_Side_Fill',rig);
+const ambient=new THREE.AmbientLight('#7b8492',.38);addNamed(ambient,'Low_Ambient');
+const hemi=new THREE.HemisphereLight('#a9b6c6','#272021',.75);addNamed(hemi,'Ambient_Bounce');
+
+// Radial stage pool. A real spot casts the shadows; this barely-visible transparent map softens the pool.
+const glowCanvas=(()=>{const [c,x]=cvs(512,512);const g=x.createRadialGradient(256,256,15,256,256,256);g.addColorStop(0,'rgba(255,208,135,.32)');g.addColorStop(.34,'rgba(255,180,96,.23)');g.addColorStop(.7,'rgba(255,167,80,.06)');g.addColorStop(1,'rgba(255,170,90,0)');x.fillStyle=g;x.fillRect(0,0,512,512);return c})();
+const floorGlow=new THREE.Mesh(new THREE.PlaneGeometry(4.4,4.2),new THREE.MeshBasicMaterial({map:tex(glowCanvas),transparent:true,opacity:.62,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1,blending:THREE.AdditiveBlending}));
+floorGlow.rotation.x=-Math.PI/2;floorGlow.position.set(.18,stageY+.036,.22);addNamed(floorGlow,'Main_Spotlight_Ground_Pool',rig);
+
+const hazeGroup=group('Spotlight_Haze');
+function hazeCone(name,r,opacity,color,px,pz,topY=8.3){const h=topY-stageY;const material=new THREE.MeshBasicMaterial({color,transparent:true,opacity,side:THREE.BackSide,depthWrite:false,blending:THREE.AdditiveBlending});const cone=new THREE.Mesh(new THREE.ConeGeometry(r,h,80,1,true),material);cone.position.set(px,(stageY+topY)/2,pz);cone.renderOrder=1;return addNamed(cone,name,hazeGroup)}
+hazeCone('Warm_Spot_Volume_Inner',1.94,.023,'#eab779',-.25,.45);
+hazeCone('Warm_Spot_Volume_Outer',2.58,.012,'#f0b36f',-.25,.45);
+const dustPositions=new Float32Array(220*3),rd=rng(237);for(let i=0;i<220;i++){const y=stageY+.4+rd()*6.9;const radial=(1-(y-stageY)/8)*2.25;dustPositions[i*3]=-.25+(rd()-.5)*radial*2;dustPositions[i*3+1]=y;dustPositions[i*3+2]=.45+(rd()-.5)*radial*2}
+const dustGeom=new THREE.BufferGeometry();dustGeom.setAttribute('position',new THREE.BufferAttribute(dustPositions,3));
+const dust=new THREE.Points(dustGeom,new THREE.PointsMaterial({color:'#ecc69c',size:.031,transparent:true,opacity:.45,depthWrite:false}));addNamed(dust,'Floating_Dust_Motes',hazeGroup);
+
+// Stage footlights and the shadowed audience seating establish scale and depth.
+const foot=group('Stage_Footlights');
+for(let i=0;i<12;i++){const x=-6.42+i*1.15;box(foot,`Footlight_Case_${i}`,.33,.075,.22,darkMetal,x,.84,4.26);ellipsoid(foot,`Warm_Footlight_${i}`,x,.91,4.22,.083,.040,.080,new THREE.MeshBasicMaterial({color:'#9b7654'})).castShadow=false}
+const seats=group('Audience_Rows');
+const seatMat=mat('#251d23',.95),seatSide=mat('#19171b',.9);
+for(let row=0;row<2;row++){const z=9.85+row*2.45;for(let i=-7;i<=7;i++){const x=i*.95;const sg=group(`Audience_Seat_${row}_${i}`,seats);sg.position.set(x,-.03+row*.15,z);box(sg,'Back',.76,.76,.17,seatMat,0,.64,-.1,false);box(sg,'Cushion',.74,.17,.62,seatMat,0,.23,.17,false);box(sg,'Left_Arm',.065,.19,.65,seatSide,-.40,.31,.17,false);box(sg,'Right_Arm',.065,.19,.65,seatSide,.4,.31,.17,false)}}
+
+// Glints on theatre walls are understated so the viewer's attention remains on the solitary figure.
+const showRoom=new THREE.PointLight('#d8a776',1.1,26,2);showRoom.position.set(0,7.2,11);addNamed(showRoom,'Audience_House_Light');
+
+// UI, animation, renders and JSON export.
+const presets={front:{p:[.1,4.45,19],t:[0,3.36,0]},close:{p:[1.55,2.61,5.75],t:[.15,1.84,.18]},side:{p:[9.10,3.9,9.80],t:[0,2.58,-.3]},high:{p:[-2.9,10.85,8.7],t:[0,3.10,0]}};
+let cameraAnim=null;
+function setView(name){const v=presets[name];if(!v)return;cameraAnim={fromP:camera.position.clone(),fromT:controls.target.clone(),toP:new THREE.Vector3(...v.p),toT:new THREE.Vector3(...v.t),start:performance.now()};document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name))}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+controls.addEventListener('start',()=>{cameraAnim=null;document.querySelectorAll('[data-view]').forEach(b=>b.classList.remove('active'))});
+let showMode=true;
+const modeBtn=document.getElementById('modeToggle');
+modeBtn.addEventListener('click',()=>{showMode=!showMode;modeBtn.textContent=showMode?'공연 조명':'연습 조명';applyLights()});
+const lightRange=document.getElementById('lightRange'),lightVal=document.getElementById('lightVal');
+lightRange.addEventListener('input',()=>{lightVal.textContent=lightRange.value+'%';applyLights()});
+const actorToggle=document.getElementById('actorToggle');actorToggle.addEventListener('change',()=>{actor.visible=actorToggle.checked});
+document.getElementById('hazeToggle').addEventListener('change',e=>{hazeGroup.visible=e.target.checked;scene.fog.density=e.target.checked ? .009 : .002});
+function applyLights(){let p=Number(lightRange.value)/100;mainSpot.intensity=(showMode?155:118)*p;coolSpot.intensity=showMode?82:25;sideSpot.intensity=showMode?56:42;showRoom.intensity=showMode?1.1:7.5;ambient.intensity=showMode?.38:.87;hemi.intensity=showMode?.75:1.15;lampLight.intensity=showMode?3.1:1.0;floorGlow.material.opacity=(showMode?.62:.24)*p}
+applyLights();
+
+function saveFile(name,blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+document.getElementById('exportJson').addEventListener('click',()=>{const names=[];root.traverse(o=>{if(o.name)names.push({name:o.name,type:o.type,position:o.position.toArray().map(v=>Math.round(v*10000)/10000),parent:o.parent?.name||''})});const data={...SCENE_SPEC,generatedObjectRegistry:names};saveFile('solo_monologue_stage_blender_reference.json',new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'}))});
+document.getElementById('capture').addEventListener('click',()=>{renderer.render(scene,camera);renderer.domElement.toBlob(blob=>{if(blob)saveFile('solo_monologue_theatre.png',blob)},'image/png')});
+
+const clock=new THREE.Clock();let frame=0;
+function animate(){requestAnimationFrame(animate);const elapsed=clock.getElapsedTime();frame++;
+ if(cameraAnim){const t=Math.min(1,(performance.now()-cameraAnim.start)/1050),s=t*t*(3-2*t);camera.position.copy(cameraAnim.fromP).lerp(cameraAnim.toP,s);controls.target.copy(cameraAnim.fromT).lerp(cameraAnim.toT,s);if(t>=1)cameraAnim=null}
+ // Gentle breathing is just a few millimetres; actor remains in one place.
+ torso.scale.y=1+Math.sin(elapsed*1.35)*.0065;head.rotation.x=.105+Math.sin(elapsed*.7)*.016;
+ dust.rotation.y=Math.sin(elapsed*.038)*.025;
+ controls.update();renderer.render(scene,camera)
+}
+window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight)});
+renderer.render(scene,camera);animate();
+requestAnimationFrame(()=>requestAnimationFrame(()=>{document.getElementById('loading').classList.add('hidden');setTimeout(()=>{document.getElementById('loading')?.remove()},600)}));
+</script>
+<script>
+// If the external Three.js CDN is blocked, show a useful and specific error rather than a blank screen.
+window.addEventListener('error',()=>{const e=document.getElementById('loading');if(e&&!e.classList.contains('hidden'))e.innerHTML='<b>3D 라이브러리를 불러오지 못했습니다</b><div class="error">인터넷이 연결되어 있는지 확인한 뒤 Chrome 또는 Edge에서 다시 실행해 주세요. Three.js는 jsDelivr CDN에서 불러옵니다.</div>'});
+window.addEventListener('unhandledrejection',()=>{const e=document.getElementById('loading');if(e&&!e.classList.contains('hidden'))e.innerHTML='<b>3D 장면 초기화 오류</b><div class="error">최신 Chrome 또는 Edge에서 파일을 열어 주세요. 인터넷 연결이 필요합니다.</div>'});
+</script>
+</body>
+</html>

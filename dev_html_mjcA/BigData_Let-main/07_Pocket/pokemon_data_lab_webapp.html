@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0d17">
+<title>DEX//LAB — 빅데이터 × 스몰데이터 체험실</title>
+<style>
+:root{--bg:#090c16;--paper:#101526;--paper2:#151c30;--stroke:#30394f;--text:#f1f4fd;--dim:#a5b3cd;--lime:#ddff71;--cyan:#67e8ec;--pink:#fe8cc7;--lav:#a9a0fc;--orange:#ffbe82;--shadow:0 25px 85px #0005}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);font-family:"Pretendard","SUIT","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;background:var(--bg);line-height:1.5}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--lime);outline-offset:3px}a{color:inherit}.shell{max-width:1400px;padding:0 clamp(18px,3.8vw,58px);margin:auto}
+.header{position:sticky;z-index:20;top:0;background:#090c16ee;backdrop-filter:blur(18px);border-bottom:1px solid #2b354b}.header-inner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:16px}.logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);font-size:24px;font-weight:950;letter-spacing:-1.5px;white-space:nowrap}.logo-mark{width:34px;height:34px;border:3px solid var(--lime);border-radius:9px;display:grid;place-items:center;transform:rotate(-8deg);font-size:19px;color:var(--lime)}.logo span.slash{color:var(--lime)}.small-tag{font-size:11px;letter-spacing:2px;color:var(--dim);font-weight:800}.nav-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.btn{border:1px solid #47516a;border-radius:11px;padding:11px 16px;background:#192238;color:var(--text);font-size:13px;font-weight:750;transition:background .15s,transform .15s}.btn:hover{background:#273352;transform:translateY(-1px)}.btn:active{transform:translateY(0)}.btn.primary{background:var(--lime);color:#0d1523;border-color:var(--lime)}.btn.primary:hover{background:#f2ffa7}.btn.ghost{background:transparent}.btn.accent{background:#193e47;border-color:#32606e;color:#8ff6f4}.btn.compact{padding:9px 11px;font-size:12px}.button-row{display:flex;flex-wrap:wrap;gap:9px}.text-link{color:var(--cyan);font-size:13px;text-decoration:none;border-bottom:1px solid #68e8ec70}.text-link:hover{color:#fff}
+.hero{padding:55px 0 30px}.hero-content{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:stretch}.eyebrow{font-size:12px;color:var(--lime);letter-spacing:2.5px;font-weight:900;text-transform:uppercase;display:flex;align-items:center;gap:9px}.dot{height:7px;width:7px;display:inline-block;background:var(--lime);border-radius:50%;box-shadow:0 0 15px var(--lime)}.hero-copy{padding:34px 0 44px}.hero h1{font-size:clamp(40px,5.5vw,82px);line-height:1.04;margin:23px 0 20px;letter-spacing:-.065em;font-weight:900}.hero h1 em{font-style:normal;color:var(--lime)}.hero-lead{max-width:580px;color:#b2bfd8;font-size:clamp(15px,1.45vw,19px);line-height:1.85;word-break:keep-all}.tags{display:flex;gap:8px;flex-wrap:wrap;margin:23px 0 27px}.tag{display:inline-flex;border:1px solid #404b65;border-radius:100px;padding:7px 12px;color:#d2def5;font-size:11px;letter-spacing:.3px;font-weight:800}.hero-visual{border-radius:24px;border:1px solid #35405e;min-height:405px;position:relative;overflow:hidden;background:radial-gradient(circle at 75% 35%,#2e3062 0%,transparent 45%),linear-gradient(135deg,#182336,#0d1324 68%)}.hero-visual:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(transparent 96%,#7486c414 100%);background-size:100% 28px}.radar{position:absolute;inset:0;width:100%;height:100%}.scene-kicker{position:absolute;top:25px;left:25px;color:#b5c2df;font-weight:800;font-size:11px;letter-spacing:2px}.scene-label{position:absolute;left:26px;bottom:24px;right:26px;display:flex;align-items:end;justify-content:space-between}.scene-label .big{display:block;font-size:43px;line-height:1;font-weight:950;letter-spacing:-2px;color:var(--lime)}.scene-label .sub{font-size:12px;color:#b1c1df;line-height:1.8}.scene-num{font-size:15px;font-weight:800;color:#c8d5e7}.scene-num b{font-size:27px;color:#fff}.cross{position:absolute;color:var(--lime);font-size:28px;font-weight:100;top:24%;left:17%}
+.progress{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}.stage{border:1px solid var(--stroke);border-radius:14px;background:#111728;padding:15px 13px;min-height:102px;display:flex;flex-direction:column;gap:6px;transition:transform .2s,border-color .2s;cursor:pointer;text-align:left;color:var(--text)}.stage:hover{border-color:#7a8da7;transform:translateY(-2px)}.stage small{color:var(--lime);font-weight:900;letter-spacing:2px}.stage strong{font-size:17px;letter-spacing:-.4px}.stage span{font-size:12px;color:var(--dim)}
+.section{padding:68px 0 3px}.section-top{display:flex;justify-content:space-between;align-items:flex-end;gap:22px;margin-bottom:25px;flex-wrap:wrap}.section-title{margin:7px 0 8px;font-size:clamp(27px,3.2vw,42px);font-weight:900;letter-spacing:-1.7px}.section-title span{color:var(--lime)}.section-desc{color:var(--dim);margin:0;font-size:14px;max-width:750px;line-height:1.75}.section-index{color:var(--lime);font-size:12px;font-weight:900;letter-spacing:2px}.panel{background:var(--paper);border:1px solid var(--stroke);border-radius:19px;min-width:0;overflow:hidden}.panel-pad{padding:clamp(18px,2.3vw,30px)}.card-title{font-weight:850;font-size:17px;letter-spacing:-.5px;margin:0 0 5px}.card-desc{color:var(--dim);font-size:12px;margin:0 0 19px;line-height:1.7}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.source-card{background:repeating-linear-gradient(135deg,#0f1628,#0f1628 18px,#121a2d 18px,#121a2d 19px);border:1px solid #26334b;border-radius:12px;padding:17px;max-height:260px;overflow:auto;color:#c8d7f1;font-family:Consolas,monospace;font-size:12px;line-height:1.85}.source-card b{color:var(--lime)}.source-card .muted{color:#9eb0c8}.step-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}.step-buttons .btn{width:100%;padding:14px 10px;text-align:center}.status{border-left:3px solid var(--cyan);background:#172435;padding:11px 13px;margin-top:17px;font-size:12px;color:#cae6ed;border-radius:0 9px 9px 0;min-height:48px;line-height:1.6}.note{margin-top:13px;color:#a4b0cb;font-size:12px;line-height:1.8}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:18px}.segment{display:flex;gap:4px;border:1px solid #39435d;border-radius:12px;padding:4px;background:#151c2d}.segment button{background:transparent;color:#bac7db;border:0;padding:9px 17px;border-radius:9px;font-weight:800;font-size:13px}.segment button.active{color:#0b1422;background:var(--lime)}.filters{display:flex;gap:9px;flex-wrap:wrap}.field{border:1px solid #3c4967;color:#e8f1fd;padding:10px 13px;background:#151e32;border-radius:9px;min-width:160px;max-width:240px}.field::placeholder{color:#8090ad}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.stat{padding:22px 19px;border:1px solid #39425c;background:#151c2f;border-radius:15px;min-width:0}.stat-label{display:block;color:#abb8cf;font-size:12px;font-weight:800;margin-bottom:6px}.stat-number{font-size:clamp(23px,3vw,38px);line-height:1.18;font-weight:900;letter-spacing:-1px;color:#fff}.stat-unit{color:#9aa9c1;font-size:11px;margin-top:8px}.compare{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}.compare-card{padding:20px;border:1px solid #3a465f;background:#10192c;border-radius:13px;display:flex;justify-content:space-between;align-items:center;gap:10px}.compare-card span{font-size:11px;color:#9dabcb}.compare-card strong{display:block;font-size:25px;margin-top:5px}.compare-card .mini{font-size:11px;color:#b8c9de;line-height:1.8}
+.visual-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:16px}.vis-panel{padding:24px;min-height:400px}.vis-panel h3{font-size:17px;margin:0 0 4px}.vis-panel p{color:var(--dim);font-size:12px;margin:0 0 20px}.ranks{display:flex;flex-direction:column;gap:12px}.rank{display:grid;grid-template-columns:24px minmax(80px,150px) 1fr 38px;align-items:center;gap:8px;font-size:12px}.rank-id{color:var(--lime);font-weight:900}.rank-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#d7e0ef}.rank-track{height:9px;background:#2b3550;border-radius:100px;overflow:hidden}.rank-bar{height:100%;border-radius:100px;background:linear-gradient(90deg,#80efe2,#dcff73)}.rank-value{text-align:right;font-size:12px;font-weight:900;color:#e8f8a9}.empty{padding:40px;text-align:center;color:var(--dim)}#scatterChart,#generationChart{display:block;width:100%;height:auto;overflow:visible}.chart-tooltip{position:fixed;z-index:100;pointer-events:none;padding:9px 12px;background:#f2f8ff;color:#111827;border-radius:9px;font-size:12px;box-shadow:0 15px 30px #0008;display:none;white-space:nowrap}.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px}.legend-i{font-size:11px;color:#bbc6d9;display:flex;align-items:center;gap:6px}.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block}.table-wrap{overflow:auto;max-height:390px}.data-table{border-collapse:collapse;width:100%;min-width:600px;font-size:12px}.data-table th{position:sticky;top:0;background:#1b263d;color:#aebcd5;font-size:11px;text-align:right;padding:13px 11px;white-space:nowrap;z-index:2}.data-table td{border-top:1px solid #293550;padding:11px;text-align:right}.data-table td:first-child,.data-table td:nth-child(2),.data-table th:first-child,.data-table th:nth-child(2){text-align:left}.data-table tr:hover td{background:#1e2941}.type-chip{display:inline-flex;background:#1d2e41;color:#a4ecdc;padding:4px 8px;border-radius:6px}
+.predict-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:16px}.slider-panel,.result-panel{padding:28px}.slider-row{display:grid;grid-template-columns:88px 1fr 50px;align-items:center;gap:15px;margin:17px 0}.slider-row label{font-size:13px;color:#c9d7eb;font-weight:800}.slider-row input[type=range]{width:100%;accent-color:var(--lime);cursor:pointer;height:20px}.slider-row .v{text-align:right;font-size:17px;font-weight:900;color:var(--lime);font-variant-numeric:tabular-nums}.prediction-big{font-size:clamp(60px,8vw,112px);font-weight:950;letter-spacing:-6px;line-height:1;color:var(--lime);margin:13px 0}.prediction-small{font-size:13px;color:#b8c9e1}.neighbors{display:grid;gap:8px;margin-top:21px}.neighbor{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 13px;background:#202c43;border-radius:9px;font-size:12px}.neighbor .neighbor-name{color:#deebff;font-weight:800}.neighbor .neighbor-score{color:var(--cyan);font-weight:900}.predict-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}.model-note{padding:12px 13px;border:1px solid #345165;background:#13293a;border-radius:12px;color:#acd9e4;font-size:12px;line-height:1.8;margin-top:18px}.gen-panel{margin-top:16px;padding:25px}.gen-bottom{margin-top:10px;font-size:12px;line-height:1.7;color:#b9c5dd}.task-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.task{background:#121b2d;border:1px solid #34435a;border-radius:13px;padding:20px;min-height:160px}.task-num{color:var(--lime);font-size:12px;font-weight:900;letter-spacing:2px}.task h3{margin:16px 0 8px;font-size:16px}.task p{margin:0;color:var(--dim);font-size:12px;line-height:1.7}.footer{padding:67px 0 55px;color:#9ba8c0}.footer-main{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;border-top:1px solid #333f58;padding-top:27px}.footer strong{color:#eaf4ff}.footer p{font-size:12px;max-width:780px;line-height:1.9}.footer a{color:var(--cyan)}.topline{display:inline-flex;align-items:center;gap:6px}.topline::before{content:"";height:5px;width:5px;background:var(--lime);border-radius:50%}
+@media(max-width:980px){.hero-content,.grid-2,.visual-grid,.predict-grid{grid-template-columns:1fr}.hero-visual{min-height:340px}.hero-copy{padding:10px 0}.nav-actions .btn.ghost{display:none}.stats{grid-template-columns:repeat(2,1fr)}.task-grid{grid-template-columns:1fr 1fr}.header-inner{height:auto;min-height:74px;padding:12px 0}.stage{min-height:90px}}@media(max-width:660px){.hero{padding-top:25px}.hero h1{font-size:44px}.header-inner{gap:6px}.small-tag{display:none}.nav-actions .btn{padding:9px 8px;font-size:11px}.progress{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.stage{padding:9px 6px;min-height:90px}.stage small{font-size:10px}.stage strong{font-size:13px}.stage span{font-size:10px}.section{padding-top:48px}.stat{padding:16px 12px}.stats{gap:8px}.stat-number{font-size:25px}.predict-grid .panel{min-width:0}.slider-panel,.result-panel,.vis-panel{padding:19px}.slider-row{grid-template-columns:72px 1fr 42px;gap:8px}.step-buttons{grid-template-columns:1fr 1fr}.task-grid{grid-template-columns:1fr}.compare{grid-template-columns:1fr}.filters{width:100%}.field{flex:1;min-width:135px}}
+@media print{.header,.button-row,.btn,.stage,.toolbar,.task-grid{display:none!important}body{background:#fff;color:#151515}.panel,.stat{background:#fff;color:#151515;border:1px solid #ddd}.stat-number,.card-title{color:#151515}.section{page-break-inside:avoid}.shell{max-width:100%}.hero-visual{display:none}.hero h1 em{color:#18451a}}
+body.presentation .shell{max-width:1600px}body.presentation .section-title{font-size:48px}body.presentation .card-desc,body.presentation .section-desc{font-size:16px}body.presentation .hero h1{font-size:88px}
+</style>
+</head>
+<body>
+<header class="header"><div class="shell header-inner">
+  <a href="#top" class="logo"><span class="logo-mark">D</span> DEX<span class="slash">//</span>LAB <span class="small-tag">DATA SCHOOL</span></a>
+  <div class="nav-actions">
+    <button id="uploadBtn" class="btn accent" title="코랩에서 저장한 CSV 파일도 사용할 수 있습니다">CSV 불러오기</button>
+    <button id="downloadBtn" class="btn ghost">정제 CSV 저장</button>
+    <button id="presentBtn" class="btn primary">발표 모드</button>
+  </div>
+</div></header>
+<input type="file" id="csvFile" accept=".csv,text/csv" hidden>
+<div id="chartTooltip" class="chart-tooltip"></div>
+<main id="top">
+<section class="hero shell"><div class="hero-content">
+  <div class="hero-copy">
+    <div class="eyebrow"><i class="dot"></i> BIG DATA <span style="color:#9babc9">×</span> SMALL DATA</div>
+    <h1>데이터는<br><em>게임을</em><br>예측한다.</h1>
+    <p class="hero-lead">포켓몬 도감 데이터로 탐험하는 데이터 과학. 웹페이지 HTML을 읽고, CSV를 만들고, AI로 가상의 신규 캐릭터 스피드를 예측해 보자.</p>
+    <div class="tags"><span class="tag">실습 01 — 데이터 수집</span><span class="tag">실습 02 — 데이터 분석</span><span class="tag">실습 03 — AI 예측</span></div>
+    <div class="button-row"><button id="scrollExplore" class="btn primary">데이터 탐험 시작 ↓</button><a class="btn ghost" href="#prediction" style="text-decoration:none">AI 예측 체험 →</a></div>
+  </div>
+  <div class="hero-visual"><span class="scene-kicker">SYSTEM / DATA SCAN / 001</span><span class="cross">+</span>
+    <svg class="radar" viewBox="0 0 600 460" role="img" aria-label="능력치 데이터 탐색을 표현한 추상 원형 레이더 그래픽" preserveAspectRatio="xMidYMid meet">
+    <defs><linearGradient id="rad-grad" x1="0" x2="1" y1="1" y2="0"><stop stop-color="#a9a0fc"/><stop offset="1" stop-color="#6fe6df"/></linearGradient></defs>
+    <g transform="translate(320 210)"><circle r="168" fill="none" stroke="#66708e" stroke-width="1" stroke-dasharray="3 8" opacity=".55"/><circle r="126" fill="none" stroke="#555f87" stroke-width="1.5"/><circle r="85" fill="none" stroke="#657398" opacity=".7"/><circle r="43" fill="#62e6df" opacity=".06" stroke="#71eae8" stroke-width="1.2"/>
+    <path d="M-164 -43L164 43 M-43 164L43 -164 M-171 0H171 M0 -171V171" stroke="#536282" stroke-opacity=".35"/>
+    <path d="M0 -141 L130 -45 L85 90 L-12 134 L-116 45 L-70 -62 Z" fill="#c1ff7740" stroke="#ddff71" stroke-width="3"/>
+    <path d="M0 -90 L64 -32 L60 47 L-7 94 L-75 32 L-52 -48 Z" fill="#6ddff940" stroke="#67e8ec" stroke-width="2" stroke-dasharray="7 5"/>
+    <circle cx="130" cy="-45" r="6" fill="#ddff71"/><circle cx="85" cy="90" r="6" fill="#ddff71"/><circle cx="-116" cy="45" r="6" fill="#ddff71"/><circle cx="-52" cy="-48" r="5" fill="#67e8ec"/>
+    <text x="0" y="-174" text-anchor="middle" font-family="monospace" font-size="11" fill="#c5d2ed">HP</text><text x="153" y="-67" font-family="monospace" font-size="11" fill="#c5d2ed">ATK</text><text x="121" y="110" font-family="monospace" font-size="11" fill="#c5d2ed">DEF</text><text x="-25" y="159" font-family="monospace" font-size="11" fill="#c5d2ed">SPD</text><text x="-153" y="62" font-family="monospace" font-size="11" fill="#c5d2ed">S.ATK</text></g>
+    </svg>
+    <div class="scene-label"><div><span class="sub">LIVE CLASS DATA</span><span class="big" id="heroCount">088</span></div><div class="scene-num">DATA<br><b>LAB.</b></div></div>
+  </div>
+</div>
+<div class="progress" aria-label="데이터 처리 5단계">
+  <button class="stage" data-to="#collect"><small>01 / INPUT</small><strong>수집</strong><span>HTML에서 추출</span></button>
+  <button class="stage" data-to="#collect"><small>02 / SAVE</small><strong>저장</strong><span>CSV 만들기</span></button>
+  <button class="stage" data-to="#collect"><small>03 / CLEAN</small><strong>처리</strong><span>중복·오류 제거</span></button>
+  <button class="stage" data-to="#analysis"><small>04 / INSIGHT</small><strong>분석</strong><span>패턴 시각화</span></button>
+  <button class="stage" data-to="#prediction"><small>05 / PREDICT</small><strong>결과</strong><span>AI 미래예측</span></button>
+</div></section>
+<section class="section shell" id="collect">
+  <div class="section-top"><div><div class="section-index">PART 01 — THE PIPELINE</div><h2 class="section-title">데이터를 <span>모으고, 다듬다.</span></h2><p class="section-desc">아래 버튼을 순서대로 눌러 코딩 없이 HTML 추출 → CSV 저장 → 전처리를 체험한다. 웹앱의 첫 단계는 외부 사이트 접속이 아닌 <b>내장된 HTML 샘플의 실제 DOM 파싱</b>이다.</p></div><span class="tag" id="sourceTag">샘플 HTML 90행</span></div>
+  <div class="grid-2">
+    <article class="panel panel-pad"><h3 class="card-title">A / 웹페이지의 데이터는 어떻게 생겼을까?</h3><p class="card-desc">수집 대상의 표 구조를 단순화한 HTML 예시. 크롤러는 행과 열을 찾아 값을 읽는다.</p>
+      <div class="source-card"><span class="muted">&lt;table id="pokedex"&gt;</span><br>&nbsp; &lt;tbody&gt;<br>&nbsp;&nbsp; &lt;tr&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td&gt;<b>0001</b>&lt;/td&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td&gt;<b>Bulbasaur</b>&lt;/td&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td&gt;<b>Grass/Poison</b>&lt;/td&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td&gt;<b>318</b>&lt;/td&gt;<br>&nbsp;&nbsp;&nbsp; &lt;td&gt;<b>45,49,49,65,65,45</b>&lt;/td&gt;<br>&nbsp;&nbsp; &lt;/tr&gt;<br>&nbsp; &lt;/tbody&gt;<br><span class="muted">&lt;/table&gt;</span></div>
+      <p class="note">실시간 공개 웹페이지 크롤링은 Google Colab 노트북에서 `requests + BeautifulSoup`로 실행한다. 브라우저의 사이트 간 접근 제한(CORS) 때문에 이 HTML 파일은 외부 웹페이지를 직접 크롤링한다고 주장하지 않는다.</p>
+      <a href="https://pokemondb.net/pokedex/all" class="text-link" target="_blank" rel="noopener noreferrer">공개 도감 데이터 출처 ↗</a>
+    </article>
+    <article class="panel panel-pad"><h3 class="card-title">B / 노코드 데이터 처리 버튼</h3><p class="card-desc">버튼을 눌러 원자료와 정제 자료의 행 수가 어떻게 달라지는지 확인해 보자.</p>
+      <div class="step-buttons">
+        <button id="crawlBtn" class="btn primary">① HTML 샘플 수집</button>
+        <button id="rawBtn" class="btn">② 원본 CSV 저장</button>
+        <button id="cleanBtn" class="btn accent">③ 데이터 전처리</button>
+        <button id="cleanCsvBtn" class="btn">④ 정제 CSV 저장</button>
+      </div>
+      <div id="statusBox" class="status" role="status" aria-live="polite">준비 완료. HTML 샘플을 수집하고 2건의 중복 형태를 제거했습니다.</div>
+      <p class="note" id="processCount">원자료 90행 → 정제 88행</p>
+      <p class="note">코랩에서 크롤링한 CSV 파일도 상단 <b>CSV 불러오기</b>로 업로드할 수 있다. 업로드 이후의 그래프와 AI 예측도 자동으로 바뀐다.</p>
+    </article>
+  </div>
+</section>
+<section class="section shell" id="analysis">
+ <div class="section-top"><div><div class="section-index">PART 02 — FIND THE PATTERN</div><h2 class="section-title">데이터로 <span>차이를 발견하다.</span></h2><p class="section-desc">단 30개만 볼 때와 전체를 볼 때 결과는 같을까? 그래프와 숫자를 비교해 데이터 크기·편향을 탐구한다.</p></div></div>
+ <div class="toolbar"><div class="segment" role="group" aria-label="데이터 크기 선택"><button id="smallBtn" aria-pressed="false">스몰 · 30행</button><button id="allBtn" class="active" aria-pressed="true">전체 · <span id="allCount">88</span>행</button></div>
+ <div class="filters"><select id="typeFilter" class="field" aria-label="타입별 필터"><option value="ALL">모든 타입</option></select><input id="searchInput" class="field" placeholder="포켓몬 이름 검색..." aria-label="이름 검색" /></div></div>
+ <div class="stats"><div class="stat"><span class="stat-label">분석 데이터</span><div class="stat-number" id="statN">88</div><div class="stat-unit">ROWS / 현재 선택 범위</div></div><div class="stat"><span class="stat-label">평균 스피드</span><div class="stat-number" id="statSpeed">71.0</div><div class="stat-unit">SPEED / 전체 평균</div></div><div class="stat"><span class="stat-label">평균 총합</span><div class="stat-number" id="statTotal">420.9</div><div class="stat-unit">BASE STATS / 6개 능력치 합</div></div><div class="stat"><span class="stat-label">스피드 100 이상</span><div class="stat-number" id="statFast">14</div><div class="stat-unit">CHARACTERS / 빠른 포켓몬</div></div></div>
+ <div class="compare"><div class="compare-card"><div><span>SMALL DATA · 30행</span><strong id="smallMean">—</strong><div class="mini" id="smallMeta">선택한 표본의 평균 스피드</div></div><span style="color:var(--lav);font-weight:900;font-size:28px">S</span></div><div class="compare-card"><div><span>AVAILABLE DATA · 전체</span><strong id="largeMean">—</strong><div class="mini" id="largeMeta">현재 업로드된 정제 데이터</div></div><span style="color:var(--lime);font-weight:900;font-size:28px">L</span></div></div>
+ <div class="visual-grid" style="margin-top:16px"><article class="panel vis-panel"><h3>01 / 가장 빠른 포켓몬</h3><p>선택된 데이터의 스피드 TOP 10</p><div class="ranks" id="rankList"></div></article>
+ <article class="panel vis-panel"><h3>02 / 공격력과 스피드의 상관관계</h3><p>각 점이 캐릭터 1개 · 마우스를 올리면 자세히 보기</p><svg id="scatterChart" viewBox="0 0 760 400" role="img" aria-label="공격력과 스피드의 산점도"></svg><div class="legend" id="legend"></div></article></div>
+ <div class="panel panel-pad" style="margin-top:16px"><div class="section-top" style="margin-bottom:12px"><div><h3 class="card-title">03 / 실제 데이터 확인</h3><p class="card-desc" style="margin-bottom:0">원자료 → 전처리 → 분석 과정의 마지막 산출물. 상위 12개가 표시됩니다.</p></div><span class="tag" id="tableCount">0행</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>도감 번호</th><th>포켓몬</th><th>타입1</th><th>HP</th><th>공격</th><th>방어</th><th>특공</th><th>특방</th><th>스피드</th><th>총합</th></tr></thead><tbody id="dataBody"></tbody></table></div></div>
+</section>
+<section class="section shell" id="prediction">
+ <div class="section-top"><div><div class="section-index">PART 03 — FUTURE LAB</div><h2 class="section-title">AI에게 <span>미래를 물어보다.</span></h2><p class="section-desc">새로운 게임 캐릭터를 상상해 보자. 아래 다섯 능력치를 바꾸면 데이터에서 가장 비슷한 포켓몬 다섯 종을 찾고 예상 스피드를 계산한다.</p></div><button class="btn ghost" id="resetSlidersBtn">능력치 초기화 ↺</button></div>
+ <div class="predict-grid">
+   <article class="panel slider-panel"><h3 class="card-title">MAKE YOUR NEW CHARACTER</h3><p class="card-desc">슬라이더를 움직여 가상 신규 캐릭터를 디자인한다.</p>
+     <div id="sliders"></div><div class="button-row" style="margin-top:21px"><button class="btn primary" id="highAtkBtn">공격 특화 실험</button><button class="btn accent" id="highDefBtn">방어 특화 실험</button></div>
+     <div class="model-note">모델: <b>KNN 최근접 이웃(k=5)</b><br>실제 신규 포켓몬의 능력치를 맞히는 기술이 아니며, 기존 데이터에서 비슷한 사례를 찾아보는 학습용 예측이다.</div>
+   </article>
+   <article class="panel result-panel"><div class="eyebrow">AI PREDICTION · SPEED</div><div class="prediction-big" id="predSpeed">—</div><div class="prediction-small">가상의 신규 캐릭터 예상 스피드 (0~수백 포인트)</div><div class="predict-tags"><span class="tag" id="predMode">전체 데이터 기준</span><span class="tag" id="predCount">학습 데이터 88행</span></div>
+     <h3 style="font-size:15px;margin:28px 0 10px">가장 비슷한 실제 데이터 TOP 5</h3><div class="neighbors" id="neighbors"></div>
+     <p class="note">어떤 데이터가 가장 가까운지 함께 보는 것은 AI 결과를 설명하고 검증하는 중요한 방법이다.</p>
+   </article>
+ </div>
+ <article class="panel gen-panel"><div class="section-top" style="margin-bottom:7px"><div><h3 class="card-title">심화 / 다음 세대의 평균 스피드를 직선 추세로 예상한다면?</h3><p class="card-desc">1~9세대 평균 스피드 → 통계 추세선. 충분한 전체 도감 데이터가 없으면 미래 수치는 표시하지 않습니다.</p></div><span class="tag" id="forecastTag">검토 중</span></div><svg id="generationChart" viewBox="0 0 1060 275" aria-label="세대별 평균 스피드 그래프"></svg><div class="gen-bottom" id="forecastText">데이터를 확인하고 있습니다.</div></article>
+</section>
+<section class="section shell" id="tasks"><div class="section-top"><div><div class="section-index">AFTER THE LAB</div><h2 class="section-title">스스로 <span>생각해 보기.</span></h2><p class="section-desc">관찰한 숫자보다 중요한 것은 왜 그런 결과가 나왔는지 질문하는 태도다.</p></div></div>
+ <div class="task-grid"><div class="task"><div class="task-num">MISSION / 01</div><h3>데이터가 많으면 늘 정답일까?</h3><p>스몰/전체 모드를 바꾸고 스피드 순위와 평균이 달라지는 이유를 설명해 보자.</p></div><div class="task"><div class="task-num">MISSION / 02</div><h3>공격력 150이면 빠를까?</h3><p>공격 특화 버튼을 누르고 예상 스피드, 가장 가까운 다섯 캐릭터를 확인해 보자.</p></div><div class="task"><div class="task-num">MISSION / 03</div><h3>편향이 있는 데이터라면?</h3><p>샘플은 스타터 포켓몬 중심이다. 전체를 대표하지 못하는 편의표본이 예측에 미칠 영향을 토론한다.</p></div></div>
+</section>
+</main>
+<footer class="footer shell"><div class="footer-main"><div class="logo">DEX<span class="slash">//</span>LAB</div><div><strong>교육용 데이터 과학 실습</strong><p>코드 없는 브라우저 실습은 HTML 샘플의 DOM 파싱과 CSV 업로드를 수행합니다. 외부 서버 크롤링은 CORS 제약으로 인해 Python Google Colab에서 별도로 수행합니다. HTML 파일은 외부 CDN과 서버가 필요 없는 독립 실행형입니다. 기존 게임 콘텐츠의 특성상 이 데이터는 통계 학습용일 뿐 실제 향후 출시 데이터나 제작사 예측을 의미하지 않습니다.</p><p>데이터 출처: <a href="https://pokemondb.net/pokedex/all" target="_blank" rel="noopener noreferrer">Pokémon Database — Complete Pokémon Pokédex</a> · 해당 사이트의 명칭/캐릭터는 권리자에게 귀속됩니다.</p></div></div></footer>
+<template id="scrapeSource">
+<table id="pokedex"><tbody>
+<tr><td>1</td><td>Bulbasaur</td><td>Grass</td><td>Poison</td><td>318</td><td>45</td><td>49</td><td>49</td><td>65</td><td>65</td><td>45</td><td>기본</td></tr>
+<tr><td>2</td><td>Ivysaur</td><td>Grass</td><td>Poison</td><td>405</td><td>60</td><td>62</td><td>63</td><td>80</td><td>80</td><td>60</td><td>기본</td></tr>
+<tr><td>3</td><td>Venusaur</td><td>Grass</td><td>Poison</td><td>525</td><td>80</td><td>82</td><td>83</td><td>100</td><td>100</td><td>80</td><td>기본</td></tr>
+<tr><td>4</td><td>Charmander</td><td>Fire</td><td></td><td>309</td><td>39</td><td>52</td><td>43</td><td>60</td><td>50</td><td>65</td><td>기본</td></tr>
+<tr><td>5</td><td>Charmeleon</td><td>Fire</td><td></td><td>405</td><td>58</td><td>64</td><td>58</td><td>80</td><td>65</td><td>80</td><td>기본</td></tr>
+<tr><td>6</td><td>Charizard</td><td>Fire</td><td>Flying</td><td>534</td><td>78</td><td>84</td><td>78</td><td>109</td><td>85</td><td>100</td><td>기본</td></tr>
+<tr><td>6</td><td>Charizard</td><td>Fire</td><td>Dragon</td><td>634</td><td>78</td><td>130</td><td>111</td><td>130</td><td>85</td><td>100</td><td>Mega Charizard X</td></tr>
+<tr><td>7</td><td>Squirtle</td><td>Water</td><td></td><td>314</td><td>44</td><td>48</td><td>65</td><td>50</td><td>64</td><td>43</td><td>기본</td></tr>
+<tr><td>8</td><td>Wartortle</td><td>Water</td><td></td><td>405</td><td>59</td><td>63</td><td>80</td><td>65</td><td>80</td><td>58</td><td>기본</td></tr>
+<tr><td>9</td><td>Blastoise</td><td>Water</td><td></td><td>530</td><td>79</td><td>83</td><td>100</td><td>85</td><td>105</td><td>78</td><td>기본</td></tr>
+<tr><td>25</td><td>Pikachu</td><td>Electric</td><td></td><td>320</td><td>35</td><td>55</td><td>40</td><td>50</td><td>50</td><td>90</td><td>기본</td></tr>
+<tr><td>26</td><td>Raichu</td><td>Electric</td><td></td><td>485</td><td>60</td><td>90</td><td>55</td><td>90</td><td>80</td><td>110</td><td>기본</td></tr>
+<tr><td>132</td><td>Ditto</td><td>Normal</td><td></td><td>288</td><td>48</td><td>48</td><td>48</td><td>48</td><td>48</td><td>48</td><td>기본</td></tr>
+<tr><td>133</td><td>Eevee</td><td>Normal</td><td></td><td>325</td><td>55</td><td>55</td><td>50</td><td>45</td><td>65</td><td>55</td><td>기본</td></tr>
+<tr><td>135</td><td>Jolteon</td><td>Electric</td><td></td><td>525</td><td>65</td><td>65</td><td>60</td><td>110</td><td>95</td><td>130</td><td>기본</td></tr>
+<tr><td>150</td><td>Mewtwo</td><td>Psychic</td><td></td><td>680</td><td>106</td><td>110</td><td>90</td><td>154</td><td>90</td><td>130</td><td>기본</td></tr>
+<tr><td>151</td><td>Mew</td><td>Psychic</td><td></td><td>600</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>기본</td></tr>
+<tr><td>152</td><td>Chikorita</td><td>Grass</td><td></td><td>318</td><td>45</td><td>49</td><td>65</td><td>49</td><td>65</td><td>45</td><td>기본</td></tr>
+<tr><td>153</td><td>Bayleef</td><td>Grass</td><td></td><td>405</td><td>60</td><td>62</td><td>80</td><td>63</td><td>80</td><td>60</td><td>기본</td></tr>
+<tr><td>154</td><td>Meganium</td><td>Grass</td><td></td><td>525</td><td>80</td><td>82</td><td>100</td><td>83</td><td>100</td><td>80</td><td>기본</td></tr>
+<tr><td>155</td><td>Cyndaquil</td><td>Fire</td><td></td><td>309</td><td>39</td><td>52</td><td>43</td><td>60</td><td>50</td><td>65</td><td>기본</td></tr>
+<tr><td>156</td><td>Quilava</td><td>Fire</td><td></td><td>405</td><td>58</td><td>64</td><td>58</td><td>80</td><td>65</td><td>80</td><td>기본</td></tr>
+<tr><td>157</td><td>Typhlosion</td><td>Fire</td><td></td><td>534</td><td>78</td><td>84</td><td>78</td><td>109</td><td>85</td><td>100</td><td>기본</td></tr>
+<tr><td>158</td><td>Totodile</td><td>Water</td><td></td><td>314</td><td>50</td><td>65</td><td>64</td><td>44</td><td>48</td><td>43</td><td>기본</td></tr>
+<tr><td>159</td><td>Croconaw</td><td>Water</td><td></td><td>405</td><td>65</td><td>80</td><td>80</td><td>59</td><td>63</td><td>58</td><td>기본</td></tr>
+<tr><td>160</td><td>Feraligatr</td><td>Water</td><td></td><td>530</td><td>85</td><td>105</td><td>100</td><td>79</td><td>83</td><td>78</td><td>기본</td></tr>
+<tr><td>252</td><td>Treecko</td><td>Grass</td><td></td><td>310</td><td>40</td><td>45</td><td>35</td><td>65</td><td>55</td><td>70</td><td>기본</td></tr>
+<tr><td>253</td><td>Grovyle</td><td>Grass</td><td></td><td>405</td><td>50</td><td>65</td><td>45</td><td>85</td><td>65</td><td>95</td><td>기본</td></tr>
+<tr><td>254</td><td>Sceptile</td><td>Grass</td><td></td><td>530</td><td>70</td><td>85</td><td>65</td><td>105</td><td>85</td><td>120</td><td>기본</td></tr>
+<tr><td>255</td><td>Torchic</td><td>Fire</td><td></td><td>310</td><td>45</td><td>60</td><td>40</td><td>70</td><td>50</td><td>45</td><td>기본</td></tr>
+<tr><td>256</td><td>Combusken</td><td>Fire</td><td>Fighting</td><td>405</td><td>60</td><td>85</td><td>60</td><td>85</td><td>60</td><td>55</td><td>기본</td></tr>
+<tr><td>257</td><td>Blaziken</td><td>Fire</td><td>Fighting</td><td>530</td><td>80</td><td>120</td><td>70</td><td>110</td><td>70</td><td>80</td><td>기본</td></tr>
+<tr><td>258</td><td>Mudkip</td><td>Water</td><td></td><td>310</td><td>50</td><td>70</td><td>50</td><td>50</td><td>50</td><td>40</td><td>기본</td></tr>
+<tr><td>259</td><td>Marshtomp</td><td>Water</td><td>Ground</td><td>405</td><td>70</td><td>85</td><td>70</td><td>60</td><td>70</td><td>50</td><td>기본</td></tr>
+<tr><td>260</td><td>Swampert</td><td>Water</td><td>Ground</td><td>535</td><td>100</td><td>110</td><td>90</td><td>85</td><td>90</td><td>60</td><td>기본</td></tr>
+<tr><td>387</td><td>Turtwig</td><td>Grass</td><td></td><td>318</td><td>55</td><td>68</td><td>64</td><td>45</td><td>55</td><td>31</td><td>기본</td></tr>
+<tr><td>388</td><td>Grotle</td><td>Grass</td><td></td><td>405</td><td>75</td><td>89</td><td>85</td><td>55</td><td>65</td><td>36</td><td>기본</td></tr>
+<tr><td>389</td><td>Torterra</td><td>Grass</td><td>Ground</td><td>525</td><td>95</td><td>109</td><td>105</td><td>75</td><td>85</td><td>56</td><td>기본</td></tr>
+<tr><td>390</td><td>Chimchar</td><td>Fire</td><td></td><td>309</td><td>44</td><td>58</td><td>44</td><td>58</td><td>44</td><td>61</td><td>기본</td></tr>
+<tr><td>391</td><td>Monferno</td><td>Fire</td><td>Fighting</td><td>405</td><td>64</td><td>78</td><td>52</td><td>78</td><td>52</td><td>81</td><td>기본</td></tr>
+<tr><td>392</td><td>Infernape</td><td>Fire</td><td>Fighting</td><td>534</td><td>76</td><td>104</td><td>71</td><td>104</td><td>71</td><td>108</td><td>기본</td></tr>
+<tr><td>393</td><td>Piplup</td><td>Water</td><td></td><td>314</td><td>53</td><td>51</td><td>53</td><td>61</td><td>56</td><td>40</td><td>기본</td></tr>
+<tr><td>394</td><td>Prinplup</td><td>Water</td><td></td><td>405</td><td>64</td><td>66</td><td>68</td><td>81</td><td>76</td><td>50</td><td>기본</td></tr>
+<tr><td>395</td><td>Empoleon</td><td>Water</td><td>Steel</td><td>530</td><td>84</td><td>86</td><td>88</td><td>111</td><td>101</td><td>60</td><td>기본</td></tr>
+<tr><td>495</td><td>Snivy</td><td>Grass</td><td></td><td>308</td><td>45</td><td>45</td><td>55</td><td>45</td><td>55</td><td>63</td><td>기본</td></tr>
+<tr><td>496</td><td>Servine</td><td>Grass</td><td></td><td>413</td><td>60</td><td>60</td><td>75</td><td>60</td><td>75</td><td>83</td><td>기본</td></tr>
+<tr><td>497</td><td>Serperior</td><td>Grass</td><td></td><td>528</td><td>75</td><td>75</td><td>95</td><td>75</td><td>95</td><td>113</td><td>기본</td></tr>
+<tr><td>498</td><td>Tepig</td><td>Fire</td><td></td><td>308</td><td>65</td><td>63</td><td>45</td><td>45</td><td>45</td><td>45</td><td>기본</td></tr>
+<tr><td>499</td><td>Pignite</td><td>Fire</td><td>Fighting</td><td>418</td><td>90</td><td>93</td><td>55</td><td>70</td><td>55</td><td>55</td><td>기본</td></tr>
+<tr><td>500</td><td>Emboar</td><td>Fire</td><td>Fighting</td><td>528</td><td>110</td><td>123</td><td>65</td><td>100</td><td>65</td><td>65</td><td>기본</td></tr>
+<tr><td>501</td><td>Oshawott</td><td>Water</td><td></td><td>308</td><td>55</td><td>55</td><td>45</td><td>63</td><td>45</td><td>45</td><td>기본</td></tr>
+<tr><td>502</td><td>Dewott</td><td>Water</td><td></td><td>413</td><td>75</td><td>75</td><td>60</td><td>83</td><td>60</td><td>60</td><td>기본</td></tr>
+<tr><td>503</td><td>Samurott</td><td>Water</td><td></td><td>528</td><td>95</td><td>100</td><td>85</td><td>108</td><td>70</td><td>70</td><td>기본</td></tr>
+<tr><td>650</td><td>Chespin</td><td>Grass</td><td></td><td>313</td><td>56</td><td>61</td><td>65</td><td>48</td><td>45</td><td>38</td><td>기본</td></tr>
+<tr><td>651</td><td>Quilladin</td><td>Grass</td><td></td><td>405</td><td>61</td><td>78</td><td>95</td><td>56</td><td>58</td><td>57</td><td>기본</td></tr>
+<tr><td>652</td><td>Chesnaught</td><td>Grass</td><td>Fighting</td><td>530</td><td>88</td><td>107</td><td>122</td><td>74</td><td>75</td><td>64</td><td>기본</td></tr>
+<tr><td>653</td><td>Fennekin</td><td>Fire</td><td></td><td>307</td><td>40</td><td>45</td><td>40</td><td>62</td><td>60</td><td>60</td><td>기본</td></tr>
+<tr><td>654</td><td>Braixen</td><td>Fire</td><td></td><td>409</td><td>59</td><td>59</td><td>58</td><td>90</td><td>70</td><td>73</td><td>기본</td></tr>
+<tr><td>655</td><td>Delphox</td><td>Fire</td><td>Psychic</td><td>534</td><td>75</td><td>69</td><td>72</td><td>114</td><td>100</td><td>104</td><td>기본</td></tr>
+<tr><td>656</td><td>Froakie</td><td>Water</td><td></td><td>314</td><td>41</td><td>56</td><td>40</td><td>62</td><td>44</td><td>71</td><td>기본</td></tr>
+<tr><td>657</td><td>Frogadier</td><td>Water</td><td></td><td>405</td><td>54</td><td>63</td><td>52</td><td>83</td><td>56</td><td>97</td><td>기본</td></tr>
+<tr><td>658</td><td>Greninja</td><td>Water</td><td>Dark</td><td>530</td><td>72</td><td>95</td><td>67</td><td>103</td><td>71</td><td>122</td><td>기본</td></tr>
+<tr><td>722</td><td>Rowlet</td><td>Grass</td><td>Flying</td><td>320</td><td>68</td><td>55</td><td>55</td><td>50</td><td>50</td><td>42</td><td>기본</td></tr>
+<tr><td>723</td><td>Dartrix</td><td>Grass</td><td>Flying</td><td>420</td><td>78</td><td>75</td><td>75</td><td>70</td><td>70</td><td>52</td><td>기본</td></tr>
+<tr><td>724</td><td>Decidueye</td><td>Grass</td><td>Ghost</td><td>530</td><td>78</td><td>107</td><td>75</td><td>100</td><td>100</td><td>70</td><td>기본</td></tr>
+<tr><td>725</td><td>Litten</td><td>Fire</td><td></td><td>320</td><td>45</td><td>65</td><td>40</td><td>60</td><td>40</td><td>70</td><td>기본</td></tr>
+<tr><td>726</td><td>Torracat</td><td>Fire</td><td></td><td>420</td><td>65</td><td>85</td><td>50</td><td>80</td><td>50</td><td>90</td><td>기본</td></tr>
+<tr><td>727</td><td>Incineroar</td><td>Fire</td><td>Dark</td><td>530</td><td>95</td><td>115</td><td>90</td><td>80</td><td>90</td><td>60</td><td>기본</td></tr>
+<tr><td>728</td><td>Popplio</td><td>Water</td><td></td><td>320</td><td>50</td><td>54</td><td>54</td><td>66</td><td>56</td><td>40</td><td>기본</td></tr>
+<tr><td>729</td><td>Brionne</td><td>Water</td><td></td><td>420</td><td>60</td><td>69</td><td>69</td><td>91</td><td>81</td><td>50</td><td>기본</td></tr>
+<tr><td>730</td><td>Primarina</td><td>Water</td><td>Fairy</td><td>530</td><td>80</td><td>74</td><td>74</td><td>126</td><td>116</td><td>60</td><td>기본</td></tr>
+<tr><td>810</td><td>Grookey</td><td>Grass</td><td></td><td>310</td><td>50</td><td>65</td><td>50</td><td>40</td><td>40</td><td>65</td><td>기본</td></tr>
+<tr><td>811</td><td>Thwackey</td><td>Grass</td><td></td><td>420</td><td>70</td><td>85</td><td>70</td><td>55</td><td>60</td><td>80</td><td>기본</td></tr>
+<tr><td>812</td><td>Rillaboom</td><td>Grass</td><td></td><td>530</td><td>100</td><td>125</td><td>90</td><td>60</td><td>70</td><td>85</td><td>기본</td></tr>
+<tr><td>813</td><td>Scorbunny</td><td>Fire</td><td></td><td>310</td><td>50</td><td>71</td><td>40</td><td>40</td><td>40</td><td>69</td><td>기본</td></tr>
+<tr><td>814</td><td>Raboot</td><td>Fire</td><td></td><td>420</td><td>65</td><td>86</td><td>60</td><td>55</td><td>60</td><td>94</td><td>기본</td></tr>
+<tr><td>815</td><td>Cinderace</td><td>Fire</td><td></td><td>530</td><td>80</td><td>116</td><td>75</td><td>65</td><td>75</td><td>119</td><td>기본</td></tr>
+<tr><td>816</td><td>Sobble</td><td>Water</td><td></td><td>310</td><td>50</td><td>40</td><td>40</td><td>70</td><td>40</td><td>70</td><td>기본</td></tr>
+<tr><td>817</td><td>Drizzile</td><td>Water</td><td></td><td>420</td><td>65</td><td>60</td><td>55</td><td>95</td><td>55</td><td>90</td><td>기본</td></tr>
+<tr><td>818</td><td>Inteleon</td><td>Water</td><td></td><td>530</td><td>70</td><td>85</td><td>65</td><td>125</td><td>65</td><td>120</td><td>기본</td></tr>
+<tr><td>906</td><td>Sprigatito</td><td>Grass</td><td></td><td>310</td><td>40</td><td>61</td><td>54</td><td>45</td><td>45</td><td>65</td><td>기본</td></tr>
+<tr><td>907</td><td>Floragato</td><td>Grass</td><td></td><td>410</td><td>61</td><td>80</td><td>63</td><td>60</td><td>63</td><td>83</td><td>기본</td></tr>
+<tr><td>908</td><td>Meowscarada</td><td>Grass</td><td>Dark</td><td>530</td><td>76</td><td>110</td><td>70</td><td>81</td><td>70</td><td>123</td><td>기본</td></tr>
+<tr><td>909</td><td>Fuecoco</td><td>Fire</td><td></td><td>310</td><td>67</td><td>45</td><td>59</td><td>63</td><td>40</td><td>36</td><td>기본</td></tr>
+<tr><td>910</td><td>Crocalor</td><td>Fire</td><td></td><td>411</td><td>81</td><td>55</td><td>78</td><td>90</td><td>58</td><td>49</td><td>기본</td></tr>
+<tr><td>911</td><td>Skeledirge</td><td>Fire</td><td>Ghost</td><td>530</td><td>104</td><td>75</td><td>100</td><td>110</td><td>75</td><td>66</td><td>기본</td></tr>
+<tr><td>912</td><td>Quaxly</td><td>Water</td><td></td><td>310</td><td>55</td><td>65</td><td>45</td><td>50</td><td>45</td><td>50</td><td>기본</td></tr>
+<tr><td>913</td><td>Quaxwell</td><td>Water</td><td></td><td>410</td><td>70</td><td>85</td><td>65</td><td>65</td><td>60</td><td>65</td><td>기본</td></tr>
+<tr><td>914</td><td>Quaquaval</td><td>Water</td><td>Fighting</td><td>530</td><td>85</td><td>120</td><td>80</td><td>85</td><td>75</td><td>85</td><td>기본</td></tr>
+<tr><td>150</td><td>Mewtwo</td><td>Psychic</td><td></td><td>780</td><td>106</td><td>190</td><td>100</td><td>154</td><td>100</td><td>130</td><td>Mega Mewtwo X</td></tr>
+</tbody></table>
+</template>
+<script>
+'use strict';
+(() => {
+ const C=['번호','이름','타입1','타입2','총합','HP','공격','방어','특수공격','특수방어','스피드','폼'];
+ const NUM=['번호','총합','HP','공격','방어','특수공격','특수방어','스피드'];
+ const FEATS=['HP','공격','방어','특수공격','특수방어'];
+ const BOUNDS=[151,251,386,493,649,721,809,905,1025];
+ const DEF={HP:78,공격:95,방어:76,특수공격:105,특수방어:82};
+ const TCOL={Grass:'#b9e46a',Fire:'#ff9a73',Water:'#73a9ff',Electric:'#ffda72',Psychic:'#eb91de',Normal:'#cbd0d7',Fighting:'#ffbe82',Dragon:'#9ba4ff',Dark:'#8f9eb9'};
+ const $=(id)=>document.getElementById(id);
+ const SVG='http://www.w3.org/2000/svg';
+ let raw=[], cleaned=[], small=[], chosen='ALL', filterType='ALL', query='', source='HTML 샘플', sizeMode='all';
+ const state={...DEF};
+ const mean=(arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
+ const fmt=(n,p=0)=>Number.isFinite(n)?Number(n).toLocaleString('ko-KR',{minimumFractionDigits:p,maximumFractionDigits:p}):'—';
+ const gen=(n)=>{for(let i=0;i<BOUNDS.length;i++)if(n<=BOUNDS[i])return i+1;return null};
+ const clr=(t)=>TCOL[t]||'#81ddd4';
+ const el=(tag,cl,text)=>{const x=document.createElement(tag);if(cl)x.className=cl;if(text!==undefined)x.textContent=text;return x};
+ const setStatus=(msg)=>{$('statusBox').textContent=msg};
+ function parseLocalSample(){
+   const doc=new DOMParser().parseFromString($('scrapeSource').innerHTML,'text/html');
+   return [...doc.querySelectorAll('#pokedex tbody tr')].map(tr=>{
+     const c=[...tr.querySelectorAll('td')].map(td=>td.textContent.trim());
+     const d={};C.forEach((k,i)=>d[k]=c[i]??'');return d;
+   });
+ }
+ function parseCSV(text){
+   text=text.replace(/^\uFEFF/,'');let result=[], row=[],cell='',quoted=false;
+   for(let i=0;i<text.length;i++){
+     const c=text[i];
+     if(c==='"') {if(quoted&&text[i+1]==='"'){cell+='"';i++}else{quoted=!quoted}}
+     else if(c===','&&!quoted){row.push(cell);cell=''}
+     else if((c==='\n'||c==='\r')&&!quoted){if(c==='\r'&&text[i+1]==='\n')i++;row.push(cell);if(row.some(s=>s.trim()))result.push(row);row=[];cell=''}
+     else{cell+=c}
+   }
+   if(cell!==''||row.length){row.push(cell);if(row.some(s=>s.trim()))result.push(row)}
+   if(result.length<2)throw Error('CSV 데이터 행이 없습니다.');
+   const header=result.shift().map(x=>x.trim().replace(/^\uFEFF/,''));
+   const missing=C.filter(x=>x!=='폼'&&!header.includes(x));
+   if(missing.length)throw Error('필수 열 누락: '+missing.join(', '));
+   return result.map(r=>Object.fromEntries(header.map((h,i)=>[h,r[i]??''])));
+ }
+ function clean(input){
+   const o=[],seen=new Set();let invalid=0,dup=0;
+   for(const a of input){
+     const r={};C.forEach(k=>r[k]=a[k]??'');
+     const missingNumber=NUM.some(k=>String(r[k]).trim()==='');
+     NUM.forEach(k=>r[k]=Number(String(r[k]).replace(/,/g,'').trim()));
+     r.이름=String(r.이름).trim();r.타입1=String(r.타입1).trim();r.타입2=String(r.타입2||'').trim();
+     if(missingNumber||!r.이름||!r.타입1||NUM.some(k=>!Number.isFinite(r[k])||r[k]<0)||
+       r.번호<1 || r.총합!==FEATS.reduce((s,k)=>s+r[k],r.스피드)){invalid++;continue}
+     if(seen.has(r.번호)){dup++;continue}
+     seen.add(r.번호);r.세대=gen(r.번호);o.push(r);
+   }
+   o.sort((a,b)=>a.번호-b.번호);
+   return {list:o,invalid,dup};
+ }
+ // seeded sampling without network: deterministic Fisher-Yates with a local PRNG
+ function sampleRows(a,n){return [...a].sort((x,y)=> ((x.번호*2654435761)>>>0)-((y.번호*2654435761)>>>0)||x.번호-y.번호).slice(0,Math.min(n,a.length)).sort((x,y)=>x.번호-y.번호)}
+ function ingest(newRaw,newSource){raw=newRaw;source=newSource;runClean();}
+ function runClean(){const x=clean(raw);if(!x.list.length)throw Error('정상적인 자료가 없습니다.');cleaned=x.list;small=sampleRows(cleaned,30);filterType='ALL';query='';$('searchInput').value='';$('sourceTag').textContent=source+' '+raw.length.toLocaleString()+'행';$('processCount').textContent=`원자료 ${raw.length}행 → 정제 ${cleaned.length}행 (중복 ${x.dup}행 · 오류/결측 ${x.invalid}행)`;setStatus(`전처리 완료: 원본 ${raw.length}행에서 중복 ${x.dup}행, 오류/결측 ${x.invalid}행 제거 → ${cleaned.length}행 남음.`);fillFilter();redraw();}
+ function fillFilter(){const available=[...new Set(cleaned.map(r=>r.타입1))].sort();$('typeFilter').replaceChildren(el('option',null,'모든 타입'));$('typeFilter').firstChild.value='ALL';for(const t of available){const o=el('option',null,t);o.value=t;$('typeFilter').append(o)}$('typeFilter').value='ALL'}
+ function activeData(){return sizeMode==='small'?small:cleaned}
+ function filtered(){return activeData().filter(r=>(filterType==='ALL'||r.타입1===filterType)&&(!query||r.이름.toLowerCase().includes(query.toLowerCase())||String(r.번호).includes(query)))}
+ function drawRanks(data){const box=$('rankList');box.replaceChildren();if(!data.length){box.append(el('div','empty','해당하는 자료가 없습니다.'));return}const sorted=[...data].sort((a,b)=>b.스피드-a.스피드).slice(0,10);const mx=Math.max(100,...sorted.map(r=>r.스피드));sorted.forEach((r,i)=>{const item=el('div','rank');item.append(el('span','rank-id',String(i+1).padStart(2,'0')));item.append(el('span','rank-name',r.이름));const track=el('div','rank-track'),bar=el('div','rank-bar');bar.style.width=(r.스피드/mx*100)+'%';track.append(bar);item.append(track,el('span','rank-value',r.스피드));box.append(item)})}
+ function node(tag,attrs,text){const a=document.createElementNS(SVG,tag);for(const [k,v] of Object.entries(attrs||{}))a.setAttribute(k,String(v));if(text!==undefined)a.textContent=text;return a}
+ function showTip(evt,msg){let t=$('chartTooltip');t.textContent=msg;t.style.display='block';t.style.left=Math.min(window.innerWidth-210,evt.clientX+12)+'px';t.style.top=Math.min(window.innerHeight-65,evt.clientY+12)+'px'}
+ function hideTip(){$('chartTooltip').style.display='none'}
+ function drawScatter(data){const s=$('scatterChart');s.replaceChildren();const w=760,h=400,l=68,r=22,t=19,b=55;const xMax=Math.max(160,Math.ceil(Math.max(...data.map(x=>x.공격),1)/20)*20),yMax=Math.max(160,Math.ceil(Math.max(...data.map(x=>x.스피드),1)/20)*20);
+   const X=v=>l+v/xMax*(w-l-r), Y=v=>h-b-v/yMax*(h-b-t);
+   for(let i=0;i<=4;i++){let val=i/4, xx=X(xMax*val),yy=Y(yMax*val);s.append(node('line',{x1:xx,y1:t,x2:xx,y2:h-b,stroke:'#344361','stroke-dasharray':'4 8'}));s.append(node('line',{x1:l,y1:yy,x2:w-r,y2:yy,stroke:'#344361','stroke-dasharray':'4 8'}));s.append(node('text',{x:xx,y:h-b+23,'text-anchor':'middle',fill:'#a4b4cd','font-size':13},Math.round(xMax*val)));s.append(node('text',{x:l-17,y:yy+4,'text-anchor':'end',fill:'#a4b4cd','font-size':13},Math.round(yMax*val)))}
+   s.append(node('text',{x:w/2,y:h-6,'text-anchor':'middle',fill:'#c1d0e4','font-size':15},'공격력 (ATK)'));
+   s.append(node('text',{x:17,y:h/2,'text-anchor':'middle',fill:'#c1d0e4','font-size':15,transform:`rotate(-90 17 ${h/2})`},'스피드 (SPEED)'));
+   for(const p of data.slice(0,4000)){const c=node('circle',{cx:X(p.공격),cy:Y(p.스피드),r:data.length>350?3.2:5.4,fill:clr(p.타입1),opacity:.84,stroke:'#0e1627','stroke-width':1});const tt=node('title',{},`${p.이름} · 공격 ${p.공격} / 스피드 ${p.스피드}`);c.append(tt);c.addEventListener('mousemove',(e)=>showTip(e,`${p.이름} · 공격 ${p.공격} / 스피드 ${p.스피드}`));c.addEventListener('mouseleave',hideTip);s.append(c)}
+   const keys=[...new Set(data.map(r=>r.타입1))].slice(0,9),legend=$('legend');legend.replaceChildren();keys.forEach(t=>{const item=el('span','legend-i'),dot=el('i','legend-dot');dot.style.background=clr(t);item.append(dot,el('span',null,t));legend.append(item)});
+ }
+ function drawTable(data){const t=$('dataBody');t.replaceChildren();$('tableCount').textContent=fmt(data.length)+'행 검색됨';for(const x of data.slice(0,12)){const tr=el('tr');for(const col of ['번호','이름','타입1','HP','공격','방어','특수공격','특수방어','스피드','총합']){const td=el('td');if(col==='타입1'){td.append(el('span','type-chip',x[col]))}else{td.textContent=x[col]}tr.append(td)}t.append(tr)}if(!data.length){const tr=el('tr'),td=el('td',null,'검색 결과가 없습니다.');td.colSpan=10;tr.append(td);t.append(tr)}}
+ function round(v){return Number.isFinite(v)?v.toFixed(1):'—'}
+ function redraw(){chosen=filtered();$('heroCount').textContent=String(cleaned.length).padStart(3,'0');$('allCount').textContent=fmt(cleaned.length);$('statN').textContent=fmt(chosen.length);$('statSpeed').textContent=chosen.length?round(mean(chosen.map(x=>x.스피드))):'—';$('statTotal').textContent=chosen.length?round(mean(chosen.map(x=>x.총합))):'—';$('statFast').textContent=fmt(chosen.filter(x=>x.스피드>=100).length);
+   $('smallMean').textContent=round(mean(small.map(x=>x.스피드)));$('largeMean').textContent=round(mean(cleaned.map(x=>x.스피드)));
+   $('smallMeta').textContent=small.length+'행의 평균 스피드';$('largeMeta').textContent=cleaned.length+'행의 평균 스피드';
+   $('smallBtn').classList.toggle('active',sizeMode==='small');$('allBtn').classList.toggle('active',sizeMode==='all');$('smallBtn').setAttribute('aria-pressed',sizeMode==='small'?'true':'false');$('allBtn').setAttribute('aria-pressed',sizeMode==='all'?'true':'false');
+   drawRanks(chosen);drawScatter(chosen);drawTable(chosen);predict();drawGeneration();}
+ function knn(data,input){if(!data.length)return {value:NaN,neighbors:[]};const mu={},std={};for(const k of FEATS){mu[k]=mean(data.map(r=>r[k]));let sd=Math.sqrt(mean(data.map(r=>(r[k]-mu[k])**2)));std[k]=sd||1}
+   const rank=data.map(r=>{let dist=0;for(const k of FEATS)dist+=((r[k]-input[k])/std[k])**2;return {r,d:Math.sqrt(dist)}}).sort((a,b)=>a.d-b.d).slice(0,Math.min(5,data.length));return {value:mean(rank.map(z=>z.r.스피드)),neighbors:rank.map(z=>z.r)};}
+ function predict(){const data=activeData(),p=knn(data,state);$('predSpeed').textContent=round(p.value);$('predMode').textContent=sizeMode==='small'?'스몰데이터 기준':'전체 데이터 기준';$('predCount').textContent='학습 데이터 '+fmt(data.length)+'행';const elb=$('neighbors');elb.replaceChildren();for(const [i,r] of p.neighbors.entries()){const z=el('div','neighbor');z.append(el('span','neighbor-name',`${i+1}. ${r.이름}`),el('span','neighbor-score',`SPEED ${r.스피드}`));elb.append(z)}}
+ function regress(a){const mx=mean(a.map(z=>z.x)),my=mean(a.map(z=>z.y));let num=0,den=0;for(const z of a){num+=(z.x-mx)*(z.y-my);den+=(z.x-mx)**2}const slope=den?num/den:0;return {slope,intercept:my-slope*mx}}
+ function drawGeneration(){const svg=$('generationChart');svg.replaceChildren();const data=cleaned.filter(r=>Number.isInteger(r.세대));const parts=Array.from({length:9},(_,i)=>{const d=data.filter(x=>x.세대===i+1);return {x:i+1,y:d.length?mean(d.map(z=>z.스피드)):null,n:d.length}}).filter(x=>x.n);
+   const enough=cleaned.length>=500&&parts.length===9&&parts.every(p=>p.n>=10);
+   let future=null;if(enough){const fit=regress(parts);future=Math.max(1,Math.min(200,fit.slope*10+fit.intercept))}
+   const w=1060,h=275,l=61,r=34,t=25,b=45,ymax=Math.max(125,Math.ceil(Math.max(...parts.map(z=>z.y),future||0)/20)*20);
+   const X=x=>l+(x-1)/9*(w-l-r),Y=y=>h-b-(y/ymax)*(h-b-t);
+   for(let y=0;y<=ymax;y+=ymax/4){const yy=Y(y);svg.append(node('line',{x1:l,y1:yy,x2:w-r,y2:yy,stroke:'#35425b','stroke-dasharray':'4 7'}));svg.append(node('text',{x:l-13,y:yy+5,'text-anchor':'end',fill:'#9eb0c8','font-size':13},Math.round(y)))}
+   for(let x=1;x<=10;x++){svg.append(node('text',{x:X(x),y:h-b+26,'text-anchor':'middle',fill:x===10?'#ddff71':'#9eb0c8','font-size':14},x===10?'10세대*':x+'세대'))}
+   if(parts.length){svg.append(node('path',{d:parts.map((z,i)=>(i===0?'M':'L')+X(z.x)+' '+Y(z.y)).join(' '),fill:'none',stroke:'#6fe8eb','stroke-width':3.5,'stroke-linecap':'round'}));
+     for(const z of parts){const c=node('circle',{cx:X(z.x),cy:Y(z.y),r:6,fill:'#c7fa7a',stroke:'#142134','stroke-width':3});c.append(node('title',{},`${z.x}세대 / 평균 ${z.y.toFixed(1)} / ${z.n}마리`));svg.append(c);svg.append(node('text',{x:X(z.x),y:Y(z.y)-13,'text-anchor':'middle',fill:'#d9e8fa','font-size':12},round(z.y)))}
+     if(future!==null){const last=parts[parts.length-1];svg.append(node('line',{x1:X(last.x),y1:Y(last.y),x2:X(10),y2:Y(future),stroke:'#ddff71','stroke-width':3,'stroke-dasharray':'7 6'}));svg.append(node('circle',{cx:X(10),cy:Y(future),r:7,fill:'#ddff71'}));svg.append(node('text',{x:X(10),y:Y(future)-16,'text-anchor':'middle',fill:'#ddff71','font-size':15,'font-weight':800},round(future)))} }
+   $('forecastTag').textContent=enough?`교육용 추세 추정 ${round(future)}`:'전체 데이터 필요';
+   $('forecastText').textContent=enough?`가상의 10세대 평균 스피드 ${round(future)} 추정. 주의: 세대별 평균 점 9개를 단순 직선으로 연장한 시나리오일 뿐 실제 출시 데이터/제작사 계획이 아닙니다.`:`현재 ${cleaned.length}행은 전체 도감이라고 볼 수 없는 소량·편의표본입니다. 세대별 평균은 보이지만 다음 세대의 숫자 예측은 하지 않습니다. Colab에서 수집한 전체 CSV(500행 이상)를 불러오면 조건을 확인해 심화 예측을 활성화합니다.`;
+ }
+ function csvText(a){const cleanCell=(x)=>{const v=String(x??'');return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};return '\uFEFF'+[C.join(','),...a.map(r=>C.map(k=>cleanCell(r[k])).join(','))].join('\r\n')}
+ function downloadCSV(a,name){const blob=new Blob([csvText(a)],{type:'text/csv;charset=utf-8;'});const u=URL.createObjectURL(blob),a1=el('a');a1.href=u;a1.download=name;document.body.append(a1);a1.click();a1.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+ function slidersInit(){const holder=$('sliders');for(const k of FEATS){const id='range_'+k,wrap=el('div','slider-row');const lab=el('label',null,k);lab.htmlFor=id;const slider=el('input');slider.id=id;slider.type='range';slider.min='15';slider.max='200';slider.step='1';slider.value=state[k];const value=el('span','v',String(state[k]));slider.addEventListener('input',()=>{state[k]=+slider.value;value.textContent=slider.value;predict()});wrap.append(lab,slider,value);holder.append(wrap)}}
+ function setStats(obj){for(const k of FEATS){state[k]=obj[k];$('range_'+k).value=obj[k];$('range_'+k).nextSibling.textContent=obj[k]}predict()}
+ function wire(){document.querySelectorAll('.stage').forEach(b=>b.addEventListener('click',()=>document.querySelector(b.dataset.to).scrollIntoView({behavior:'smooth'})));
+   $('scrollExplore').onclick=()=>$('collect').scrollIntoView({behavior:'smooth'});
+   $('crawlBtn').onclick=()=>{ingest(parseLocalSample(),'HTML 샘플에서 파싱');setStatus(`① 샘플 HTML 표를 DOMParser로 읽어 원자료 ${raw.length}행을 추출했습니다. ② 원본 CSV 저장을 눌러 보세요.`)};
+   $('rawBtn').onclick=()=>{downloadCSV(raw,'pokemon_collected_raw.csv');setStatus('② 원본 CSV 다운로드를 시작했습니다. Excel이나 메모장으로 열어 확인해 보세요.')} ;
+   $('cleanBtn').onclick=()=>{try{runClean()}catch(e){setStatus('전처리 실패: '+e.message)}};
+   $('cleanCsvBtn').onclick=()=>{downloadCSV(cleaned,'pokemon_clean.csv');setStatus(`④ 정제 CSV ${cleaned.length}행을 저장했습니다.`)};
+   $('downloadBtn').onclick=()=>$('cleanCsvBtn').click();
+   $('uploadBtn').onclick=()=>$('csvFile').click();
+   $('csvFile').onchange=async(e)=>{const file=e.target.files?.[0];if(!file)return;try{const text=await file.text(),records=parseCSV(text);ingest(records,`사용자 CSV: ${file.name}`);setStatus(`CSV 업로드 및 전처리 완료: ${file.name} / 원본 ${records.length}행 → 정제 ${cleaned.length}행`)}catch(err){setStatus('CSV 불러오기 오류: '+err.message);window.alert('CSV 파일을 확인하세요. '+err.message)}e.target.value=''};
+   $('smallBtn').onclick=()=>{sizeMode='small';redraw()};$('allBtn').onclick=()=>{sizeMode='all';redraw()};
+   $('typeFilter').onchange=e=>{filterType=e.target.value;redraw()};$('searchInput').oninput=e=>{query=e.target.value.trim();redraw()};
+   $('resetSlidersBtn').onclick=()=>setStats(DEF);
+   $('highAtkBtn').onclick=()=>setStats({HP:90,공격:160,방어:55,특수공격:55,특수방어:55});
+   $('highDefBtn').onclick=()=>setStats({HP:120,공격:50,방어:170,특수공격:50,특수방어:150});
+   $('presentBtn').onclick=()=>{const on=document.body.classList.toggle('presentation');$('presentBtn').textContent=on?'일반 모드':'발표 모드'};
+ }
+ slidersInit();wire();ingest(parseLocalSample(),'내장 샘플 HTML (실시간 수집 아님)');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Basic</title>
+    <script>
+        //Date객체를 선언합니다:현재 시간 측정
+        let date = new Date();
+        let hours = date.getHours();
+
+        //조건문
+        if (hours < 5) {
+            alert("잠을 자렴....");
+        } else if (hours < 7) {
+            alert("준비");
+        } else if (hours < 9) {
+            alert('출근');
+        } else if (hours < 12) {
+            alert('업무...오전 빈둥빈둥?!');
+        } else if (hours < 14) {
+            alert('식사');
+        } else {
+            //여러가지 업무를 수행합니다. 
+            alert('여러가지 업무를 수행합니다. ');
+        }
+    </script>
+</head>
+
+<body>
+    if else if조건문으로 하루 일정 표현<hr>
+
+    <h3>3. 조건문과 반복문</h3>
+    <h5>    1_조건문</h5>
+    <h5>    2_반복문</h5>
+</body>
+
+</html>

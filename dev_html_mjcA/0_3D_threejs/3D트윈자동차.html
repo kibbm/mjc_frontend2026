@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Three.js로 제작한 자동차 외형·실내·기계 구조 체험. 문 열기, 운전석 시점, 분해 보기와 단면 관찰을 지원합니다.">
+<title>MOTION · 자동차 3D 구조 탐험</title>
+<style>
+:root{color-scheme:dark;--bg:#09131d;--panel:#101e2a;--line:rgba(168,195,216,.13);--muted:#91a6b9;--text:#edf5fb;--mint:#87ecd6;--blue:#69b9ed;font-family:Inter,"Pretendard","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-synthesis:none}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);overflow:hidden}button,input{font:inherit}button{color:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:not-allowed}button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--mint);outline-offset:4px}button{touch-action:manipulation}button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}button:hover{filter:brightness(1.12)}.app{display:grid;grid-template-columns:minmax(0,1fr) 316px;grid-template-rows:74px minmax(0,1fr);height:100vh;height:100dvh}.topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 27px;border-bottom:1px solid var(--line);background:#0b1721;gap:20px;z-index:4}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:34px;height:34px;border:1px solid #8be9d785;display:grid;place-items:center;transform:rotate(-8deg);border-radius:10px;color:var(--mint);font-size:20px;font-weight:800}.brand-name{font-size:15px;font-weight:800;letter-spacing:2px}.brand-sub{display:block;font-size:10px;letter-spacing:2.4px;color:var(--muted);margin-top:4px}.tabs{display:flex;background:#07111a;padding:4px;border:1px solid var(--line);border-radius:11px;gap:3px}.tab{border:0;background:transparent;color:var(--muted);padding:10px 20px;border-radius:8px;white-space:nowrap;font-size:13px;font-weight:650}.tab span{font-size:10px;margin-right:8px;opacity:.6}.tab.active{background:#1a303c;color:var(--mint)}.top-actions{display:flex;gap:8px}.icon-button,.small-button{border:1px solid var(--line);background:#14242f;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;padding:0 11px;font-size:12px}.icon-button{width:37px;padding:0}.viewport{position:relative;overflow:hidden;min-width:0;background:radial-gradient(ellipse at 48% 42%,#263d4c 0,#101e2a 58%,#09131d 100%)}#canvas-host{position:absolute;inset:0}#canvas-host canvas{display:block;width:100%;height:100%;touch-action:none;outline:0}.scene-heading{position:absolute;top:27px;left:32px;pointer-events:none;z-index:1}.eyebrow{font-size:10px;letter-spacing:2.1px;color:var(--mint);font-weight:650;margin:0 0 10px}.scene-heading h1{margin:0;font-size:30px;font-weight:700;letter-spacing:-1.2px;line-height:1.35}.scene-heading p{color:var(--muted);font-size:12px;margin:10px 0 0;line-height:1.7;max-width:320px}.scene-status{position:absolute;right:25px;top:30px;display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:1px;color:#b4c9d8;pointer-events:none}.live-dot{width:6px;height:6px;border-radius:50%;background:var(--mint);box-shadow:0 0 9px #87ecd66b}.view-badge{position:absolute;top:146px;left:32px;border:1px solid #87ecd633;background:#122c348c;border-radius:5px;color:#a7edde;font-size:10px;padding:5px 9px;pointer-events:none;letter-spacing:.4px}.view-tools{position:absolute;bottom:65px;left:50%;transform:translateX(-50%);display:flex;gap:4px;background:#0b1924e8;border:1px solid #9ab3c326;padding:6px;border-radius:12px;box-shadow:0 8px 30px #0003;white-space:nowrap;backdrop-filter:blur(14px);z-index:3}.view-tools button{border:0;background:transparent;padding:10px 12px;border-radius:7px;font-size:12px;color:#c0d0dc}.view-tools button.active{background:#203744;color:var(--mint)}.view-tools .driver{background:#87ecd6;color:#0e2c2d;font-weight:750;padding-inline:15px}.view-tools .divider{width:1px;background:var(--line);margin:6px}.scene-bottom{position:absolute;bottom:22px;left:28px;right:25px;display:flex;justify-content:space-between;align-items:center;gap:15px;font-size:10px;color:#88a0b2;pointer-events:none}.legend{display:flex;gap:14px;align-items:center}.legend span{display:flex;align-items:center;gap:5px}.legend i{width:6px;height:6px;background:#83d8dc;border-radius:2px}.legend span:nth-child(2) i{background:#eeb77c}.legend span:nth-child(3) i{background:#99aab6}.side-panel{background:linear-gradient(150deg,#12212d,#0d1923);border-left:1px solid var(--line);padding:22px 20px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#344c5e transparent;z-index:4}.panel-title{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:19px}.panel-title h2{font-size:16px;margin:0;letter-spacing:-.4px}.panel-title span{font-size:10px;color:var(--muted);letter-spacing:1px}.section{border-top:1px solid var(--line);padding-top:17px;margin-top:17px}.section-title{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:650;margin-bottom:11px}.section-title small{font-weight:400;font-size:10px;color:var(--muted)}.button-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.control-button{min-height:39px;display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:#1a2c39;border:1px solid #aac8dd12;border-radius:7px;font-size:12px;color:#c6d6e2;text-align:left}.control-button .state-dot{height:5px;width:5px;flex-shrink:0;background:#627c90;border-radius:50%;margin-left:6px}.control-button[aria-pressed=true]{color:var(--mint);background:#163737;border-color:#87ecd632}.control-button[aria-pressed=true] .state-dot{background:var(--mint)}.range-header{display:flex;justify-content:space-between;font-size:12px;color:#c3d2de;margin-bottom:6px}.range-header output{color:var(--mint);font-size:11px;font-variant-numeric:tabular-nums}.range{width:100%;height:20px;margin:2px 0 0;accent-color:var(--mint);cursor:pointer}.range-caption{display:flex;justify-content:space-between;color:#6f899f;font-size:10px;margin-top:3px}.range-row+.range-row{margin-top:17px}.row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px;color:#c0d1df}.row+.row{margin-top:13px}.switch{width:33px;min-width:33px;height:19px;padding:2px;background:#2b4051;border:0;border-radius:20px;position:relative}.switch:after{content:"";display:block;width:13px;height:13px;border-radius:50%;background:#b6c8d5;transition:transform .18s}.switch[aria-pressed=true]{background:#438779}.switch[aria-pressed=true]:after{transform:translateX(14px);background:#b9ffed}.color-row{display:flex;align-items:center;gap:10px}.swatch{width:25px;height:25px;border-radius:50%;background:var(--swatch);border:2px solid #ffffff10;position:relative;padding:0}.swatch[aria-pressed=true]:after{content:"";position:absolute;inset:-5px;border:1px solid #a2efd9;border-radius:50%}.color-label{margin-left:auto;color:#9db3c5;font-size:10px}.component-list{display:flex;flex-wrap:wrap;gap:5px}.component-list button{font-size:10px;padding:6px 8px;background:#192c39;border:1px solid #aac8dd0b;border-radius:5px;color:#a9c3d4}.component-list button.active{color:#a7f3df;border-color:#87ecd64a;background:#20423f}.info-card{padding:15px;border-radius:10px;background:linear-gradient(135deg,#203440aa,#162933aa);border:1px solid #8eb8c128;margin-top:16px}.info-card .micro{font-size:9px;letter-spacing:1.7px;color:var(--mint);display:flex;align-items:center;gap:8px}.info-card .micro:before{content:"";width:15px;height:1px;background:var(--mint)}.info-card h3{margin:9px 0 8px;font-size:16px;line-height:1.4}.info-card p{font-size:11px;color:#aebfcb;line-height:1.9;margin:0;word-break:keep-all}.info-card .tip{margin-top:10px;padding-top:10px;border-top:1px solid #abc4d012;color:#d7e9ed;font-size:10px;line-height:1.8}.focus-button{margin-top:13px;width:100%;border:1px solid #a2e8db37;color:#a6eddf;background:#24453e78;border-radius:6px;padding:8px;font-size:11px}.notice{font-size:10px;line-height:1.75;color:#708b9f;margin:17px 1px 0;word-break:keep-all}.cut-options{padding-top:10px}.hidden{display:none!important}#labels{position:absolute;inset:0;pointer-events:none;z-index:2}.hotspot{position:absolute;pointer-events:auto;display:flex;gap:8px;align-items:center;background:#0c1d28e8;border:1px solid #8bbeb44d;border-radius:20px;color:#d8f8ee;padding:6px 11px 6px 6px;font-size:11px;white-space:nowrap;box-shadow:0 4px 16px #0003;backdrop-filter:blur(8px);transform:translate(-50%,-50%)}.hotspot .num{width:20px;height:20px;display:grid;place-items:center;border-radius:50%;background:#88e7d0;color:#0d302c;font-size:9px;font-weight:800}.hotspot:after{position:absolute;content:"";width:1px;height:16px;background:#86d5bc85;top:100%;left:50%}.hotspot:hover{background:#244c4b}.toast{position:absolute;bottom:123px;left:50%;transform:translate(-50%,8px);background:#12362fea;color:#c7f9e9;border:1px solid #8ce8cc33;border-radius:7px;padding:10px 15px;font-size:12px;max-width:90%;text-align:center;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:6}.toast.show{opacity:1;transform:translate(-50%,0)}.loader{position:absolute;inset:0;display:grid;place-items:center;background:#0d1c28ed;z-index:10;padding:30px;text-align:center}.loader-inner{max-width:420px}.loading-ring{width:42px;height:42px;border:2px solid #92e6d622;border-top-color:#92e6d6;border-radius:50%;margin:0 auto 21px;animation:spin 1s linear infinite}.loader h2{font-size:19px;margin:0 0 10px}.loader p{font-size:12px;color:#98aebd;line-height:1.9;margin:0}.loader button{margin-top:17px;background:#87ecd6;color:#082620;border:0;border-radius:8px;padding:10px 18px}.loader.error .loading-ring{display:none}@keyframes spin{to{transform:rotate(360deg)}}dialog{border:1px solid #91cdb347;background:#122432;color:#edf5fb;border-radius:14px;padding:26px;width:min(510px,90vw);box-shadow:0 20px 100px #0009}dialog::backdrop{background:#050e16ba;backdrop-filter:blur(7px)}dialog h2{margin:0 0 15px;font-size:21px}dialog p,dialog li{font-size:13px;line-height:1.9;color:#b7c9d7}dialog ol{padding-left:20px}dialog code{color:#a8ebd5}dialog button{width:100%;padding:11px;background:#83e5d0;border:0;border-radius:8px;color:#113730;font-weight:700}body.cockpit .scene-heading p,body.cockpit .view-badge,body.cockpit .scene-status,body.cockpit .legend{display:none}body.cockpit .scene-heading h1{font-size:22px}body.cockpit .scene-heading{top:20px;left:23px}body.cockpit .scene-heading .eyebrow{font-size:9px;margin-bottom:6px}body.fullscreen .app{height:100vh;height:100dvh}.mobile-note{display:none}
+@media(min-width:1550px){.app{grid-template-columns:minmax(0,1fr) 340px}.side-panel{padding:25px}.scene-heading{top:35px;left:40px}.scene-heading h1{font-size:36px}.scene-heading p{font-size:13px}.control-button{min-height:42px}.info-card p{font-size:12px}}
+@media(max-height:820px) and (min-width:901px){.side-panel{padding-top:17px}.section{margin-top:14px;padding-top:14px}.scene-heading h1{font-size:26px}.scene-heading p{font-size:11px}.view-badge{top:137px}.info-card{padding:12px}.scene-bottom .legend{display:none}}
+@media(max-width:1100px) and (min-width:901px){.app{grid-template-columns:minmax(0,1fr) 290px}.side-panel{padding-inline:16px}.tab{padding:9px 13px}.scene-heading{left:23px}.scene-heading h1{font-size:25px}.scene-status{display:none}.legend{display:none}.view-tools button{padding:9px}.topbar{padding-inline:20px}.top-actions .small-button span{display:none}}
+@media(max-width:900px){body{overflow:auto}.app{height:auto;min-height:100dvh;grid-template-columns:1fr;grid-template-rows:64px minmax(390px,57dvh) auto}.topbar{padding:0 15px;gap:10px;flex-wrap:nowrap}.brand{gap:9px}.brand-mark{width:29px;height:29px;font-size:17px}.brand-name{font-size:12px;letter-spacing:1.2px}.brand-sub{font-size:8px;letter-spacing:1.5px}.tabs{padding:3px;border-radius:8px}.tab{font-size:11px;padding:8px 11px}.tab span{display:none}.top-actions{gap:5px}.top-actions .small-button{display:none}.top-actions .icon-button{width:31px;min-height:31px}.side-panel{overflow:visible;border-left:0;border-top:1px solid var(--line);padding:23px;display:grid;grid-template-columns:1fr 1fr;gap:0 23px}.panel-title{grid-column:1/-1;margin-bottom:3px}.section{margin-top:16px;padding-top:16px}.info-card{margin-top:17px}.notice{grid-column:1/-1}.scene-heading{top:20px;left:21px}.scene-heading h1{font-size:25px}.scene-heading p{font-size:11px;margin-top:6px;max-width:290px}.eyebrow{font-size:9px;margin-bottom:7px}.scene-status{right:18px;top:23px;font-size:9px}.view-badge{top:126px;left:21px;font-size:9px}.view-tools{bottom:40px;padding:4px;gap:2px;border-radius:10px;max-width:96%}.view-tools button{padding:9px 11px;font-size:11px}.view-tools .driver{padding-inline:12px}.scene-bottom{bottom:15px;left:20px;right:20px;font-size:9px}.legend{display:none}.toast{bottom:94px}.hotspot{font-size:10px;padding:4px 8px 4px 4px;gap:6px}.hotspot .num{width:18px;height:18px}.hotspot:after{height:12px}.mobile-note{display:inline}}
+@media(max-width:520px){.app{grid-template-rows:61px minmax(360px,55dvh) auto}.topbar{padding-inline:11px}.brand-sub{display:none}.brand-name{font-size:10px;letter-spacing:1px}.brand{gap:6px}.brand-mark{height:24px;width:24px;font-size:14px;border-radius:7px}.tabs{gap:1px}.tab{font-size:11px;padding:8px 9px}.top-actions button:first-child{display:none}.scene-heading h1{font-size:22px}.scene-heading{left:17px;top:18px}.scene-heading p{max-width:220px;font-size:10px;line-height:1.6}.scene-status{top:19px;right:15px;font-size:8px}.view-badge{top:118px;left:17px}.view-tools{bottom:36px;gap:1px}.view-tools button{font-size:10px;padding:8px 9px}.view-tools .driver{padding:8px 10px}.view-tools .divider{margin:5px 2px}.scene-bottom{bottom:13px;font-size:8px;left:15px;right:15px}.scene-bottom #poly-count{display:none}.side-panel{padding:18px;gap:0 16px}.section-title{font-size:11px}.control-button{font-size:10px;min-height:36px;padding:7px 8px}.range-header,.row{font-size:11px}.color-row{gap:8px}.swatch{width:21px;height:21px}.color-label{display:none}.component-list button{font-size:9px;padding:5px 6px}.info-card h3{font-size:14px}.info-card p{font-size:10px}.info-card .tip{font-size:9px}.info-card{padding:12px}.panel-title h2{font-size:15px}.notice{font-size:9px}.hotspot{font-size:9px}.hotspot .num{width:16px;height:16px;font-size:8px}body.cockpit .scene-heading h1{font-size:18px}.top-actions{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}.loading-ring{animation:none}}
+/* 긴 오류 메시지·좁은 화면에서도 패널 밖으로 텍스트가 나가지 않도록 한다. */
+.loader-inner{width:100%;min-width:0;overflow-wrap:anywhere}.loader p{overflow-wrap:anywhere;word-break:keep-all}.control-button span{word-break:keep-all}.control-button .state-dot{flex:0 0 5px}
+@media(max-width:520px){.side-panel>.section:first-of-type{grid-column:1/-1}.info-card{grid-column:1/-1}.info-card p{font-size:11px}.info-card .tip{font-size:10px}.info-card h3{font-size:15px}}
+
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+<div class="brand"><div class="brand-mark" aria-hidden="true">M</div><div><div class="brand-name">MOTION</div><span class="brand-sub">3D CAR LAB</span></div></div>
+<nav class="tabs" aria-label="차량 관찰 모드">
+<button class="tab active" data-mode="exterior" aria-pressed="true"><span>01</span>외형 탐색</button>
+<button class="tab" data-mode="interior" aria-pressed="false"><span>02</span>실내 공간</button>
+<button class="tab" data-mode="mechanical" aria-pressed="false"><span>03</span>기계 구조</button>
+</nav>
+<div class="top-actions">
+<button class="small-button" id="reset" title="모든 설정 초기화 (R)"><svg viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/></svg><span>초기화</span></button>
+<button class="icon-button" id="fullscreen" title="전체 화면" aria-label="전체 화면"><svg viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+<button class="icon-button" id="help" title="사용 안내" aria-label="사용 안내"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4 2c-1 .5-1.5 1-1.5 2.5M12 17h.01"/></svg></button>
+</div>
+</header>
+<main class="viewport" id="viewport" aria-label="자동차 3D 가상 전시장">
+<div id="canvas-host"></div>
+<div class="scene-heading"><div class="eyebrow">EXPLORE THE ENGINEERING</div><h1 id="scene-title">자동차의 안과 밖.</h1><p id="scene-subtitle">회전하고, 열어 보고, 구조를 발견하세요.<br>직접 조작하는 나만의 3D 자동차 실험실.</p></div>
+<div class="scene-status"><i class="live-dot"></i><span id="render-status">THREE.JS · LIVE 3D</span></div>
+<div class="view-badge" id="view-badge">01 / 외형 탐색</div>
+<div id="labels" aria-label="3D 부품 위치"></div>
+<div class="view-tools" aria-label="카메라 시점">
+<button data-view="home" class="active" title="기본 시점">입체</button><button data-view="front">정면</button><button data-view="side">측면</button><button data-view="rear">후면</button><button data-view="top">위쪽</button><button data-view="bottom">하부</button><span class="divider"></span><button class="driver" id="driver">운전석 탑승</button>
+</div>
+<div class="scene-bottom"><span id="gesture-hint">드래그 회전 · 휠 확대 · 우클릭 이동 <span class="mobile-note">/ 두 손가락 확대</span></span><div class="legend"><span><i></i>차체</span><span><i></i>실내</span><span><i></i>기계</span></div><span id="poly-count">교육용 개념 모델</span></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="loader" id="loader"><div class="loader-inner"><div class="loading-ring"></div><h2 id="loader-title">3D 전시장을 준비하고 있습니다.</h2><p id="loader-message">Three.js 모듈을 불러옵니다.<br>인터넷 연결이 필요합니다.</p><button id="reload" class="hidden">다시 불러오기</button></div></div>
+<noscript><p style="position:absolute;inset:30px;z-index:100;background:#122432;padding:30px">이 체험을 실행하려면 브라우저에서 JavaScript를 허용해야 합니다.</p></noscript>
+</main>
+<aside class="side-panel" aria-label="차량 제어 패널">
+<div class="panel-title"><h2>차량 컨트롤</h2><div style="display:flex;gap:6px"><button class="small-button" id="reset-panel" title="모든 설정 초기화" style="min-height:29px;font-size:10px">초기화</button><button class="small-button" id="help-panel" title="사용 안내" aria-label="사용 안내" style="min-height:29px;font-size:11px;padding:0 10px">?</button></div></div>
+<section class="section" style="margin-top:0"><div class="section-title">외장 부품 <small>열고 닫기</small></div><div class="button-grid">
+<button class="control-button" id="doors" aria-pressed="false"><span>전체 문 열기</span><i class="state-dot"></i></button>
+<button class="control-button" id="hood" aria-pressed="false"><span>보닛 열기</span><i class="state-dot"></i></button>
+<button class="control-button" id="trunk" aria-pressed="false"><span>트렁크 열기</span><i class="state-dot"></i></button>
+<button class="control-button" id="roof" aria-pressed="false"><span>지붕 제거</span><i class="state-dot"></i></button>
+</div></section>
+<section class="section"><div class="range-row"><label class="range-header" for="opacity"><span>차체 불투명도</span><output id="opacity-value">100%</output></label><input id="opacity" class="range" type="range" min="5" max="100" value="100"><div class="range-caption"><span>내부 투시</span><span>외형 보기</span></div></div>
+<div class="range-row"><label class="range-header" for="explode"><span>분해 보기</span><output id="explode-value">0%</output></label><input id="explode" class="range" type="range" min="0" max="100" value="0"><div class="range-caption"><span>조립 상태</span><span>구조 펼치기</span></div></div></section>
+<section class="section"><div class="row"><span>세로 단면 보기</span><button class="switch" id="cutaway" aria-label="세로 단면 보기" aria-pressed="false"></button></div><div class="cut-options hidden" id="cut-options"><input id="cut-position" class="range" type="range" min="-105" max="105" value="0" aria-label="단면 위치"><div class="range-caption"><span>조수석 방향</span><span>운전석 방향</span></div></div>
+<div class="row"><span>부품 이름 표시</span><button class="switch" id="labels-toggle" aria-label="부품 이름 표시" aria-pressed="true"></button></div>
+<div class="row"><span>자동 회전</span><button class="switch" id="auto-rotate" aria-label="자동 회전" aria-pressed="false"></button></div>
+<div class="row"><span>와이어프레임</span><button class="switch" id="wireframe" aria-label="와이어프레임" aria-pressed="false"></button></div></section>
+<section class="section"><div class="section-title">차체 색상</div><div class="color-row"><button class="swatch" data-color="#4a91a3" data-name="오션 블루" style="--swatch:#4a91a3" aria-label="오션 블루" aria-pressed="true"></button><button class="swatch" data-color="#c9d4d9" data-name="펄 실버" style="--swatch:#c9d4d9" aria-label="펄 실버" aria-pressed="false"></button><button class="swatch" data-color="#8b243d" data-name="버건디" style="--swatch:#8b243d" aria-label="버건디" aria-pressed="false"></button><button class="swatch" data-color="#26303b" data-name="그래파이트" style="--swatch:#26303b" aria-label="그래파이트" aria-pressed="false"></button><button class="swatch" data-color="#d6a76d" data-name="샌드 골드" style="--swatch:#d6a76d" aria-label="샌드 골드" aria-pressed="false"></button><span class="color-label" id="color-label">오션 블루</span></div>
+<div class="range-row" style="margin-top:20px"><label class="range-header" for="steering"><span>앞바퀴 조향</span><output id="steering-value">0°</output></label><input id="steering" class="range" type="range" min="-28" max="28" value="0"></div>
+<div class="row" style="margin-top:12px"><span>바퀴 회전 시연</span><button class="switch" id="wheel-spin" aria-label="바퀴 회전 시연" aria-pressed="false"></button></div></section>
+<section class="section"><div class="section-title">부품 탐색 <small>누르면 가까이 보기</small></div><div class="component-list"><button data-part="engine">엔진</button><button data-part="dashboard">대시보드</button><button data-part="frontSeats">앞좌석</button><button data-part="rearSeats">뒷좌석</button><button data-part="drivetrain">구동계</button><button data-part="suspension">서스펜션</button><button data-part="wheels">휠·브레이크</button><button data-part="trunkSpace">적재 공간</button></div>
+</section>
+<section class="info-card" aria-live="polite"><div class="micro" id="info-category">EXPLORATION GUIDE</div><h3 id="info-title">어디부터 살펴볼까요?</h3><p id="info-description">차량을 드래그해 회전하거나 부품 이름을 눌러 보세요. 외장 패널을 열면 좌석과 엔진룸을 직접 확인할 수 있습니다.</p><div class="tip" id="info-tip">추천 순서: 외형 탐색 → 실내 공간 → 운전석 탑승 → 기계 구조</div><button id="focus-part" class="focus-button hidden">선택한 부품 가까이 보기</button></section>
+<p class="notice">특정 제조사의 차량이 아닌 교육용 개념 모델입니다. 부품 형상·배치·분해 방향은 이해를 돕기 위해 단순화했습니다. 실제 정비나 안전 판단의 근거로 사용하지 마세요.</p>
+</aside>
+</div>
+<dialog id="help-dialog"><h2>자동차 3D 탐험 안내</h2><p>외형, 실내 공간, 기계 구조를 오가며 자동차를 관찰하는 교육용 체험입니다.</p><ol><li>마우스 왼쪽 드래그: 회전 / 휠: 확대·축소 / 오른쪽 드래그: 화면 이동</li><li>휴대전화: 한 손가락으로 회전, 두 손가락으로 확대·이동</li><li>운전석에서는 드래그로 고개를 돌립니다. <code>Esc</code> 또는 하차 버튼으로 나옵니다.</li><li>투명도·분해·단면을 조합하면 내부 구조를 확인하기 쉽습니다.</li><li>단축키: <code>1</code> 외형 / <code>2</code> 실내 / <code>3</code> 기계 / <code>D</code> 문 / <code>H</code> 보닛 / <code>R</code> 초기화</li></ol><p>Three.js r180을 CDN에서 불러오므로 인터넷 연결이 필요합니다. 앱 내 파일 미리보기에서 실행되지 않으면 데스크톱 웹브라우저 또는 로컬 웹 서버로 열어 주세요.</p><button id="close-help">탐험 시작하기</button></dialog>
+<script type="module">
+/*
+ * MOTION / 자동차 3D 구조 탐험
+ * Three.js r180 / 모든 자동차 형상은 이 파일에서 절차적으로 생성한다.
+ * 좌표계: +X = 차량 앞, +Y = 위, +Z = 운전석 쪽(좌측).
+ * 본 모델은 교육용 개념 모델이며 실제 차량의 CAD·정비 데이터가 아니다.
+ */
+const $ = (id) => document.getElementById(id);
+const $$ = (selector) => [...document.querySelectorAll(selector)];
+
+function showLoadError(error) {
+  console.error('Car Lab:', error);
+  $('loader').classList.add('error');
+  $('loader').classList.remove('hidden');
+  $('loader-title').textContent = '3D 화면을 시작하지 못했습니다.';
+  $('loader-message').textContent = '인터넷 연결과 CDN 차단 여부를 확인해 주세요. 브라우저의 WebGL 2 / 하드웨어 가속이 필요합니다. 앱 내 미리보기 대신 데스크톱 브라우저나 VS Code의 로컬 웹 서버로 실행해 주세요. 오류: ' + String(error.message || error);
+  $('reload').classList.remove('hidden');
+}
+$('reload').addEventListener('click', () => location.reload());
+$('help').addEventListener('click', () => $('help-dialog').showModal());
+$('help-panel').addEventListener('click', () => $('help-dialog').showModal());
+$('close-help').addEventListener('click', () => $('help-dialog').close());
+$('help-dialog').addEventListener('click', (event) => {
+  if (event.target === $('help-dialog')) {
+    const r = event.target.getBoundingClientRect();
+    if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) event.target.close();
+  }
+});
+
+async function boot() {
+  const watchdog = setTimeout(() => {
+    $('loader-message').textContent = '3D 모듈 응답이 지연되고 있습니다. 인터넷 연결과 cdn.jsdelivr.net 접속 허용 여부를 확인해 주세요.';
+  }, 15000);
+  try {
+    const [THREE, { OrbitControls }, { RoundedBoxGeometry }, { RoomEnvironment }] = await Promise.all([
+      import('three'),
+      import('three/addons/controls/OrbitControls.js'),
+      import('three/addons/geometries/RoundedBoxGeometry.js'),
+      import('three/addons/environments/RoomEnvironment.js')
+    ]);
+    clearTimeout(watchdog);
+    createCarLab(THREE, OrbitControls, RoundedBoxGeometry, RoomEnvironment);
+  } catch (error) {
+    clearTimeout(watchdog);
+    showLoadError(error);
+  }
+}
+
+function createCarLab(THREE, OrbitControls, RoundedBoxGeometry, RoomEnvironment) {
+  const viewport = $('viewport');
+  const host = $('canvas-host');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const compact = () => host.clientWidth < 650;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(40, 1, 0.025, 90);
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.65));
+  renderer.setClearColor(0x101e2a, 0);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.13;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.localClippingEnabled = true;
+  host.appendChild(renderer.domElement);
+  renderer.domElement.setAttribute('aria-label', '자동차를 드래그하면 회전합니다. 운전석에서는 드래그로 주변을 둘러봅니다.');
+  renderer.domElement.setAttribute('tabindex', '0');
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.075;
+  controls.minDistance = 1.6;
+  controls.maxDistance = 17;
+  controls.maxPolarAngle = Math.PI - 0.055;
+  controls.minPolarAngle = 0.025;
+  controls.rotateSpeed = 0.65;
+  controls.zoomSpeed = 0.85;
+  controls.panSpeed = 0.7;
+  controls.autoRotateSpeed = 0.8;
+  controls.target.set(0, 0.75, 0);
+
+  // 외부 HDR 이미지 없이 스튜디오 반사 환경을 생성한다.
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const room = new RoomEnvironment();
+  const environmentTarget = pmrem.fromScene(room, 0.04);
+  scene.environment = environmentTarget.texture;
+  if (typeof room.dispose === 'function') room.dispose();
+  pmrem.dispose();
+  scene.add(new THREE.HemisphereLight(0xd7eaff, 0x38454f, 1.8));
+  const keyLight = new THREE.DirectionalLight(0xfff3e1, 3.1);
+  keyLight.position.set(3.5, 7, 5);
+  keyLight.castShadow = true;
+  keyLight.shadow.mapSize.set(1536, 1536);
+  Object.assign(keyLight.shadow.camera, { left: -5.5, right: 5.5, top: 5, bottom: -5, near: 0.2, far: 20 });
+  keyLight.shadow.bias = -0.0004;
+  keyLight.shadow.normalBias = 0.025;
+  scene.add(keyLight);
+  const fillLight = new THREE.DirectionalLight(0x9fcce9, 1.9);
+  fillLight.position.set(-5, 4, -5);
+  scene.add(fillLight);
+  const rimLight = new THREE.DirectionalLight(0xd1fff1, 1.2);
+  rimLight.position.set(-4, 3.5, 4.5);
+  scene.add(rimLight);
+  const cabinLight = new THREE.PointLight(0xffe9d0, 0.5, 3.0, 2);
+  cabinLight.position.set(-0.35, 1.45, 0);
+  scene.add(cabinLight);
+
+  const state = {
+    mode: 'exterior', doors: false, hood: false, trunk: false, roofRemoved: false,
+    opacity: 1, explode: 0, cutaway: false, cutPosition: 0,
+    labels: true, autoRotate: false, wireframe: false,
+    steering: 0, spin: false, driver: false, selected: null, color: '#4a91a3'
+  };
+  const motion = { doors: 0, hood: 0, trunk: 0, explode: 0, steering: 0 };
+  const car = new THREE.Group();
+  car.name = 'EducationalCar';
+  scene.add(car);
+  const parts = {};
+  const assemblies = [];
+  const allMaterials = [];
+  const shellMaterials = [];
+  const shellMeshes = [];
+  const glassMaterials = [];
+  const doorPivots = [];
+  const wheelUnits = [];
+  const clipPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
+  const V = (x = 0, y = 0, z = 0) => new THREE.Vector3(x, y, z);
+
+  const info = {
+    body: { title: '외장 패널과 차체', category: 'BODY / EXTERIOR', description: '보닛, 지붕, 문, 펜더를 각각 분리된 형상으로 구성했습니다. 차체 불투명도를 낮추면 외형을 유지하면서 내부 배치를 비교할 수 있습니다.', tip: '차체를 투명하게 하거나 지붕을 제거해 외장과 실내의 위치 관계를 관찰하세요.' },
+    hood: { title: '보닛과 엔진룸', category: 'BODY / ENGINE BAY', description: '보닛은 뒤쪽 경첩을 중심으로 열립니다. 아래에는 엔진, 라디에이터, 배터리 등 주요 부품이 배치되어 있습니다.', tip: '보닛 열기 → 엔진 선택으로 동력 장치의 배치를 확인하세요.', focus: 'engine' },
+    doors: { title: '도어와 측면 유리', category: 'BODY / ACCESS', description: '네 개의 문은 각 경첩을 기준으로 회전합니다. 실내 트림, 손잡이와 스피커를 함께 구성해 안쪽과 바깥쪽을 비교할 수 있습니다.', tip: '전체 문을 연 다음 뒤쪽에서 좌석과 대시보드를 바라보세요.', focus: 'frontSeats' },
+    engine: { title: '엔진과 엔진룸', category: 'POWERTRAIN / ENGINE', description: '앞쪽 엔진룸에 엔진 블록, 헤드 커버, 흡기 배관, 라디에이터와 보조 배터리를 단순화해 배치했습니다. 엔진은 4기통 개념 형상입니다.', tip: '보닛을 열고 위에서 관찰하세요. 실제 엔진의 내부 작동이나 연소를 시뮬레이션하지는 않습니다.' },
+    dashboard: { title: '대시보드와 조향 장치', category: 'INTERIOR / COCKPIT', description: '스티어링 휠, 계기판, 중앙 화면과 송풍구를 확인할 수 있습니다. 운전석 시점에서는 앉은 위치에서 주변을 둘러봅니다.', tip: '운전석 탑승을 누른 뒤 드래그하세요. 계기판 수치는 주행 데이터가 아닌 고정된 시연 화면입니다.' },
+    frontSeats: { title: '앞좌석과 센터 콘솔', category: 'INTERIOR / FRONT SEATS', description: '운전석과 조수석을 각각 좌판, 등받이, 헤드레스트로 나누어 구성했습니다. 가운데에는 센터 콘솔과 변속 조작부가 있습니다.', tip: '지붕을 제거하고 위쪽 시점을 선택하면 좌석 사이 공간을 확인하기 쉽습니다.' },
+    rearSeats: { title: '뒷좌석 공간', category: 'INTERIOR / REAR SEATS', description: '뒤쪽 좌석에는 좌판, 등받이와 헤드레스트를 배치했습니다. 앞좌석과의 간격, 뒤쪽 유리와의 위치 관계를 살펴볼 수 있습니다.', tip: '실내 공간 모드에서 차량 뒤쪽으로 회전해 앞좌석 등받이와 뒷좌석을 비교하세요.' },
+    drivetrain: { title: '변속기와 동력 전달 경로', category: 'POWERTRAIN / DRIVETRAIN', description: '앞쪽 엔진에서 변속기, 중앙 구동축, 뒤쪽 차동장치로 이어지는 후륜구동 개념 배치입니다. 실제 차량별 구동 방식과 구조는 다를 수 있습니다.', tip: '하부 시점이나 분해 보기를 사용해 차체 바닥 아래의 연결 관계를 관찰하세요.' },
+    suspension: { title: '서스펜션과 하부 프레임', category: 'CHASSIS / SUSPENSION', description: '네 바퀴 주변의 코일 스프링, 댐퍼와 연결 암을 개념적으로 표현했습니다. 프레임과 바퀴를 연결하는 부품의 위치를 보여 줍니다.', tip: '바퀴를 분해 보기로 바깥쪽에 펼치면 스프링과 브레이크가 더 잘 보입니다. 물리 거동 해석 모델은 아닙니다.' },
+    wheels: { title: '타이어·휠·디스크 브레이크', category: 'CHASSIS / WHEELS', description: '타이어, 스포크 휠, 브레이크 디스크와 캘리퍼를 분리해서 구성했습니다. 앞바퀴 조향과 바퀴 회전 시연을 조작할 수 있습니다.', tip: '바퀴 회전은 모양을 확인하기 위한 시연입니다. 차량은 제자리에 있고 실제 주행·제동은 계산하지 않습니다.' },
+    trunkSpace: { title: '트렁크 적재 공간', category: 'INTERIOR / LUGGAGE', description: '차량 뒤쪽에 트렁크 바닥과 안쪽 벽을 구성했습니다. 덮개가 앞쪽 경첩을 중심으로 열리면 내부 공간을 확인할 수 있습니다.', tip: '트렁크를 열고 후면 시점 또는 위쪽 시점에서 관찰하세요.' }
+  };
+
+  // 재질을 등록해 투명도, 단면과 와이어프레임을 한 곳에서 제어한다.
+  function mat(color, options = {}, shell = false) {
+    const material = new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.1, ...options });
+    material.clipShadows = true;
+    material.userData.originalOpacity = material.opacity;
+    allMaterials.push(material);
+    if (shell) shellMaterials.push(material);
+    return material;
+  }
+  const paint = new THREE.MeshPhysicalMaterial({ color: state.color, metalness: 0.68, roughness: 0.27, clearcoat: 1, clearcoatRoughness: 0.17, envMapIntensity: 1.2, side: THREE.DoubleSide });
+  paint.clipShadows = true;
+  paint.userData.originalOpacity = 1;
+  allMaterials.push(paint);
+  shellMaterials.push(paint);
+  const darkShell = mat(0x19252d, { roughness: 0.38, metalness: 0.3, side: THREE.DoubleSide }, true);
+  const chromeShell = mat(0x9cbbc5, { roughness: 0.22, metalness: 0.93 }, true);
+  const glass = mat(0x9ac6d9, { roughness: 0.14, metalness: 0.05, transparent: true, opacity: 0.20, depthWrite: false, side: THREE.DoubleSide });
+  glassMaterials.push(glass);
+  const rubber = mat(0x12191e, { roughness: 0.87, metalness: 0.02 });
+  const treadMat = mat(0x1a2227, { roughness: 0.95 });
+  const metal = mat(0x8a9dab, { roughness: 0.27, metalness: 0.87 });
+  const brushed = mat(0x596973, { roughness: 0.48, metalness: 0.8 });
+  const frameMat = mat(0x354754, { roughness: 0.46, metalness: 0.75 });
+  const black = mat(0x202a31, { roughness: 0.73 });
+  const leather = mat(0xbd8757, { roughness: 0.9, metalness: 0 });
+  const leatherInset = mat(0x80583e, { roughness: 0.96 });
+  const stitching = mat(0xe7c79f, { roughness: 1 });
+  const carpet = mat(0x24333e, { roughness: 1, metalness: 0 });
+  const doorTrim = mat(0x6a584b, { roughness: 0.94 }, true);
+  const copper = mat(0xc69b62, { roughness: 0.4, metalness: 0.77 });
+  const orange = mat(0xda7c43, { roughness: 0.4, metalness: 0.48 });
+  const red = mat(0xb44947, { roughness: 0.35, metalness: 0.42 });
+  const lightMat = mat(0xcbeeff, { emissive: 0x93cddd, emissiveIntensity: 1.5, roughness: 0.16 }, true);
+  const tailMat = mat(0xa92737, { emissive: 0xca152d, emissiveIntensity: 0.7, roughness: 0.24 }, true);
+  const geometryCache = new Map();
+  function mesh(parent, geometry, material, x = 0, y = 0, z = 0) {
+    const object = new THREE.Mesh(geometry, material);
+    object.position.set(x, y, z);
+    object.castShadow = !material.transparent;
+    object.receiveShadow = true;
+    if (shellMaterials.includes(material)) shellMeshes.push(object);
+    parent.add(object);
+    return object;
+  }
+  function box(parent, w, h, d, x, y, z, material, radius = 0.025) {
+    const r = Math.min(radius, w / 2 - 0.0001, h / 2 - 0.0001, d / 2 - 0.0001);
+    const key = [w, h, d, r].join('/');
+    if (!geometryCache.has(key)) geometryCache.set(key, r > 0.004 ? new RoundedBoxGeometry(w, h, d, 2, r) : new THREE.BoxGeometry(w, h, d));
+    return mesh(parent, geometryCache.get(key), material, x, y, z);
+  }
+  function cylinder(parent, radius, length, x, y, z, material, axis = 'y', r2 = radius, segments = 32) {
+    const object = mesh(parent, new THREE.CylinderGeometry(radius, r2, length, segments), material, x, y, z);
+    if (axis === 'z') object.rotation.x = Math.PI / 2;
+    if (axis === 'x') object.rotation.z = Math.PI / 2;
+    return object;
+  }
+  function beam(parent, start, end, radius, material, segments = 10) {
+    const a = Array.isArray(start) ? V(...start) : start;
+    const b = Array.isArray(end) ? V(...end) : end;
+    const object = cylinder(parent, radius, a.distanceTo(b), 0, 0, 0, material, 'y', radius, segments);
+    object.position.copy(a).add(b).multiplyScalar(0.5);
+    object.quaternion.setFromUnitVectors(V(0, 1, 0), b.clone().sub(a).normalize());
+    return object;
+  }
+  function pipe(parent, points, radius, material, segments = 36) {
+    const curve = new THREE.CatmullRomCurve3(points.map((p) => V(...p)));
+    return mesh(parent, new THREE.TubeGeometry(curve, segments, radius, 7, false), material);
+  }
+  function panel(parent, points, material) {
+    const positions = points.flat();
+    const indices = [];
+    for (let i = 1; i < points.length - 1; i++) indices.push(0, i, i + 1);
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    return mesh(parent, geometry, material);
+  }
+  function sidePanel(parent, points, z, material, depth = 0.045, bevel = 0.012) {
+    const shape = new THREE.Shape();
+    points.forEach((p, i) => i === 0 ? shape.moveTo(...p) : shape.lineTo(...p));
+    shape.closePath();
+    const geometry = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: bevel > 0, bevelSegments: 2, steps: 1, bevelSize: bevel, bevelThickness: bevel, curveSegments: 16 });
+    return mesh(parent, geometry, material, 0, 0, z);
+  }
+  function curvedPanel(parent, sections, thickness, material) {
+    // 너비 방향에 곡률을 주는 닫힌 패널. 입력값: x, 너비, 높이.
+    const columns = 12, rows = sections.length;
+    const positions = [], indices = [];
+    for (let layer = 0; layer < 2; layer++) {
+      for (const [x, width, y] of sections) {
+        for (let j = 0; j <= columns; j++) {
+          const t = j / columns * 2 - 1;
+          positions.push(x, y + 0.045 * (1 - t * t) - thickness * layer, t * width / 2);
+        }
+      }
+    }
+    const stride = columns + 1, count = rows * stride;
+    const quad = (a, b, c, d) => indices.push(a, b, c, a, c, d);
+    for (let i = 0; i < rows - 1; i++) {
+      for (let j = 0; j < columns; j++) {
+        const a = i * stride + j;
+        quad(a, a + 1, a + stride + 1, a + stride);
+        quad(a + count, a + stride + count, a + stride + 1 + count, a + 1 + count);
+      }
+      const left = i * stride, right = left + columns;
+      quad(left, left + stride, left + stride + count, left + count);
+      quad(right, right + count, right + stride + count, right + stride);
+    }
+    for (let j = 0; j < columns; j++) {
+      quad(j, j + count, j + 1 + count, j + 1);
+      const a = (rows - 1) * stride + j;
+      quad(a, a + 1, a + 1 + count, a + count);
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setIndex(indices);
+    geometry.computeVertexNormals();
+    return mesh(parent, geometry, material);
+  }
+  function group(parent, key, offset = [0, 0, 0], explodeOffset = null) {
+    const object = new THREE.Group();
+    object.position.set(...offset);
+    object.userData.partKey = key;
+    object.name = key;
+    parent.add(object);
+    if (!parts[key]) parts[key] = object;
+    if (explodeOffset) assemblies.push({ object, base: object.position.clone(), offset: V(...explodeOffset) });
+    return object;
+  }
+
+  // 바닥·회전 전시대. 하부 관찰에서는 자동으로 감춘다.
+  const stage = new THREE.Group();
+  scene.add(stage);
+  const stageMat = new THREE.MeshStandardMaterial({ color: 0x1a2d3c, roughness: 0.7, metalness: 0.22 });
+  const stageSideMat = new THREE.MeshStandardMaterial({ color: 0x0d202d, roughness: 0.55, metalness: 0.45 });
+  cylinder(stage, 3.38, 0.11, 0, -0.084, 0, stageSideMat, 'y', 3.44, 96);
+  cylinder(stage, 3.37, 0.016, 0, -0.021, 0, stageMat, 'y', 3.37, 96);
+  const ringMaterial = new THREE.MeshBasicMaterial({ color: 0x60878e, transparent: true, opacity: 0.34 });
+  for (const radius of [3.06, 3.34]) {
+    const ring = mesh(stage, new THREE.TorusGeometry(radius, 0.005, 5, 128), ringMaterial, 0, -0.011, 0);
+    ring.rotation.x = Math.PI / 2;
+  }
+  for (let i = 0; i < 48; i++) {
+    const angle = i / 48 * Math.PI * 2;
+    const tick = box(stage, 0.006, 0.004, i % 4 === 0 ? 0.09 : 0.04, Math.cos(angle) * 3.20, -0.009, Math.sin(angle) * 3.20, ringMaterial, 0);
+    tick.rotation.y = -angle + Math.PI / 2;
+  }
+
+  const body = group(car, 'body', [0, 0, 0], [0, 0.19, 0]);
+  const floor = box(body, 3.93, 0.09, 1.58, -0.05, 0.40, 0, darkShell, 0.04);
+  const floorCarpet = box(body, 2.10, 0.025, 1.49, -0.44, 0.465, 0, darkShell, 0.015);
+  for (const s of [-1, 1]) {
+    box(body, 2.03, 0.18, 0.115, -0.02, 0.50, s * 0.84, paint, 0.04);
+    box(body, 2.05, 0.032, 0.045, -0.02, 0.445, s * 0.925, darkShell, 0.01);
+    // 앞뒤 펜더의 바퀴 아치는 단순한 큐브가 아니라 실제로 비어 있는 윤곽이다.
+    const frontPoints = [[0.86, 1.07], [1.43, 1.085], [2.08, 1.015], [2.30, 0.89], [2.32, 0.47], [1.885, 0.43]];
+    for (let i = 0; i <= 28; i++) {
+      const a = i / 28 * Math.PI;
+      frontPoints.push([1.43 + 0.447 * Math.cos(a), 0.43 + 0.447 * Math.sin(a)]);
+    }
+    frontPoints.push([0.86, 0.46]);
+    const front = sidePanel(body, frontPoints, s * 0.835, paint, 0.087, 0.018);
+    if (s < 0) { front.position.z = -0.835; front.scale.z = -1; }
+    const rearPoints = [[-2.32, 0.47], [-2.31, 0.91], [-2.05, 1.03], [-1.40, 1.09], [-0.87, 1.055], [-0.87, 0.46], [-0.983, 0.43]];
+    for (let i = 0; i <= 28; i++) {
+      const a = i / 28 * Math.PI;
+      rearPoints.push([-1.43 + 0.447 * Math.cos(a), 0.43 + 0.447 * Math.sin(a)]);
+    }
+    rearPoints.push([-2.32, 0.43]);
+    const rear = sidePanel(body, rearPoints, s * 0.835, paint, 0.087, 0.018);
+    if (s < 0) { rear.position.z = -0.835; rear.scale.z = -1; }
+    for (const x of [1.43, -1.43]) {
+      const arcPoints = [];
+      for (let i = 0; i <= 28; i++) {
+        const a = i / 28 * Math.PI;
+        arcPoints.push([x + 0.454 * Math.cos(a), 0.429 + 0.454 * Math.sin(a), s * 0.936]);
+      }
+      pipe(body, arcPoints, 0.012, darkShell, 32);
+    }
+    box(body, 0.035, 0.06, 0.29, 2.314, 0.89, s * 0.57, lightMat, 0.015);
+    box(body, 0.06, 0.035, 0.32, 2.27, 0.815, s * 0.55, lightMat, 0.01);
+    box(body, 0.045, 0.09, 0.41, -2.32, 0.87, s * 0.55, tailMat, 0.019);
+    box(body, 0.055, 0.02, 0.55, -2.329, 0.864, s * 0.45, tailMat, 0.01);
+  }
+  box(body, 0.21, 0.39, 1.73, 2.26, 0.61, 0, paint, 0.09);
+  box(body, 0.022, 0.205, 1.02, 2.372, 0.62, 0, darkShell, 0.04);
+  for (let i = -6; i <= 6; i++) box(body, 0.025, 0.157, 0.012, 2.389, 0.626, i * 0.073, chromeShell, 0.005);
+  box(body, 0.027, 0.037, 1.78, 2.366, 0.43, 0, darkShell, 0.008);
+  box(body, 0.055, 0.045, 0.08, 2.382, 0.834, 0, chromeShell, 0.016);
+  box(body, 0.20, 0.38, 1.76, -2.25, 0.61, 0, paint, 0.075);
+  box(body, 0.055, 0.13, 1.44, -2.36, 0.465, 0, darkShell, 0.036);
+  for (const s of [-1, 1]) cylinder(body, 0.058, 0.09, -2.41, 0.43, s * 0.56, chromeShell, 'x', 0.058, 20);
+
+  // 차량 번호판도 로컬 CanvasTexture로 생성한다.
+  function textTexture(width, height, draw) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width; canvas.height = height;
+    draw(canvas.getContext('2d'), width, height);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
+    return texture;
+  }
+  function screenMaterial(texture) {
+    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, toneMapped: false });
+    material.clipShadows = true;
+    allMaterials.push(material);
+    return material;
+  }
+  const plateTexture = textTexture(512, 128, (ctx, w, h) => {
+    ctx.fillStyle = '#172d39'; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = '#6a8e9b'; ctx.lineWidth = 3; ctx.strokeRect(5, 5, w - 10, h - 10);
+    ctx.fillStyle = '#d9ebee'; ctx.font = '600 52px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('MOTION', w / 2, 84);
+  });
+  const plateMat = screenMaterial(plateTexture);
+  shellMaterials.push(plateMat); plateMat.userData.originalOpacity = 1;
+  for (const front of [true, false]) {
+    const plate = mesh(body, new THREE.PlaneGeometry(0.36, 0.09), plateMat, front ? 2.390 : -2.363, 0.675, 0);
+    plate.rotation.y = front ? Math.PI / 2 : -Math.PI / 2;
+  }
+
+  // 보닛·트렁크는 경첩 그룹의 회전으로 개폐한다.
+  const hoodPivot = group(car, 'hood', [0.82, 1.075, 0], [0.85, 0.53, 0]);
+  curvedPanel(hoodPivot, [[0.015, 1.62, 0], [0.36, 1.73, -0.012], [0.89, 1.75, -0.055], [1.44, 1.48, -0.15]], 0.055, paint);
+  for (const s of [-1, 1]) pipe(hoodPivot, [[0.06, 0.025, s * 0.51], [0.60, 0.005, s * 0.50], [1.25, -0.095, s * 0.54]], 0.004, chromeShell, 22);
+  const trunkPivot = group(car, 'trunkSpace', [-1.60, 1.075, 0], [-0.55, 0.49, 0]);
+  curvedPanel(trunkPivot, [[-0.69, 1.52, -0.105], [-0.50, 1.66, -0.035], [-0.02, 1.61, 0.01]], 0.05, paint);
+  const luggage = group(car, 'trunkSpace', [-1.88, 0.65, 0], [-0.30, 0.10, 0]);
+  parts.trunkSpace = luggage;
+  box(luggage, 0.56, 0.07, 1.42, 0, 0, 0, carpet, 0.018);
+  box(luggage, 0.07, 0.30, 1.39, 0.27, 0.16, 0, carpet, 0.018);
+  for (const s of [-1, 1]) box(luggage, 0.53, 0.24, 0.055, 0, 0.12, s * 0.675, carpet, 0.02);
+  for (let i = -3; i <= 3; i++) box(luggage, 0.47, 0.01, 0.01, 0, 0.041, i * 0.16, brushed, 0.004);
+
+  const canopy = group(car, 'body', [0, 0, 0], [0, 1.08, 0]);
+  const roofMesh = curvedPanel(canopy, [[-0.99, 1.40, 1.615], [-0.74, 1.45, 1.654], [-0.10, 1.46, 1.661], [0.15, 1.40, 1.622]], 0.055, paint);
+  panel(canopy, [[0.82, 1.072, -0.802], [0.82, 1.072, 0.802], [0.151, 1.613, 0.704], [0.151, 1.613, -0.704]], glass);
+  panel(canopy, [[-1.60, 1.081, 0.79], [-1.60, 1.081, -0.79], [-0.986, 1.608, -0.703], [-0.986, 1.608, 0.703]], glass);
+  for (const s of [-1, 1]) {
+    beam(canopy, [0.85, 1.046, s * 0.815], [0.13, 1.64, s * 0.718], 0.039, paint, 12);
+    beam(canopy, [-1.61, 1.07, s * 0.815], [-0.98, 1.63, s * 0.715], 0.048, paint, 12);
+    panel(canopy, [[-1.106, 1.084, s * 0.850], [-1.574, 1.093, s * 0.799], [-0.982, 1.579, s * 0.725]], glass);
+    beam(canopy, [-1.106, 1.084, s * 0.850], [-0.982, 1.579, s * 0.725], 0.013, darkShell, 8);
+    beam(canopy, [-0.205, 1.015, s * 0.865], [-0.205, 1.651, s * 0.732], 0.032, darkShell, 10);
+    pipe(canopy, [[-1.60, 1.065, s * 0.819], [-0.975, 1.625, s * 0.73], [-0.21, 1.674, s * 0.738], [0.14, 1.633, s * 0.722], [0.85, 1.052, s * 0.829]], 0.012, chromeShell, 48);
+  }
+  beam(canopy, [0.815, 1.074, -0.79], [0.815, 1.074, 0.79], 0.018, darkShell);
+  beam(canopy, [-1.60, 1.08, -0.77], [-1.60, 1.08, 0.77], 0.018, darkShell);
+  for (const s of [-1, 1]) beam(canopy, [0.782, 1.095, s * 0.07], [0.39, 1.40, s * 0.51], 0.008, darkShell);
+
+  for (const side of [-1, 1]) {
+    for (const front of [true, false]) {
+      const hingeX = front ? 0.81 : -0.225;
+      const pivot = group(car, 'doors', [hingeX, 0, side * 0.853], [front ? 0.06 : -0.12, 0.18, side * 0.89]);
+      doorPivots.push({ object: pivot, side, front });
+      const shape = front ? [[0, 0.535], [-0.955, 0.535], [-0.967, 1.056], [-0.05, 1.062], [0.015, 0.988]] : [[-0.005, 0.535], [-0.62, 0.535], [-0.77, 0.78], [-0.87, 1.064], [-0.005, 1.063]];
+      const exteriorPanel = sidePanel(pivot, shape, side * 0.003, paint, 0.053, 0.015);
+      exteriorPanel.scale.z = side;
+      const windowPoints = front ? [[-0.955, 1.092, side * 0.001], [-0.079, 1.091, side * 0.001], [-0.648, 1.579, side * -0.115], [-0.955, 1.596, side * -0.11]] : [[-0.012, 1.093, side * 0.003], [-0.871, 1.093, side * 0.003], [-0.738, 1.572, side * -0.117], [-0.012, 1.60, side * -0.11]];
+      panel(pivot, windowPoints, glass);
+      for (let i = 0; i < windowPoints.length; i++) beam(pivot, windowPoints[i], windowPoints[(i + 1) % windowPoints.length], 0.011, darkShell, 7);
+      const insidePanel = sidePanel(pivot, shape, side * -0.029, doorTrim, 0.017, 0.003);
+      insidePanel.scale.z = -side;
+      const midX = front ? -0.53 : -0.40;
+      box(pivot, front ? 0.72 : 0.53, 0.072, 0.078, midX, 0.82, -side * 0.067, darkShell, 0.025);
+      box(pivot, 0.17, 0.024, 0.025, front ? -0.19 : -0.12, 0.942, -side * 0.052, chromeShell, 0.009);
+      box(pivot, 0.15, 0.026, 0.04, front ? -0.77 : -0.60, 0.976, side * 0.075, chromeShell, 0.01);
+      cylinder(pivot, 0.077, 0.008, front ? -0.18 : -0.38, 0.644, -side * 0.051, darkShell, 'z', 0.077, 22);
+      for (let i = -2; i <= 2; i++) box(pivot, 0.10, 0.004, 0.005, front ? -0.18 : -0.38, 0.644 + i * 0.018, -side * 0.058, chromeShell, 0);
+      if (front) {
+        beam(pivot, [-0.08, 1.106, 0], [-0.08, 1.092, side * 0.17], 0.028, darkShell);
+        box(pivot, 0.20, 0.105, 0.15, -0.13, 1.12, side * 0.224, paint, 0.045);
+        const mirror = box(pivot, 0.011, 0.073, 0.12, -0.234, 1.12, side * 0.225, chromeShell, 0.006);
+      }
+    }
+  }
+
+  // 실내: 좌판·등받이·헤드레스트와 콘솔을 별도 메시로 구성한다.
+  function makeSeat(parent, x, z, rear = false) {
+    const seat = new THREE.Group();
+    seat.position.set(x, 0, z);
+    parent.add(seat);
+    const width = rear ? 0.54 : 0.57;
+    box(seat, 0.54, 0.10, width * 0.86, 0, 0.565, 0, black, 0.025);
+    for (const s of [-1, 1]) box(seat, 0.56, 0.035, 0.033, 0, 0.49, s * 0.19, metal, 0.008);
+    box(seat, 0.58, 0.16, width, 0.035, 0.674, 0, leather, 0.072);
+    box(seat, 0.46, 0.04, width * 0.61, 0.067, 0.763, 0, leatherInset, 0.019);
+    for (const s of [-1, 1]) {
+      box(seat, 0.51, 0.104, 0.09, 0.02, 0.75, s * width * 0.41, leather, 0.038);
+      pipe(seat, [[0.25, 0.761, s * width * 0.36], [0.12, 0.79, s * width * 0.36], [-0.18, 0.79, s * width * 0.36]], 0.0025, stitching, 12);
+    }
+    const back = new THREE.Group();
+    back.position.set(-0.242, 0.78, 0);
+    back.rotation.z = 0.12;
+    seat.add(back);
+    box(back, 0.14, 0.45, width, 0, 0.20, 0, leather, 0.055);
+    box(back, 0.018, 0.345, width * 0.63, 0.079, 0.195, 0, leatherInset, 0.008);
+    for (const s of [-1, 1]) {
+      box(back, 0.11, 0.405, 0.09, 0.033, 0.22, s * width * 0.40, leather, 0.036);
+      beam(back, [0.012, 0.40, s * 0.085], [0.012, 0.52, s * 0.085], 0.012, metal);
+      pipe(back, [[0.084, 0.05, s * width * 0.32], [0.084, 0.21, s * width * 0.32], [0.078, 0.37, s * width * 0.32]], 0.0028, stitching, 12);
+    }
+    box(back, 0.13, 0.18, 0.32, -0.002, 0.534, 0, leather, 0.042);
+    for (let i = 0; i < 5; i++) box(back, 0.006, 0.005, width * 0.49, 0.09, 0.068 + i * 0.056, 0, stitching, 0.002);
+    box(seat, 0.067, 0.09, 0.039, -0.10, 0.737, z > 0 ? -0.303 : 0.303, black, 0.009);
+    box(seat, 0.040, 0.011, 0.030, -0.10, 0.785, z > 0 ? -0.303 : 0.303, red, 0.004);
+    return seat;
+  }
+  const frontSeats = group(car, 'frontSeats', [0, 0, 0], [0.03, 0.64, 0]);
+  makeSeat(frontSeats, -0.16, 0.426);
+  makeSeat(frontSeats, -0.16, -0.426);
+  const rearSeats = group(car, 'rearSeats', [0, 0, 0], [-0.28, 0.79, 0]);
+  makeSeat(rearSeats, -1.015, 0.402, true);
+  makeSeat(rearSeats, -1.015, -0.402, true);
+  box(rearSeats, 0.44, 0.13, 0.25, -1.00, 0.684, 0, leather, 0.04);
+  const rearMid = box(rearSeats, 0.13, 0.42, 0.27, -1.28, 0.986, 0, leather, 0.025);
+  rearMid.rotation.z = 0.12;
+  const consoleGroup = group(car, 'frontSeats', [0, 0, 0], [0.08, 0.48, 0]);
+  box(consoleGroup, 0.91, 0.20, 0.245, -0.02, 0.625, 0, black, 0.046);
+  box(consoleGroup, 0.69, 0.025, 0.23, 0.048, 0.738, 0, brushed, 0.01);
+  box(consoleGroup, 0.29, 0.095, 0.24, -0.298, 0.763, 0, leather, 0.038);
+  box(consoleGroup, 0.13, 0.045, 0.13, 0.302, 0.768, 0, black, 0.017);
+  beam(consoleGroup, [0.30, 0.78, 0], [0.267, 0.88, 0], 0.021, metal);
+  box(consoleGroup, 0.089, 0.075, 0.052, 0.265, 0.9, 0, black, 0.024);
+  for (const x of [-0.025, 0.105]) {
+    const cup = mesh(consoleGroup, new THREE.TorusGeometry(0.046, 0.009, 8, 28), metal, x, 0.757, 0);
+    cup.rotation.x = Math.PI / 2;
+    cylinder(consoleGroup, 0.038, 0.013, x, 0.748, 0, black, 'y', 0.038, 20);
+  }
+  for (const s of [-1, 1]) box(body, 0.62, 0.016, 0.49, 0.12, 0.458, s * 0.43, darkShell, 0.02);
+  for (const z of [0.34, 0.50]) {
+    const pedal = box(consoleGroup, 0.055, 0.1, 0.065, 0.66, 0.60, z, rubber, 0.01);
+    pedal.rotation.z = -0.24;
+  }
+
+  const dashboard = group(car, 'dashboard', [0, 0, 0], [0.32, 0.53, 0]);
+  box(dashboard, 0.31, 0.20, 1.49, 0.615, 1.015, 0, black, 0.055);
+  box(dashboard, 0.027, 0.104, 1.38, 0.447, 0.977, 0, leatherInset, 0.009);
+  box(dashboard, 0.015, 0.012, 1.37, 0.43, 1.023, 0, copper, 0.004);
+  box(dashboard, 0.025, 0.105, 0.40, 0.436, 0.941, -0.443, black, 0.012);
+  box(dashboard, 0.018, 0.012, 0.105, 0.420, 0.95, -0.443, metal, 0.005);
+  for (const z of [-0.62, -0.215, 0.215, 0.655]) {
+    box(dashboard, 0.022, 0.065, 0.138, 0.443, 1.062, z, brushed, 0.01);
+    for (let i = -2; i <= 2; i++) box(dashboard, 0.008, 0.007, 0.113, 0.427, 1.062 + i * 0.011, z, black, 0.002);
+  }
+  const displayTexture = textTexture(720, 400, (ctx, w, h) => {
+    ctx.fillStyle = '#08151e'; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = '#1c3445'; ctx.lineWidth = 2;
+    for (let x = 20; x < w; x += 45) { ctx.beginPath(); ctx.moveTo(x, 70); ctx.lineTo(x, 330); ctx.stroke(); }
+    for (let y = 80; y < h; y += 43) { ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(w - 20, y); ctx.stroke(); }
+    ctx.fillStyle = '#b4d9e2'; ctx.font = '500 22px sans-serif'; ctx.fillText('MOTION  /  VIRTUAL GARAGE', 32, 39);
+    ctx.font = '500 18px sans-serif'; ctx.fillStyle = '#82a6b9'; ctx.fillText('CONCEPT DISPLAY', 32, 373);
+    ctx.strokeStyle = '#78e4c7'; ctx.lineWidth = 11; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(90, 293); ctx.lineTo(212, 293); ctx.lineTo(305, 201); ctx.lineTo(454, 201); ctx.lineTo(540, 119); ctx.lineTo(636, 119); ctx.stroke();
+    ctx.fillStyle = '#efffec'; ctx.beginPath(); ctx.arc(90, 293, 12, 0, Math.PI * 2); ctx.fill();
+    ctx.font = '600 25px sans-serif'; ctx.fillStyle = '#edf3e7'; ctx.fillText('22.0°', 595, 376);
+    ctx.font = '16px sans-serif'; ctx.fillText('PARK', 608, 38);
+  });
+  const instrumentTexture = textTexture(640, 280, (ctx, w, h) => {
+    ctx.fillStyle = '#09121a'; ctx.fillRect(0, 0, w, h);
+    ctx.textAlign = 'center'; ctx.fillStyle = '#ddfaf0'; ctx.font = '500 119px sans-serif'; ctx.fillText('0', w / 2, 176);
+    ctx.font = '18px sans-serif'; ctx.fillStyle = '#8bbfae'; ctx.fillText('km/h  ·  DEMO', w / 2, 214);
+    ctx.font = '26px sans-serif'; ctx.fillStyle = '#99e5cf'; ctx.fillText('P', 69, 67);
+    for (const x of [120, 520]) {
+      ctx.strokeStyle = '#244554'; ctx.lineWidth = 17; ctx.beginPath(); ctx.arc(x, 149, 79, Math.PI * 0.74, Math.PI * 2.26); ctx.stroke();
+      ctx.strokeStyle = '#71d7c3'; ctx.lineWidth = 8; ctx.beginPath(); ctx.arc(x, 149, 79, Math.PI * 0.74, Math.PI * 1.34); ctx.stroke();
+    }
+    ctx.fillStyle = '#87a6b5'; ctx.font = '17px sans-serif'; ctx.fillText('POWER', 120, 161); ctx.fillText('FUEL', 520, 161);
+  });
+  box(dashboard, 0.032, 0.252, 0.427, 0.48, 1.187, -0.016, black, 0.024);
+  const centralScreen = mesh(dashboard, new THREE.PlaneGeometry(0.389, 0.216), screenMaterial(displayTexture), 0.462, 1.188, -0.016);
+  centralScreen.rotation.y = -Math.PI / 2;
+  box(dashboard, 0.080, 0.19, 0.36, 0.521, 1.171, 0.431, black, 0.041);
+  const instruments = mesh(dashboard, new THREE.PlaneGeometry(0.316, 0.138), screenMaterial(instrumentTexture), 0.478, 1.183, 0.431);
+  instruments.rotation.y = -Math.PI / 2;
+  beam(dashboard, [0.587, 0.99, 0.431], [0.275, 1.109, 0.431], 0.036, black, 16);
+  const steeringBase = new THREE.Group();
+  steeringBase.position.set(0.258, 1.115, 0.431);
+  steeringBase.quaternion.setFromUnitVectors(V(0, 0, 1), V(-0.92, 0.39, 0).normalize());
+  dashboard.add(steeringBase);
+  const steeringWheel = new THREE.Group();
+  steeringBase.add(steeringWheel);
+  mesh(steeringWheel, new THREE.TorusGeometry(0.163, 0.016, 12, 64), black);
+  cylinder(steeringWheel, 0.060, 0.032, 0, 0, 0, black, 'z', 0.06, 26);
+  for (const angle of [0, Math.PI, -Math.PI / 2]) beam(steeringWheel, [Math.cos(angle) * 0.04, Math.sin(angle) * 0.04, 0], [Math.cos(angle) * 0.145, Math.sin(angle) * 0.145, 0], 0.018, brushed);
+  cylinder(steeringWheel, 0.022, 0.004, 0, 0, 0.018, metal, 'z', 0.022, 20);
+  box(dashboard, 0.035, 0.073, 0.221, 0.40, 1.487, 0, black, 0.02);
+  box(dashboard, 0.007, 0.054, 0.191, 0.377, 1.487, 0, metal, 0.003);
+  beam(dashboard, [0.45, 1.49, 0], [0.38, 1.59, 0], 0.012, black);
+
+  // 엔진을 포함한 기계 구조. 구동·연소의 물리 연산은 수행하지 않는다.
+  const engine = group(car, 'engine', [1.425, 0.71, 0], [0.90, 0.50, 0]);
+  box(engine, 0.65, 0.29, 0.47, 0, -0.046, 0, brushed, 0.036);
+  box(engine, 0.69, 0.075, 0.50, 0, 0.135, 0, metal, 0.018);
+  box(engine, 0.63, 0.09, 0.40, 0, 0.219, 0, black, 0.029);
+  box(engine, 0.47, 0.013, 0.068, -0.035, 0.271, 0, orange, 0.005);
+  for (let i = 0; i < 4; i++) {
+    const x = -0.237 + i * 0.151;
+    cylinder(engine, 0.038, 0.035, x, 0.265, 0.115, metal, 'y', 0.038, 20);
+    pipe(engine, [[x, 0.16, -0.21], [x, 0.19, -0.37], [x, -0.005, -0.402], [x, -0.085, -0.255]], 0.023, metal, 20);
+    pipe(engine, [[x, -0.025, 0.24], [x, -0.015, 0.36], [x - 0.05, -0.20, 0.41]], 0.018, copper, 18);
+  }
+  cylinder(engine, 0.114, 0.06, 0.358, -0.05, 0, black, 'x', 0.114, 32);
+  cylinder(engine, 0.057, 0.075, 0.368, 0.063, -0.237, brushed, 'x', 0.057, 24);
+  box(engine, 0.48, 0.075, 0.37, -0.025, -0.24, 0, black, 0.022);
+  const accessories = group(car, 'engine', [0, 0, 0], [0.80, 0.23, 0]);
+  box(accessories, 0.073, 0.385, 1.21, 2.075, 0.713, 0, black, 0.016);
+  for (let i = -9; i <= 9; i++) box(accessories, 0.081, 0.326, 0.01, 2.071, 0.718, i * 0.058, metal, 0.002);
+  pipe(accessories, [[2.03, 0.838, -0.45], [1.78, 0.855, -0.44], [1.67, 0.84, -0.25]], 0.027, rubber, 24);
+  box(accessories, 0.31, 0.24, 0.27, 1.08, 0.744, -0.61, black, 0.02);
+  box(accessories, 0.26, 0.019, 0.226, 1.08, 0.877, -0.61, brushed, 0.005);
+  for (const s of [-1, 1]) cylinder(accessories, 0.019, 0.027, 1.08 + s * 0.105, 0.90, -0.61, s > 0 ? red : black, 'y', 0.019, 12);
+  box(accessories, 0.32, 0.17, 0.23, 1.78, 0.802, 0.586, black, 0.025);
+  pipe(accessories, [[1.70, 0.84, 0.49], [1.58, 0.91, 0.39], [1.53, 0.92, 0.21]], 0.052, rubber, 24);
+  const reservoirMat = mat(0xd4dcda, { roughness: 0.6, metalness: 0 });
+  box(accessories, 0.16, 0.16, 0.17, 1.07, 0.834, 0.62, reservoirMat, 0.042);
+  cylinder(accessories, 0.039, 0.027, 1.07, 0.929, 0.62, black, 'y', 0.039, 20);
+
+  const drivetrain = group(car, 'drivetrain', [0, 0, 0], [0.02, -0.15, 0]);
+  cylinder(drivetrain, 0.18, 0.32, 0.90, 0.465, 0, brushed, 'x', 0.20, 24);
+  cylinder(drivetrain, 0.118, 0.39, 0.56, 0.465, 0, metal, 'x', 0.157, 24);
+  box(drivetrain, 0.43, 0.12, 0.33, 0.689, 0.343, 0, brushed, 0.022);
+  for (let i = 0; i < 6; i++) cylinder(drivetrain, 0.168 - i * 0.009, 0.015, 0.79 - i * 0.062, 0.465, 0, frameMat, 'x', 0.168 - i * 0.009, 24);
+  cylinder(drivetrain, 0.047, 1.71, -0.495, 0.349, 0, metal, 'x', 0.047, 20);
+  for (const x of [0.348, -1.338]) cylinder(drivetrain, 0.07, 0.105, x, 0.349, 0, orange, 'x', 0.07, 20);
+  box(drivetrain, 0.30, 0.245, 0.35, -1.435, 0.361, 0, brushed, 0.066);
+  cylinder(drivetrain, 0.099, 0.13, -1.27, 0.349, 0, brushed, 'x', 0.099, 22);
+  beam(drivetrain, [-1.435, 0.377, -0.80], [-1.435, 0.377, 0.80], 0.038, metal, 18);
+  for (const s of [-1, 1]) {
+    pipe(drivetrain, [[1.18, 0.48, s * 0.31], [0.90, 0.282, s * 0.32], [0.4, 0.232, s * 0.34], [-0.6, 0.241, s * 0.36], [-1.5, 0.285, s * 0.47], [-2.32, 0.425, s * 0.56]], 0.025, copper, 44);
+    box(drivetrain, 0.32, 0.11, 0.23, -1.94, 0.313, s * 0.51, metal, 0.042);
+  }
+
+  const suspension = group(car, 'suspension');
+  for (const s of [-1, 1]) box(suspension, 3.73, 0.12, 0.085, -0.03, 0.278, s * 0.60, frameMat, 0.022);
+  for (const x of [-1.45, -0.56, 0.49, 1.39]) box(suspension, 0.082, 0.085, 1.30, x, 0.28, 0, frameMat, 0.016);
+  for (const x of [1.43, -1.43]) {
+    for (const s of [-1, 1]) {
+      beam(suspension, [x - 0.22, 0.31, s * 0.52], [x, 0.40, s * 0.86], 0.025, brushed);
+      beam(suspension, [x + 0.22, 0.31, s * 0.52], [x, 0.40, s * 0.86], 0.025, brushed);
+      beam(suspension, [x - 0.13, 0.67, s * 0.50], [x, 0.54, s * 0.80], 0.019, brushed);
+      beam(suspension, [x + 0.13, 0.67, s * 0.50], [x, 0.54, s * 0.80], 0.019, brushed);
+      beam(suspension, [x, 0.426, s * 0.77], [x, 0.84, s * 0.65], 0.025, metal, 14);
+      cylinder(suspension, 0.075, 0.028, x, 0.839, s * 0.65, black, 'y', 0.075, 22);
+      const springPoints = [];
+      for (let i = 0; i <= 100; i++) {
+        const t = i / 100, a = t * Math.PI * 2 * 6;
+        springPoints.push([x + Math.cos(a) * 0.064, 0.486 + t * 0.30, s * (0.752 - t * 0.087) + Math.sin(a) * 0.064]);
+      }
+      pipe(suspension, springPoints, 0.010, orange, 100);
+    }
+  }
+
+  const wheels = group(car, 'wheels');
+  const tireProfile = [
+    [0.264, -0.131], [0.305, -0.132], [0.350, -0.118], [0.381, -0.083], [0.392, -0.030], [0.392, 0.030], [0.381, 0.083], [0.350, 0.118], [0.305, 0.132], [0.264, 0.131], [0.264, -0.131]
+  ].map(([x, y]) => new THREE.Vector2(x, y));
+  const tireGeometry = new THREE.LatheGeometry(tireProfile, 64);
+  tireGeometry.rotateX(Math.PI / 2);
+  const treadGeometry = new THREE.BoxGeometry(0.015, 0.0035, 0.12);
+  for (const x of [1.43, -1.43]) {
+    for (const side of [-1, 1]) {
+      const axle = group(wheels, 'wheels', [x, 0.415, side * 0.923], [0, 0.11, side * 0.80]);
+      const rolling = new THREE.Group();
+      axle.add(rolling);
+      wheelUnits.push({ axle, rolling, front: x > 0, side });
+      mesh(rolling, tireGeometry, rubber);
+      const tread = new THREE.InstancedMesh(treadGeometry, treadMat, 64);
+      const dummy = new THREE.Object3D();
+      for (let i = 0; i < 64; i++) {
+        const a = i / 64 * Math.PI * 2;
+        dummy.position.set(Math.sin(a) * 0.391, Math.cos(a) * 0.391, 0);
+        dummy.rotation.set(0, 0, -a);
+        dummy.updateMatrix(); tread.setMatrixAt(i, dummy.matrix);
+      }
+      tread.castShadow = true; tread.receiveShadow = true;
+      rolling.add(tread);
+      cylinder(rolling, 0.255, 0.17, 0, 0, 0, black, 'z', 0.255, 48);
+      cylinder(rolling, 0.227, 0.018, 0, 0, side * 0.063, brushed, 'z', 0.227, 48);
+      const rim = mesh(rolling, new THREE.TorusGeometry(0.252, 0.018, 10, 64), metal, 0, 0, side * 0.139);
+      const innerRim = mesh(rolling, new THREE.TorusGeometry(0.231, 0.006, 8, 48), brushed, 0, 0, side * 0.142);
+      for (let spoke = 0; spoke < 5; spoke++) {
+        const angle = spoke / 5 * Math.PI * 2 + 0.18;
+        for (const split of [-1, 1]) {
+          const a = angle + split * 0.10;
+          beam(rolling, [Math.cos(angle) * 0.066, Math.sin(angle) * 0.066, side * 0.15], [Math.cos(a) * 0.238, Math.sin(a) * 0.238, side * 0.146], 0.017, metal, 8);
+        }
+        const a = angle + 0.06;
+        cylinder(rolling, 0.009, 0.012, Math.cos(a) * 0.056, Math.sin(a) * 0.056, side * 0.181, black, 'z', 0.009, 10);
+      }
+      cylinder(rolling, 0.074, 0.042, 0, 0, side * 0.149, metal, 'z', 0.074, 30);
+      cylinder(rolling, 0.041, 0.008, 0, 0, side * 0.177, black, 'z', 0.041, 26);
+      cylinder(rolling, 0.021, 0.009, 0, 0, side * 0.183, chromeShell, 'z', 0.021, 20);
+      for (let i = 0; i < 20; i++) {
+        const a = i / 20 * Math.PI * 2;
+        cylinder(rolling, 0.007, 0.003, Math.cos(a) * 0.190, Math.sin(a) * 0.190, side * 0.075, black, 'z', 0.007, 6);
+      }
+      const caliper = box(axle, 0.105, 0.187, 0.095, -0.165, 0.015, side * 0.103, red, 0.025);
+      caliper.rotation.z = -0.12;
+    }
+  }
+
+  // 카메라·표시 상태·부품 설명을 연결한다.
+  let cameraTween = null;
+  let selectedObject = null;
+  let driverReturn = null;
+  let activeView = 'home';
+  let driverYaw = -0.043;
+  let driverPitch = -0.083;
+  let dragging = null;
+  let toastTimeout = null;
+  const selectionBox = new THREE.Box3();
+  const selectionHelper = new THREE.Box3Helper(selectionBox, 0x96f4d9);
+  selectionHelper.material.transparent = true;
+  selectionHelper.material.opacity = 0.65;
+  selectionHelper.material.depthTest = false;
+  selectionHelper.visible = false;
+  selectionHelper.renderOrder = 10;
+  scene.add(selectionHelper);
+  const driverEye = V(-0.125, 1.385, 0.431);
+  const initialInfo = {
+    title: $('info-title').textContent,
+    description: $('info-description').textContent,
+    tip: $('info-tip').textContent
+  };
+
+  function toast(message) {
+    clearTimeout(toastTimeout);
+    $('toast').textContent = message;
+    $('toast').classList.add('show');
+    toastTimeout = setTimeout(() => $('toast').classList.remove('show'), 2400);
+  }
+  function pressed(id, on) { $(id).setAttribute('aria-pressed', String(on)); }
+  function caption(id, text) { $(id).querySelector('span').textContent = text; }
+  function appearance() {
+    for (const material of shellMaterials) {
+      const isTransparent = state.opacity < 0.995;
+      const needsUpdate = material.transparent !== isTransparent;
+      material.opacity = state.opacity;
+      material.transparent = isTransparent;
+      material.depthWrite = !isTransparent;
+      if (needsUpdate) material.needsUpdate = true;
+    }
+    for (const material of glassMaterials) material.opacity = (state.mode === 'interior' ? 0.10 : 0.21) * Math.sqrt(state.opacity);
+    for (const material of allMaterials) {
+      const changed = Boolean(material.clippingPlanes?.length) !== state.cutaway || material.wireframe !== state.wireframe;
+      material.clippingPlanes = state.cutaway ? [clipPlane] : [];
+      material.wireframe = state.wireframe;
+      if (changed) material.needsUpdate = true;
+    }
+    for (const object of shellMeshes) object.castShadow = state.opacity > 0.92;
+    clipPlane.constant = state.cutPosition;
+    roofMesh.visible = !state.roofRemoved;
+    paint.color.set(state.color);
+    controls.autoRotate = state.autoRotate && !state.driver;
+    document.body.classList.toggle('cockpit', state.driver);
+  }
+  function syncUI() {
+    for (const [id, value] of [['doors', state.doors], ['hood', state.hood], ['trunk', state.trunk], ['roof', state.roofRemoved], ['cutaway', state.cutaway], ['labels-toggle', state.labels], ['auto-rotate', state.autoRotate], ['wireframe', state.wireframe], ['wheel-spin', state.spin]]) pressed(id, value);
+    caption('doors', state.doors ? '전체 문 닫기' : '전체 문 열기');
+    caption('hood', state.hood ? '보닛 닫기' : '보닛 열기');
+    caption('trunk', state.trunk ? '트렁크 닫기' : '트렁크 열기');
+    caption('roof', state.roofRemoved ? '지붕 복원' : '지붕 제거');
+    $('opacity').value = Math.round(state.opacity * 100);
+    $('opacity-value').value = Math.round(state.opacity * 100) + '%';
+    $('explode').value = Math.round(state.explode * 100);
+    $('explode-value').value = Math.round(state.explode * 100) + '%';
+    $('steering').value = state.steering;
+    $('steering-value').value = state.steering + '°';
+    $('cut-position').value = Math.round(state.cutPosition * 100);
+    $('cut-options').classList.toggle('hidden', !state.cutaway);
+    $('driver').textContent = state.driver ? '운전석 하차' : '운전석 탑승';
+    $$('.tab').forEach((button) => {
+      const on = button.dataset.mode === state.mode;
+      button.classList.toggle('active', on);
+      button.setAttribute('aria-pressed', String(on));
+    });
+    $$('[data-view]').forEach((button) => button.classList.toggle('active', !state.driver && button.dataset.view === activeView));
+    $$('[data-color]').forEach((button) => {
+      const on = button.dataset.color === state.color;
+      button.setAttribute('aria-pressed', String(on));
+      if (on) $('color-label').textContent = button.dataset.name;
+    });
+    $$('[data-part]').forEach((button) => button.classList.toggle('active', button.dataset.part === state.selected));
+    const titles = { exterior: ['자동차의 안과 밖.', '회전하고, 열어 보고, 구조를 발견하세요.\n직접 조작하는 나만의 3D 자동차 실험실.', '01 / 외형 탐색'], interior: ['실내 공간을 발견하다.', '지붕과 문을 열어 좌석 배치를 확인하세요.\n운전석 탑승으로 시점을 바꿀 수 있습니다.', '02 / 실내 공간'], mechanical: ['보이지 않던 구조까지.', '엔진에서 바퀴까지 이어지는 연결.\n투명도, 분해, 단면으로 깊이 살펴보세요.', '03 / 기계 구조'] };
+    const text = titles[state.mode];
+    $('scene-title').textContent = state.driver ? '지금, 운전석에서.' : text[0];
+    $('scene-subtitle').textContent = text[1];
+    $('scene-subtitle').style.whiteSpace = 'pre-line';
+    $('view-badge').textContent = state.cutaway ? text[2] + ' · 단면 관찰' : text[2];
+    $('gesture-hint').textContent = state.driver ? '드래그로 둘러보기 · 휠로 시야 조절 · Esc / 하차로 복귀' : (compact() ? '한 손가락 회전 · 두 손가락 확대·이동' : '드래그 회전 · 휠 확대 · 우클릭 이동');
+    appearance();
+  }
+  function moveCamera(position, target, fov = 40, immediate = false, adjustForAspect = true) {
+    controls.autoRotate = false;
+    const endTarget = Array.isArray(target) ? V(...target) : target.clone();
+    let endPosition = Array.isArray(position) ? V(...position) : position.clone();
+    if (adjustForAspect && !state.driver) {
+      const factor = Math.max(1, 0.99 / camera.aspect);
+      endPosition.sub(endTarget).multiplyScalar(factor).add(endTarget);
+    }
+    controls.enableDamping = false;
+    controls.update();
+    controls.enableDamping = true;
+    controls.enabled = false;
+    if (immediate || reducedMotion) {
+      camera.position.copy(endPosition); controls.target.copy(endTarget); camera.fov = fov;
+      camera.lookAt(endTarget); camera.updateProjectionMatrix();
+      cameraTween = null; controls.enabled = !state.driver;
+      if (!state.driver) { controls.update(); controls.autoRotate = state.autoRotate; }
+    } else {
+      cameraTween = { start: performance.now(), duration: 780, from: camera.position.clone(), to: endPosition, fromTarget: controls.target.clone(), toTarget: endTarget, fromFov: camera.fov, toFov: fov };
+    }
+  }
+  function viewCamera(view = 'home', immediate = false) {
+    activeView = view;
+    const target = [0, 0.79 + state.explode * 0.20, 0];
+    const views = {
+      front: [[7.3, 1.64, 0.001], target],
+      rear: [[-7.3, 1.75, 0.001], target],
+      side: [[0.02, 1.72, 7.25], target],
+      top: [[0.001, 8.8, 0.035], [0, 0.67, 0]],
+      bottom: [[3.7, -3.4, 4.8], [0, 0.39, 0]]
+    };
+    if (view === 'home') {
+      if (state.explode > 0.12) moveCamera([6.75, 4.65, 7.12], [0.05, 1.0, 0], 43, immediate);
+      else if (state.mode === 'interior') moveCamera([-3.40, 3.13, 4.01], [-0.37, 0.88, 0], 43, immediate);
+      else if (state.mode === 'mechanical') moveCamera([5.08, 3.03, 5.07], [0, 0.67, 0], 40, immediate);
+      else moveCamera([5.38, 2.88, 5.65], target, 40, immediate);
+    } else {
+      const [position, lookAt] = views[view] || views.side;
+      moveCamera(position, lookAt, view === 'top' ? 38 : 40, immediate);
+    }
+    syncUI();
+  }
+  function clearSelection() {
+    state.selected = null; selectedObject = null; selectionHelper.visible = false;
+    $('info-category').textContent = 'EXPLORATION GUIDE';
+    $('info-title').textContent = initialInfo.title;
+    $('info-description').textContent = initialInfo.description;
+    $('info-tip').textContent = initialInfo.tip;
+    $('focus-part').classList.add('hidden');
+    $$('[data-part]').forEach((button) => button.classList.remove('active'));
+  }
+  function selectPart(key, focus = false) {
+    if (!info[key]) return;
+    state.selected = key;
+    selectedObject = parts[key] || null;
+    const item = info[key];
+    $('info-category').textContent = item.category;
+    $('info-title').textContent = item.title;
+    $('info-description').textContent = item.description;
+    $('info-tip').textContent = item.tip;
+    $('focus-part').classList.remove('hidden');
+    $$('[data-part]').forEach((button) => button.classList.toggle('active', button.dataset.part === key));
+    if (focus) focusPart(item.focus || key);
+  }
+  function setMode(mode, animate = true) {
+    if (!['exterior', 'interior', 'mechanical'].includes(mode)) return;
+    cameraTween = null; driverReturn = null;
+    Object.assign(state, { mode, driver: false, cutaway: false, cutPosition: 0, explode: 0, wireframe: false, autoRotate: false, doors: mode === 'interior', hood: mode === 'mechanical', trunk: false, roofRemoved: mode !== 'exterior', opacity: mode === 'mechanical' ? 0.16 : 1 });
+    controls.enabled = true;
+    viewCamera('home', !animate);
+    clearSelection();
+    syncUI();
+  }
+  function focusPart(key) {
+    if (state.driver) leaveDriver(false);
+    if (info[key]?.focus) key = info[key].focus;
+    const interiorKeys = ['dashboard', 'frontSeats', 'rearSeats'];
+    if (interiorKeys.includes(key)) setMode('interior', false);
+    else if (key === 'trunkSpace') { setMode('exterior', false); state.trunk = true; }
+    else if (key === 'body') setMode('exterior', false);
+    else setMode('mechanical', false);
+    const cameras = {
+      engine: [[3.58, 2.60, 2.60], [1.44, 0.76, 0], 41],
+      dashboard: [[-0.90, 1.74, 1.94], [0.47, 1.09, 0.04], 52],
+      frontSeats: [[-1.52, 2.56, 2.61], [-0.18, 0.93, 0], 45],
+      rearSeats: [[-2.48, 2.51, 2.39], [-1.03, 0.98, 0], 45],
+      drivetrain: [[2.74, -2.60, 3.18], [-0.13, 0.37, 0], 42],
+      suspension: [[-2.91, 1.52, 2.42], [-1.43, 0.51, 0.36], 43],
+      wheels: [[3.04, 1.03, 2.71], [1.43, 0.45, 0.87], 42],
+      trunkSpace: [[-3.62, 2.29, 2.08], [-1.88, 0.94, 0], 43],
+      body: [[5.38, 2.88, 5.65], [0, 0.80, 0], 40]
+    };
+    if (key === 'engine') { state.hood = true; state.opacity = 0.65; }
+    if (key === 'wheels') state.opacity = 0.45;
+    if (key === 'suspension') { state.explode = 0.35; state.opacity = 0.12; }
+    activeView = key === 'drivetrain' ? 'bottom' : '';
+    const [position, target, fov] = cameras[key] || cameras.body;
+    moveCamera(position, target, fov);
+    syncUI();
+    selectPart(key, false);
+    if (compact()) toast(info[key].title + ' 선택 · 아래 패널에서 설명 확인');
+  }
+  function enterDriver() {
+    if (state.driver) return;
+    driverReturn = { state: { ...state }, position: camera.position.clone(), target: controls.target.clone(), fov: camera.fov, activeView };
+    Object.assign(state, { driver: true, mode: 'interior', doors: false, hood: false, trunk: false, roofRemoved: false, opacity: 1, explode: 0, cutaway: false, wireframe: false, autoRotate: false, spin: false });
+    Object.assign(motion, { doors: 0, hood: 0, trunk: 0, explode: 0 });
+    driverYaw = -0.043; driverPitch = -0.083;
+    const target = driverEye.clone().add(V(Math.cos(driverPitch) * Math.cos(driverYaw), Math.sin(driverPitch), Math.cos(driverPitch) * Math.sin(driverYaw)));
+    moveCamera(driverEye, target, 76, false, false);
+    syncUI();
+    selectPart('dashboard', false);
+    toast('운전석입니다. 드래그로 좌우와 뒤쪽을 둘러보세요.');
+  }
+  function leaveDriver(animate = true) {
+    if (!state.driver) return;
+    const saved = driverReturn;
+    driverReturn = null; dragging = null; cameraTween = null;
+    if (saved) {
+      Object.assign(state, saved.state, { driver: false });
+      activeView = saved.activeView;
+      syncUI();
+      moveCamera(saved.position, saved.target, saved.fov, !animate, false);
+      if (state.selected) selectPart(state.selected, false); else clearSelection();
+    } else setMode('interior', animate);
+    syncUI();
+  }
+  function outside() { if (state.driver) leaveDriver(false); }
+  function reset() {
+    Object.assign(state, { color: '#4a91a3', labels: true, steering: 0, spin: false });
+    setMode('exterior');
+    for (const wheel of wheelUnits) wheel.rolling.rotation.z = 0;
+    toast('차량과 카메라를 처음 상태로 복원했습니다.');
+  }
+
+  // 화면의 이름표를 각 3D 부품 위치에 투영한다. 분해될 때 부품을 따라간다.
+  const markers = [];
+  const markerDefs = [
+    ['body', canopy, [-0.46, 1.79, -0.40], '외장 패널', ['exterior']],
+    ['engine', engine, [0.07, 0.49, 0], '엔진룸', ['exterior', 'mechanical']],
+    ['wheels', wheelUnits.find((w) => w.front && w.side === 1).axle, [0, 0.42, 0.15], '휠 · 브레이크', ['exterior', 'mechanical']],
+    ['dashboard', dashboard, [0.54, 1.34, -0.05], '대시보드', ['interior']],
+    ['frontSeats', frontSeats, [-0.16, 1.49, 0.46], '앞좌석', ['interior']],
+    ['rearSeats', rearSeats, [-1.05, 1.49, -0.45], '뒷좌석', ['interior']],
+    ['drivetrain', drivetrain, [-0.30, 0.55, -0.08], '동력 전달', ['mechanical']],
+    ['suspension', suspension, [-1.43, 0.87, 0.77], '서스펜션', ['mechanical']],
+    ['trunkSpace', luggage, [0, 0.59, -0.15], '적재 공간', ['exterior', 'interior']]
+  ];
+  markerDefs.forEach(([key, object, point, title, modes], index) => {
+    const button = document.createElement('button');
+    button.className = 'hotspot'; button.type = 'button';
+    button.innerHTML = `<span class="num">${String(index + 1).padStart(2, '0')}</span><span>${title}</span>`;
+    button.setAttribute('aria-label', title + ' 자세히 보기');
+    button.addEventListener('click', (event) => { event.stopPropagation(); selectPart(key, true); });
+    $('labels').appendChild(button);
+    markers.push({ key, object, local: V(...point), button, modes });
+  });
+  const projected = V();
+  function updateMarkers() {
+    const show = state.labels && !state.driver;
+    $('labels').style.display = show ? '' : 'none';
+    if (!show) return;
+    const width = host.clientWidth, height = host.clientHeight;
+    const placed = [];
+    let count = 0;
+    for (const marker of markers) {
+      let visible = marker.modes.includes(state.mode) && count < (compact() ? 3 : 5);
+      if (marker.key === 'trunkSpace' && !state.trunk) visible = false;
+      if (visible) {
+        projected.copy(marker.local); marker.object.localToWorld(projected);
+        if (state.cutaway && clipPlane.distanceToPoint(projected) < -0.04) visible = false;
+        projected.project(camera);
+        if (projected.z < -1 || projected.z > 1 || Math.abs(projected.x) > 0.94 || Math.abs(projected.y) > 0.91) visible = false;
+      }
+      if (visible) {
+        let x = (projected.x * 0.5 + 0.5) * width;
+        let y = (-projected.y * 0.5 + 0.5) * height - 28;
+        const half = marker.button.offsetWidth / 2 || 53;
+        x = Math.max(half + 12, Math.min(width - half - 12, x));
+        if (x < 320 && y < 169) y = 169;
+        y = Math.max(80, Math.min(height - 114, y));
+        for (let attempt = 0; attempt < 3; attempt++) {
+          if (placed.some((other) => Math.abs(other.x - x) < other.half + half + 8 && Math.abs(other.y - y) < 35)) y -= 39;
+        }
+        if (y < (x < 320 ? 153 : 80)) visible = false;
+        if (visible) {
+          marker.button.style.left = `${x}px`; marker.button.style.top = `${y}px`;
+          placed.push({ x, y, half }); count++;
+        }
+      }
+      marker.button.style.display = visible ? 'flex' : 'none';
+    }
+  }
+
+  $$('.tab').forEach((button) => button.addEventListener('click', () => setMode(button.dataset.mode)));
+  $$('[data-view]').forEach((button) => button.addEventListener('click', () => { outside(); state.autoRotate = false; viewCamera(button.dataset.view); if (button.dataset.view === 'bottom') toast('하부 관찰을 위해 전시대를 숨겼습니다.'); }));
+  $('reset').addEventListener('click', reset);
+  $('reset-panel').addEventListener('click', reset);
+  $('driver').addEventListener('click', () => state.driver ? leaveDriver() : enterDriver());
+  $('focus-part').addEventListener('click', () => state.selected && focusPart(info[state.selected].focus || state.selected));
+  const switches = { doors: 'doors', hood: 'hood', trunk: 'trunk', roof: 'roofRemoved', cutaway: 'cutaway', 'labels-toggle': 'labels', 'auto-rotate': 'autoRotate', wireframe: 'wireframe', 'wheel-spin': 'spin' };
+  for (const [id, key] of Object.entries(switches)) {
+    $(id).addEventListener('click', () => {
+      if (key !== 'labels') outside();
+      state[key] = !state[key];
+      if (key === 'autoRotate' && state.autoRotate) cameraTween = null;
+      controls.enabled = !state.driver;
+      if (key === 'cutaway' && state.cutaway) toast('단면 슬라이더로 잘라 보는 위치를 조절하세요.');
+      syncUI();
+    });
+  }
+  $('opacity').addEventListener('input', (event) => { const value = Number(event.target.value) / 100; outside(); state.opacity = value; syncUI(); });
+  $('explode').addEventListener('input', (event) => {
+    const value = Number(event.target.value) / 100;
+    outside();
+    const before = state.explode;
+    state.explode = value;
+    state.autoRotate = false;
+    if (before <= 0.12 && state.explode > 0.12) viewCamera('home');
+    else if (state.explode === 0 && before > 0) viewCamera('home');
+    syncUI();
+  });
+  $('cut-position').addEventListener('input', (event) => { state.cutPosition = Number(event.target.value) / 100; clipPlane.constant = state.cutPosition; });
+  $('steering').addEventListener('input', (event) => { state.steering = Number(event.target.value); syncUI(); });
+  $$('[data-color]').forEach((button) => button.addEventListener('click', () => { state.color = button.dataset.color; syncUI(); }));
+  $$('[data-part]').forEach((button) => button.addEventListener('click', () => selectPart(button.dataset.part, true)));
+  $('fullscreen').addEventListener('click', async () => {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+      else toast('이 브라우저에서는 전체 화면 API를 지원하지 않습니다.');
+    } catch { toast('전체 화면 전환이 제한된 환경입니다.'); }
+  });
+  document.addEventListener('fullscreenchange', () => document.body.classList.toggle('fullscreen', Boolean(document.fullscreenElement)));
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && state.driver) { leaveDriver(); return; }
+    if (event.repeat || event.ctrlKey || event.metaKey || event.altKey || /INPUT|TEXTAREA|SELECT/.test(event.target.tagName) || $('help-dialog').open) return;
+    const key = event.key.toLowerCase();
+    if (key === '1') setMode('exterior');
+    else if (key === '2') setMode('interior');
+    else if (key === '3') setMode('mechanical');
+    else if (key === 'd') $('doors').click();
+    else if (key === 'h') $('hood').click();
+    else if (key === 'r') reset();
+  });
+
+  // 레이캐스팅으로 클릭한 메시에서 소속 부품 그룹을 찾는다.
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  function isVisible(object) {
+    for (let current = object; current; current = current.parent) if (!current.visible) return false;
+    return true;
+  }
+  function pickPart(clientX, clientY) {
+    const rect = renderer.domElement.getBoundingClientRect();
+    pointer.set((clientX - rect.left) / rect.width * 2 - 1, -(clientY - rect.top) / rect.height * 2 + 1);
+    raycaster.setFromCamera(pointer, camera);
+    const intersections = raycaster.intersectObject(car, true);
+    for (const hit of intersections) {
+      if (!isVisible(hit.object)) continue;
+      const material = hit.object.material;
+      if (glassMaterials.includes(material)) continue;
+      if (shellMaterials.includes(material) && state.opacity < 0.28) continue;
+      if (state.cutaway && clipPlane.distanceToPoint(hit.point) < -0.002) continue;
+      let object = hit.object;
+      while (object && !object.userData.partKey) object = object.parent;
+      if (object?.userData.partKey) { selectPart(object.userData.partKey); return; }
+    }
+  }
+  let pointerStart = null;
+  renderer.domElement.addEventListener('pointerdown', (event) => {
+    if (!event.isPrimary) { pointerStart = null; return; }
+    pointerStart = { x: event.clientX, y: event.clientY, id: event.pointerId, time: performance.now(), button: event.button };
+    if (state.driver) {
+      cameraTween = null;
+      dragging = { x: event.clientX, y: event.clientY, id: event.pointerId };
+      renderer.domElement.setPointerCapture(event.pointerId);
+    }
+  });
+  renderer.domElement.addEventListener('pointermove', (event) => {
+    if (state.driver && dragging?.id === event.pointerId) {
+      driverYaw += (event.clientX - dragging.x) * 0.0045;
+      driverPitch = THREE.MathUtils.clamp(driverPitch + (event.clientY - dragging.y) * 0.0045, -0.95, 0.78);
+      dragging.x = event.clientX; dragging.y = event.clientY;
+    }
+  });
+  renderer.domElement.addEventListener('pointerup', (event) => {
+    if (!state.driver && pointerStart && pointerStart.id === event.pointerId && pointerStart.button === 0 && Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) < 6 && performance.now() - pointerStart.time < 600) pickPart(event.clientX, event.clientY);
+    if (dragging?.id === event.pointerId) dragging = null;
+    pointerStart = null;
+  });
+  renderer.domElement.addEventListener('pointercancel', () => { pointerStart = null; dragging = null; });
+  renderer.domElement.addEventListener('wheel', (event) => {
+    if (!state.driver) return;
+    event.preventDefault(); cameraTween = null;
+    camera.fov = THREE.MathUtils.clamp(camera.fov + event.deltaY * 0.035, 48, 94);
+    camera.updateProjectionMatrix();
+  }, { passive: false });
+  renderer.domElement.addEventListener('contextmenu', (event) => event.preventDefault());
+  controls.addEventListener('start', () => {
+    cameraTween = null;
+    if (state.autoRotate) { state.autoRotate = false; syncUI(); }
+  });
+
+  function resize() {
+    const width = host.clientWidth, height = host.clientHeight;
+    if (width < 1 || height < 1) return;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height, false);
+  }
+  const resizeObserver = new ResizeObserver(resize);
+  resizeObserver.observe(host);
+  window.addEventListener('resize', resize);
+  resize();
+
+  // 모든 조립체는 최초 위치에 분해 오프셋을 더한다. 누적 이동 오차를 방지한다.
+  function updateAssemblies(dt) {
+    const smooth = reducedMotion ? 1 : 1 - Math.exp(-dt * 7.5);
+    for (const key of ['doors', 'hood', 'trunk']) motion[key] += ((state[key] ? 1 : 0) - motion[key]) * smooth;
+    motion.explode += (state.explode - motion.explode) * smooth;
+    motion.steering += (THREE.MathUtils.degToRad(state.steering) - motion.steering) * smooth;
+    for (const item of assemblies) item.object.position.copy(item.base).addScaledVector(item.offset, motion.explode);
+    for (const door of doorPivots) door.object.rotation.y = door.side * motion.doors * (door.front ? 1.06 : 0.98);
+    hoodPivot.rotation.z = motion.hood * 0.96;
+    trunkPivot.rotation.z = -motion.trunk * 1.02;
+    steeringWheel.rotation.z = -motion.steering * 2.3;
+    for (const wheel of wheelUnits) {
+      if (wheel.front) wheel.axle.rotation.y = motion.steering;
+      if (state.spin) wheel.rolling.rotation.z -= dt * 1.8;
+    }
+  }
+  let previousTime = performance.now();
+  let firstFrame = true;
+  function render(time) {
+    try {
+      const dt = Math.min((time - previousTime) / 1000, 0.05);
+      previousTime = time;
+      updateAssemblies(dt);
+      if (cameraTween) {
+        const t = THREE.MathUtils.clamp((time - cameraTween.start) / cameraTween.duration, 0, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        camera.position.lerpVectors(cameraTween.from, cameraTween.to, eased);
+        controls.target.lerpVectors(cameraTween.fromTarget, cameraTween.toTarget, eased);
+        camera.fov = THREE.MathUtils.lerp(cameraTween.fromFov, cameraTween.toFov, eased);
+        camera.updateProjectionMatrix(); camera.lookAt(controls.target);
+        if (t >= 1) { cameraTween = null; controls.enabled = !state.driver; controls.autoRotate = state.autoRotate && !state.driver; }
+      } else if (state.driver) {
+        camera.position.copy(driverEye);
+        projected.set(Math.cos(driverPitch) * Math.cos(driverYaw), Math.sin(driverPitch), Math.cos(driverPitch) * Math.sin(driverYaw)).add(driverEye);
+        camera.lookAt(projected);
+        controls.target.copy(projected);
+      } else controls.update(dt);
+      stage.visible = camera.position.y > 0.10;
+      renderer.domElement.style.cursor = dragging ? 'grabbing' : 'grab';
+      car.updateMatrixWorld(true);
+      camera.updateMatrixWorld(true);
+      if (selectedObject && !state.driver) {
+        selectionBox.setFromObject(selectedObject);
+        selectionHelper.visible = !selectionBox.isEmpty();
+        selectionHelper.updateMatrixWorld(true);
+      } else selectionHelper.visible = false;
+      updateMarkers();
+      renderer.render(scene, camera);
+      if (firstFrame) {
+        firstFrame = false;
+        $('loader').classList.add('hidden');
+        window.__CARLAB_READY__ = true;
+        $('poly-count').textContent = '교육용 개념 모델 · r' + THREE.REVISION;
+      }
+    } catch (error) {
+      renderer.setAnimationLoop(null); showLoadError(error);
+    }
+  }
+  renderer.domElement.addEventListener('webglcontextlost', (event) => {
+    event.preventDefault(); renderer.setAnimationLoop(null);
+    showLoadError(new Error('그래픽 장치 연결이 끊겼습니다. 다른 3D 탭을 닫고 다시 불러와 주세요.'));
+  });
+  renderer.domElement.addEventListener('webglcontextrestored', () => location.reload());
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) renderer.setAnimationLoop(null);
+    else { previousTime = performance.now(); renderer.setAnimationLoop(render); }
+  });
+  window.addEventListener('pagehide', (event) => {
+    renderer.setAnimationLoop(null);
+    if (!event.persisted) {
+      resizeObserver.disconnect(); controls.dispose();
+      const geometries = new Set(), materials = new Set(), textures = new Set();
+      scene.traverse((object) => {
+        if (object.geometry) geometries.add(object.geometry);
+        for (const material of Array.isArray(object.material) ? object.material : object.material ? [object.material] : []) materials.add(material);
+      });
+      for (const material of materials) { if (material.map) textures.add(material.map); material.dispose(); }
+      for (const texture of textures) texture.dispose();
+      for (const geometry of geometries) geometry.dispose();
+      environmentTarget.dispose(); renderer.dispose();
+    }
+  });
+  window.addEventListener('pageshow', (event) => { if (event.persisted) { previousTime = performance.now(); renderer.setAnimationLoop(render); } });
+
+  // 교안 실습·검증용 API. 상태의 복사본만 반환한다.
+  window.carLab = Object.freeze({
+    setMode, focusPart, enterDriver, leaveDriver, reset,
+    getState: () => ({ ...state }),
+    inspect: () => ({ revision: THREE.REVISION, meshCount: (() => { let n = 0; car.traverse((o) => { if (o.isMesh) n++; }); return n; })(), geometryCount: geometryCache.size, assemblies: assemblies.length, wheelCount: wheelUnits.length, doorCount: doorPivots.length, stageVisible: stage.visible, camera: camera.position.toArray() })
+  });
+  syncUI();
+  viewCamera('home', true);
+  renderer.setAnimationLoop(render);
+}
+
+boot();
+
+</script>
+</body>
+</html>

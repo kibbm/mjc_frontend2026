@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#070e19">
+  <meta name="description" content="가상의 LoL 플레이 기록 50판을 통해 빅데이터와 스몰데이터의 차이를 경험하는 인터랙티브 스크롤텔링 인포그래픽">
+  <title>티어가 안 오르는 진짜 이유 | BIG DATA × SMALL DATA</title>
+  <style>
+    :root{
+      --bg:#070d17;--bg-2:#0a1423;--panel:#101c2d;--panel-2:#122339;
+      --line:#253a51;--line-light:#36516c;--text:#ecf4ff;--muted:#9eb0c9;
+      --blue:#68d8ff;--blue-2:#367cdb;--gold:#ebc17a;--red:#ff6578;
+      --mint:#64e6cb;--radius:20px;--head:76px;
+      --shadow:0 24px 80px rgba(0,0,0,.35);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:var(--head)}
+    body{margin:0;color:var(--text);background:var(--bg);font-family:Inter,"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.65;overflow-x:hidden}
+    body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.14;background-image:radial-gradient(#86aacc 0.75px,transparent 0.75px);background-size:24px 24px;mask-image:linear-gradient(to bottom,black,transparent 95%)}
+    button,a,input{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit;text-decoration:none}
+    button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+    ::selection{background:#196c91;color:white}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .container{width:min(1170px,calc(100% - 48px));margin-inline:auto}
+    .mono{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}
+    .micro{font-size:.76rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+    .text-blue{color:var(--blue)}.text-gold{color:var(--gold)}.text-red{color:var(--red)}
+    .small-note{font-size:.84rem;color:var(--muted);line-height:1.7}
+    .outline-badge{display:inline-flex;align-items:center;gap:9px;padding:7px 13px;border:1px solid #38536f;background:rgba(18,37,55,.68);border-radius:99px;color:#cbddec;font-weight:700;font-size:.75rem;letter-spacing:.08em}
+    .outline-badge::before{content:"";height:6px;width:6px;border-radius:50%;background:var(--blue);box-shadow:0 0 12px var(--blue)}
+    .top-progress{height:3px;position:fixed;z-index:100;top:0;left:0;width:0;background:linear-gradient(90deg,var(--blue),var(--gold));box-shadow:0 0 18px rgba(104,216,255,.55);transition:width .12s linear}
+    .topbar{z-index:80;position:fixed;top:3px;left:0;right:0;min-height:var(--head);background:rgba(6,13,23,.87);backdrop-filter:blur(18px);border-bottom:1px solid rgba(87,122,152,.22)}
+    .topbar-inner{height:var(--head);display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.095em;white-space:nowrap;font-size:.95rem}
+    .brand-symbol{width:37px;height:37px;display:grid;place-items:center;position:relative;background:linear-gradient(160deg,#7de4ff 0%,#194a73 48%,#d8b56b 100%);clip-path:polygon(50% 0,93% 24%,93% 76%,50% 100%,7% 76%,7% 24%)}
+    .brand-symbol::before{content:"";position:absolute;inset:4px;background:#0a1827;clip-path:inherit}
+    .brand-symbol::after{content:"◆";position:relative;color:var(--gold);font-size:14px}
+    .brand-sub{display:block;color:#7894ab;letter-spacing:.13em;font-size:.57rem;font-weight:800;line-height:1.3}
+    .nav{display:flex;align-items:center;gap:4px}
+    .nav-link{padding:10px 14px;border:1px solid transparent;border-radius:9px;color:#8fa9bd;font-size:.78rem;font-weight:800;white-space:nowrap;transition:.25s}
+    .nav-link:hover,.nav-link.active{color:var(--blue);background:#13293b;border-color:#244d66}
+    .nav-link span{font-size:.66rem;color:var(--gold);margin-right:6px}
+    .live-pill{font-size:.66rem;font-weight:900;letter-spacing:.13em;color:var(--mint);background:#102e31;padding:8px 12px;border:1px solid #205b59;border-radius:99px;white-space:nowrap}
+    .live-pill::before{content:"";display:inline-block;width:6px;height:6px;background:var(--mint);border-radius:50%;margin-right:8px;box-shadow:0 0 10px var(--mint)}
+    .rail{position:fixed;z-index:45;right:18px;top:50%;transform:translateY(-50%);display:grid;gap:13px;align-items:center;justify-items:center}
+    .rail::before{content:"";position:absolute;top:10px;bottom:10px;width:1px;background:#35516e;z-index:-1}
+    .rail a{height:15px;width:15px;border:3px solid #456079;border-radius:50%;background:#0d1b2b;box-shadow:0 0 0 4px #07101b;transition:transform .2s,background .2s,border-color .2s}
+    .rail a:hover,.rail a.active{background:var(--gold);border-color:var(--gold);transform:scale(1.18)}
+    .chapter{position:relative;isolation:isolate;min-height:100svh;scroll-margin-top:var(--head);padding:clamp(128px,13vh,168px) 0 clamp(90px,10vh,130px);border-bottom:1px solid rgba(110,145,174,.13)}
+    .chapter::after{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:linear-gradient(180deg,transparent 80%,rgba(0,0,0,.11))}
+    .hero{display:flex;align-items:center;overflow:clip;background:radial-gradient(ellipse 61% 70% at 88% 41%,rgba(23,84,129,.35),transparent 70%),radial-gradient(ellipse 46% 45% at 5% 16%,rgba(16,57,84,.3),transparent 75%),#080f1a}
+    .hero-orbit{position:absolute;width:580px;height:580px;right:max(-240px,calc((100vw - 1170px)/2 - 170px));top:16%;opacity:.23;pointer-events:none;z-index:-1;border:1px solid #4a85a1;border-radius:50%;box-shadow:0 0 0 54px rgba(49,122,161,.055),0 0 0 132px rgba(67,135,174,.045),inset 0 0 120px #275575;animation:floatOrbit 15s ease-in-out infinite alternate}
+    .hero-orbit::before{content:"";position:absolute;inset:14%;border:1px dashed #63a8ca;border-radius:50%}
+    .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(30px,4.5vw,70px);align-items:center}
+    .eyebrow{display:flex;align-items:center;gap:12px;margin:0 0 19px;color:var(--gold);font-size:.77rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    .eyebrow::before{content:"";width:23px;height:2px;background:var(--gold);box-shadow:0 0 10px rgba(233,188,112,.7)}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:clamp(3.15rem,6vw,6.2rem);letter-spacing:-.08em;line-height:1.15;margin:0 0 27px;font-weight:950;word-break:keep-all}
+    h1 strong{color:var(--gold);text-shadow:0 0 36px rgba(235,193,122,.3)}
+    .hero-copy{font-size:clamp(1.05rem,1.6vw,1.2rem);color:#bccfe0;line-height:1.94;word-break:keep-all;margin-bottom:30px;max-width:560px}
+    .hero-copy b{color:white}
+    .hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:35px}
+    .hero-pills span{padding:7px 12px;font-size:.7rem;font-weight:900;color:#c5d8e7;border:1px solid #294765;border-radius:7px;background:#12263b}
+    .go-next{display:inline-flex;align-items:center;justify-content:center;gap:13px;min-height:47px;padding:10px 18px;color:var(--blue);background:rgba(19,52,77,.6);border:1px solid #366b87;border-radius:10px;font-size:.84rem;font-weight:900;transition:transform .2s,border-color .2s,background .2s}
+    .go-next:hover{transform:translateY(-3px);border-color:var(--blue);background:#17394e}
+    .go-next .down-arrow{font-size:1.2rem;line-height:1}
+    .terminal{position:relative;border:1px solid #5a6f79;background:linear-gradient(160deg,rgba(17,34,53,.97),rgba(9,19,31,.99));border-radius:16px;box-shadow:var(--shadow),0 0 0 5px rgba(15,47,74,.3);overflow:hidden}
+    .terminal::before{position:absolute;content:"";inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(100,215,255,.045),transparent 38%)}
+    .terminal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 19px;background:#0d2435;border-bottom:1px solid #305065;color:#acd4e6;font-size:.72rem;letter-spacing:.12em;font-weight:900}
+    .terminal-head span:first-child{display:flex;align-items:center;gap:9px}
+    .terminal-head .hex{display:inline-grid;place-items:center;width:18px;height:18px;background:#154763;color:var(--gold);clip-path:polygon(50% 0,93% 24%,93% 76%,50% 100%,7% 76%,7% 24%)}
+    .term-dot{color:#7a9eaa;font-size:.67rem}
+    .terminal-body{padding:clamp(20px,2.8vw,30px)}
+    .terminal-caption{color:#7896ab;font-size:.72rem;letter-spacing:.08em;font-weight:800;margin-bottom:15px}
+    .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:21px}
+    .metric{padding:17px 10px;background:#0a1c2c;border:1px solid #294253;border-radius:10px;text-align:center}
+    .metric .value{display:block;font-size:clamp(1.45rem,2.4vw,2.25rem);font-weight:900;line-height:1.2;color:var(--text);font-variant-numeric:tabular-nums}
+    .metric .label{display:block;margin-top:6px;font-size:.64rem;font-weight:900;letter-spacing:.1em;color:#88a1b8}
+    .system-log{background:#06101a;border:1px solid #294257;border-radius:10px;padding:17px 18px;color:#bad1e0;font-size:.78rem;line-height:2;overflow-wrap:anywhere}
+    .system-log b{color:var(--blue);font-weight:800}
+    .system-log strong{color:#dae9f3}
+    .prompt{color:#67b9d3;margin-right:8px}
+    .terminal-result{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-top:19px;margin-top:20px;border-top:1px solid #293c4d}
+    .terminal-result .tag{display:inline-block;padding:6px 10px;border-radius:5px;border:1px solid #56626b;color:#d7c4a1;font-size:.72rem;font-weight:900}
+    .terminal-result .explain{color:#a2b9cd;font-size:.82rem;flex:1;min-width:150px}
+    .blindspot{margin-top:26px;display:flex;gap:12px;align-items:flex-start;background:rgba(87,54,35,.18);border-left:3px solid var(--gold);padding:16px 19px;border-radius:0 9px 9px 0;color:#e1d7c3;font-size:.84rem}
+    .blindspot b{color:var(--gold);white-space:nowrap}
+    .hero-down{position:absolute;bottom:27px;left:50%;transform:translateX(-50%);font-size:.68rem;color:#91a9bd;letter-spacing:.2em;font-weight:900;text-align:center}
+    .hero-down span{display:block;color:var(--gold);font-size:1.6rem;animation:drop 1.7s ease-in-out infinite}
+    .stage-two{background:radial-gradient(ellipse 60% 50% at 0% 45%,rgba(15,61,99,.22),transparent 75%),#0a1322}
+    .stage-three{background:radial-gradient(ellipse 60% 55% at 99% 49%,rgba(114,32,51,.18),transparent 80%),#080f1b}
+    .stage-four{background:radial-gradient(ellipse 50% 52% at 50% 43%,rgba(107,79,34,.16),transparent 75%),#0a1320}
+    .section-head{max-width:900px;margin:0 auto 49px;text-align:center}
+    .section-head .eyebrow{justify-content:center}
+    .section-head h2{font-size:clamp(2.05rem,3.8vw,3.65rem);letter-spacing:-.055em;line-height:1.24;margin:0 0 19px;word-break:keep-all}
+    .section-head p:last-child{font-size:1.05rem;color:#a9bfd1;line-height:1.85;word-break:keep-all}
+    .chapter-number{font-size:.82rem;color:var(--gold);letter-spacing:.15em}
+    .inventory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:30px}
+    .slot{position:relative;background:linear-gradient(160deg,#13273b,#0c1928);border:1px solid #31516d;border-radius:16px;padding:26px 22px 22px;min-height:196px;box-shadow:0 12px 40px rgba(0,0,0,.15);overflow:hidden}
+    .slot::after{content:"";position:absolute;right:-25px;top:-30px;height:120px;width:120px;border:1px solid #426a86;border-radius:50%;opacity:.23;box-shadow:0 0 0 18px rgba(86,144,181,.11)}
+    .slot-header{display:flex;align-items:center;gap:13px;margin-bottom:16px}
+    .slot-icon{flex:none;height:45px;width:45px;display:grid;place-items:center;color:var(--blue);background:#123a50;border:1px solid #376983;border-radius:12px}
+    .slot-icon svg{width:24px;height:24px}
+    .slot-title{font-weight:900;font-size:1.04rem}
+    .slot-code{font-size:.68rem;letter-spacing:.12em;color:#789eb4;font-weight:800}
+    .slot-detail{color:#c4d8e8;font-size:.89rem;line-height:1.8}
+    .slot-detail b{color:var(--gold)}
+    .journal{background:linear-gradient(180deg,#0d1d30,#0a1726);border:1px solid #32516b;border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(26,49,69,.7);padding:19px 24px;border-bottom:1px solid #2d4b64}
+    .panel-head h3{font-size:1.04rem;font-weight:900;letter-spacing:-.02em;margin:0}
+    .panel-head .tag{font-size:.68rem;font-weight:900;color:var(--gold);border:1px solid #725d3c;background:rgba(130,100,44,.12);border-radius:7px;padding:5px 9px;white-space:nowrap}
+    .journal-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;padding:20px}
+    .diary{display:flex;flex-direction:column;gap:13px;text-align:left;color:var(--text);border:1px solid #2d4f6b;background:#0c1b2b;border-radius:13px;padding:19px;min-height:223px;transition:transform .25s,border-color .25s,background .25s,box-shadow .25s}
+    .diary:hover,.diary[aria-pressed="true"]{transform:translateY(-3px);border-color:var(--gold);background:#14273a;box-shadow:0 0 0 1px rgba(235,193,122,.18),0 12px 20px rgba(0,0,0,.22)}
+    .diary-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .diary-top .mono{color:#82a1b9;font-size:.73rem;font-weight:800}
+    .diary-emotion{font-size:.65rem;font-weight:900;padding:5px 10px;border-radius:6px;background:#3e2030;border:1px solid #8c4254;color:#ff9cac}
+    .diary-emotion.ok{background:#13383c;border-color:#286965;color:#6de4ca}
+    .diary-title{font-size:1.07rem;font-weight:900;line-height:1.5;word-break:keep-all}
+    .diary-info{margin-top:auto;color:#a1b9cc;font-size:.75rem;line-height:1.8}
+    .diary-info b{color:#e0c58e;font-weight:900}
+    .diary-foot{padding:18px 24px;border-top:1px solid #2b465d;background:#0d1e30;display:flex;align-items:flex-start;gap:17px}
+    .log-flag{padding:6px 9px;background:#173b4a;border:1px solid #2f6d79;color:var(--blue);border-radius:5px;flex:none;font-size:.67rem;font-weight:900}
+    .diary-foot strong{font-weight:900;color:#f1e1b7}
+    .diary-foot p{margin:4px 0 0;color:#adbfce;font-size:.87rem}
+    .bridge{display:flex;align-items:center;justify-content:center;gap:12px;margin:32px auto 0;text-align:center;color:#b7cad9;font-size:.86rem;font-weight:700}
+    .bridge .arrow{display:grid;place-items:center;width:34px;height:34px;border:1px solid #3c6b83;background:#123247;border-radius:50%;font-size:1.15rem;color:var(--blue)}
+    .chart-card{background:linear-gradient(155deg,#111e30,#0b1422);border:1px solid #35516b;border-radius:19px;box-shadow:var(--shadow);overflow:hidden}
+    .chart-toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:20px 26px;border-bottom:1px solid #2b445d}
+    .chart-toolbar strong{font-size:1.05rem}
+    .chart-toolbar .aside{color:#8fa8bc;font-size:.74rem}
+    .filter-tabs{display:flex;gap:7px;flex-wrap:wrap;padding:18px 26px 0}
+    .filter{border:1px solid #36536e;background:#132538;color:#a9bbcd;border-radius:9px;padding:8px 12px;font-size:.75rem;font-weight:900;transition:.2s}
+    .filter:hover,.filter[aria-pressed="true"]{border-color:var(--gold);background:#3c3326;color:#ffe5a9}
+    .chart-area{padding:24px 26px 23px}
+    .axis{padding:0 65px 0 208px;display:flex;justify-content:space-between;font-size:.68rem;color:#708da2;font-weight:800;margin-bottom:17px}
+    .chart-row{display:grid;grid-template-columns:190px minmax(0,1fr) 57px;align-items:center;gap:17px;margin:22px 0;transition:opacity .2s,transform .2s}
+    .chart-row.deemphasized{opacity:.28;transform:scale(.995)}
+    .chart-row.active .track{border-color:var(--gold);box-shadow:0 0 0 1px rgba(235,193,122,.4)}
+    .row-name{font-size:.86rem;line-height:1.4;font-weight:900}
+    .row-count{display:block;margin-top:5px;font-size:.69rem;color:#83a0b6;font-weight:700}
+    .track{position:relative;width:100%;height:25px;border:1px solid #264257;border-radius:7px;background:repeating-linear-gradient(90deg,rgba(81,111,136,.10) 0px,rgba(81,111,136,.10) 1px,transparent 1px,transparent 20%),#071524;overflow:hidden}
+    .fill{position:relative;display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,#2660a8,var(--blue));box-shadow:inset 0 0 10px rgba(255,255,255,.12),0 0 13px rgba(76,190,241,.2);transition:width 1.5s cubic-bezier(.19,1,.32,1)}
+    .fill.good{background:linear-gradient(90deg,#197c79,var(--mint))}
+    .fill.bad{background:linear-gradient(90deg,#912c4c,var(--red));box-shadow:0 0 17px rgba(255,83,108,.34)}
+    .fill.overall{background:linear-gradient(90deg,#28658e,#7caed0)}
+    .chart-animated .fill{width:var(--fill)}
+    .rate{text-align:right;font-size:1.17rem;font-weight:950;font-variant-numeric:tabular-nums}
+    .rate.bad{color:var(--red)}.rate.good{color:var(--mint)}
+    .chart-foot{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap;padding:17px 26px;background:rgba(5,17,29,.5);border-top:1px solid #29415a}
+    .chart-foot .note{font-size:.76rem;color:#90aabe;max-width:650px}
+    .legend{font-size:.73rem;color:#bed0da;white-space:nowrap}
+    .legend i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-right:6px;box-shadow:0 0 7px var(--red)}
+    .detail-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:19px;margin-top:19px}
+    .focus-card{border:1px solid #355571;background:#101f30;border-radius:15px;padding:25px 26px;min-height:196px}
+    .focus-label{color:#82a8be;font-size:.7rem;letter-spacing:.13em;font-weight:900;margin:0 0 11px}
+    .focus-card h3{font-size:1.35rem;line-height:1.35;margin:0 0 7px}
+    .focus-card p:last-child{color:#b0c5d7;font-size:.9rem;line-height:1.85;margin:0}
+    .warning{position:relative;background:linear-gradient(140deg,rgba(99,29,45,.44),rgba(37,20,31,.87));border-color:#9e3a52;overflow:hidden}
+    .warning::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 45px rgba(255,64,91,.09);animation:alertGlow 2.4s ease-in-out infinite}
+    .warning .focus-label{color:#ff9eab}
+    .warning h3{color:#ffd8dc;display:flex;align-items:center;gap:10px}
+    .warn-symbol{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--red);color:var(--red);font-size:1rem;font-weight:900;flex:none}
+    .focus-card .warning-summary{color:#f1b6bf;font-weight:700}
+    .stage-conclusion{margin-top:25px;text-align:center;color:#d0dce7;line-height:1.8;font-size:1.02rem}
+    .stage-conclusion strong{color:var(--gold)}
+    .quest-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:23px;align-items:stretch}
+    .quest-card{background:linear-gradient(165deg,#132237,#101a2a);border:1px solid #6a624b;border-radius:19px;box-shadow:var(--shadow);overflow:hidden}
+    .quest-top{background:linear-gradient(90deg,rgba(166,125,60,.22),rgba(37,37,45,.12));border-bottom:1px solid #685b43;padding:22px 25px}
+    .quest-top .micro{color:var(--gold);margin-bottom:6px}
+    .quest-top h3{font-size:1.4rem;line-height:1.4;margin:0;letter-spacing:-.035em;word-break:keep-all}
+    .quest-content{padding:22px 25px}
+    .rule{background:#0a1c2b;padding:15px 17px;border:1px solid #3e5262;border-left:3px solid var(--gold);border-radius:8px;color:#e0d5bc;font-size:.98rem;font-weight:850;line-height:1.65;margin-bottom:20px}
+    .quest-check{display:flex;align-items:center;gap:15px;border:1px solid #314b62;background:#0c1b2b;border-radius:11px;padding:14px 15px;margin-bottom:11px;cursor:pointer;transition:border-color .2s,background .2s}
+    .quest-check:has(input:checked){border-color:#3b887b;background:#112e31}
+    .quest-check input{height:20px;width:20px;accent-color:var(--mint);flex:none;cursor:pointer}
+    .quest-check .q-main{font-weight:850;font-size:.9rem;display:block}
+    .quest-check .q-sub{font-size:.73rem;color:#94acbd;line-height:1.6;display:block}
+    .queue-status{display:flex;align-items:center;gap:11px;background:#3f2430;border:1px solid #985168;color:#ffc3ca;padding:13px 15px;border-radius:10px;font-weight:850;font-size:.82rem;margin:18px 0 14px;transition:background .3s}
+    .queue-status.ready{background:#153b38;color:#adf5de;border-color:#3b8574}
+    .queue-status .status-dot{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 12px rgba(255,101,120,.7);flex:none}
+    .queue-status.ready .status-dot{background:var(--mint);box-shadow:0 0 12px rgba(100,230,203,.7)}
+    .quest-action{width:100%;border:1px solid #a8864e;color:#221c14;font-weight:950;background:linear-gradient(105deg,#c69b52,#f2d69a);padding:14px 20px;border-radius:10px;letter-spacing:.03em;transition:transform .2s,filter .2s;min-height:54px}
+    .quest-action:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.1)}
+    .quest-action:disabled{filter:saturate(.35);opacity:.5;cursor:not-allowed}
+    .quest-hint{color:#91a7b9;font-size:.75rem;margin:11px 0 0;text-align:center}
+    .upgrade-panel{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:490px;overflow:hidden;padding:38px 24px;background:radial-gradient(circle at 50% 44%,rgba(41,103,131,.2),transparent 60%),#0c1a2a;border:1px solid #365069;border-radius:19px;text-align:center;transition:border-color .4s,box-shadow .4s}
+    .upgrade-panel::before{content:"";position:absolute;inset:-40%;pointer-events:none;background:repeating-conic-gradient(from 0deg,transparent 0deg,transparent 27deg,rgba(214,165,81,.035) 28deg,transparent 32deg);animation:spin 50s linear infinite}
+    .crest-wrap{display:grid;place-items:center;width:min(270px,80%);aspect-ratio:1;position:relative;margin-bottom:15px}
+    .crest-wrap::before,.crest-wrap::after{content:"";position:absolute;border-radius:50%;inset:6%;border:1px solid #5e6e74;box-shadow:0 0 0 12px rgba(51,96,118,.09);transition:all .5s}
+    .crest-wrap::after{inset:-6%;border:1px dashed #5c8395;box-shadow:none;animation:spin 35s linear infinite reverse}
+    .crest{height:76%;width:74%;position:relative;display:grid;place-items:center;background:linear-gradient(155deg,#a58a59 0%,#eecb81 23%,#25465b 44%,#142c43 72%,#997347 100%);clip-path:polygon(50% 0%,89% 16%,89% 69%,50% 100%,11% 69%,11% 16%);filter:drop-shadow(0 0 19px rgba(195,159,96,.2));transition:filter .5s,transform .7s}
+    .crest::before{content:"";position:absolute;inset:8px;clip-path:inherit;background:linear-gradient(160deg,#183650,#0b192a)}
+    .crest::after{content:"✦";z-index:1;color:var(--gold);font-size:clamp(4.4rem,8vw,6.7rem);text-shadow:0 0 30px rgba(245,218,145,.42)}
+    .tier-caption{position:relative;font-size:.72rem;color:var(--gold);letter-spacing:.25em;font-weight:950;margin-bottom:7px}
+    .tier-big{position:relative;font-size:clamp(2.25rem,4.4vw,3.65rem);font-weight:950;letter-spacing:.08em;line-height:1.2;margin:0 0 11px;color:#d9e5eb;transition:color .5s,text-shadow .5s}
+    .tier-sub{position:relative;max-width:330px;color:#9cb2c5;font-size:.84rem;line-height:1.8;margin:0}
+    .upgrade-panel.completed{border-color:var(--gold);box-shadow:0 0 60px rgba(233,181,78,.25),inset 0 0 55px rgba(232,182,84,.06)}
+    .upgrade-panel.completed .crest{filter:drop-shadow(0 0 36px rgba(245,213,138,.75));transform:scale(1.08)}
+    .upgrade-panel.completed .crest-wrap::before{border-color:var(--gold);box-shadow:0 0 0 17px rgba(216,170,87,.08),0 0 35px rgba(233,190,98,.4)}
+    .upgrade-panel.completed .tier-big{color:#ffe2a0;text-shadow:0 0 40px rgba(248,191,78,.5)}
+    .sparks{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .spark{position:absolute;top:46%;left:50%;width:5px;height:16px;background:var(--gold);opacity:0;border-radius:3px;transform:rotate(var(--angle));transform-origin:center center}
+    .completed .spark{animation:burst 1.55s ease-out both;animation-delay:var(--delay)}
+    .footer-takeaway{margin:38px auto 0;max-width:950px;text-align:center}
+    .footer-takeaway p{color:#c2d2de;font-size:1.04rem;line-height:1.9;word-break:keep-all}
+    .footer-takeaway strong{color:var(--gold)}
+    .footer{padding:39px 0 44px;background:#060c15;border-top:1px solid #253b50}
+    .footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;flex-wrap:wrap}
+    .footer strong{color:#e4d2a4;font-size:.78rem;letter-spacing:.12em}
+    .footer p{max-width:760px;color:#87a0b6;font-size:.75rem;margin:8px 0 0;line-height:1.85}
+    .footer a{font-size:.77rem;font-weight:850;color:var(--blue);border-bottom:1px solid #30576d;padding:3px 0}
+    .js .reveal{opacity:0;transform:translateY(33px);transition:opacity .78s ease,transform .78s cubic-bezier(.21,.67,.21,1)}
+    .js .reveal.in-view{opacity:1;transform:translateY(0)}
+    .js .reveal[data-delay="1"]{transition-delay:.12s}
+    .js .reveal[data-delay="2"]{transition-delay:.24s}
+    @keyframes drop{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(7px);opacity:1}}
+    @keyframes alertGlow{0%,100%{opacity:.34}50%{opacity:.95}}
+    @keyframes floatOrbit{to{transform:translateY(-30px) rotate(15deg)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes burst{0%{opacity:0;transform:rotate(var(--angle)) translateY(0) scale(.5)}20%{opacity:1}100%{opacity:0;transform:rotate(var(--angle)) translateY(calc(-1 * var(--distance))) scale(.4)}}
+    @media(max-width:1100px){.rail{right:7px}.container{width:min(1100px,calc(100% - 60px))}.nav-link{padding:10px 9px}}
+    @media(max-width:900px){
+      :root{--head:66px}
+      .topbar-inner{gap:12px}
+      .live-pill,.rail{display:none}
+      .nav-link{font-size:.68rem;padding:7px 8px}
+      .hero-grid{grid-template-columns:1fr;gap:32px}
+      .hero{padding-top:125px}
+      .hero h1{max-width:720px}
+      .terminal{max-width:720px;width:100%;margin-inline:auto}
+      .hero-down{display:none}
+      .inventory{grid-template-columns:repeat(3,1fr);gap:10px}
+      .slot{padding:21px 17px;min-height:220px}
+      .journal-cards{gap:9px;padding:14px}
+      .diary{padding:15px;min-height:254px}
+      .detail-grid{grid-template-columns:1fr}
+      .quest-layout{grid-template-columns:1fr}
+      .upgrade-panel{min-height:430px}
+    }
+    @media(max-width:620px){
+      .container{width:calc(100% - 32px)}
+      .topbar-inner{height:var(--head)}
+      .brand{font-size:.77rem;gap:8px}
+      .brand-symbol{height:30px;width:30px}
+      .brand-sub{font-size:.47rem}
+      .nav{gap:2px}
+      .nav-link{font-size:.65rem;padding:8px 6px}
+      .nav-link span{margin:0;font-size:.67rem}
+      .nav-link .nav-word{display:none}
+      .chapter{padding:104px 0 80px}
+      h1{font-size:clamp(3rem,13vw,4.2rem)}
+      .hero-copy{font-size:.98rem;margin-bottom:22px}
+      .hero-pills{margin-bottom:23px}
+      .hero-orbit{height:430px;width:430px;right:-275px;top:90px}
+      .terminal-body{padding:17px}
+      .metrics{gap:7px}
+      .metric{padding:15px 3px}
+      .metric .value{font-size:1.55rem}
+      .metric .label{font-size:.59rem;letter-spacing:0}
+      .system-log{font-size:.71rem;padding:12px}
+      .terminal-result{gap:7px}
+      .blindspot{display:block}
+      .blindspot b{display:block;margin-bottom:6px}
+      .section-head{margin-bottom:31px}
+      .section-head h2{font-size:clamp(2rem,8.7vw,2.7rem)}
+      .section-head p:last-child{font-size:.92rem}
+      .inventory{grid-template-columns:1fr}
+      .slot{min-height:0;padding:18px}
+      .slot-header{margin-bottom:8px}
+      .slot-icon{width:40px;height:40px}
+      .slot-detail{font-size:.84rem}
+      .journal-cards{grid-template-columns:1fr}
+      .diary{min-height:0;gap:9px;padding:16px}
+      .diary-info{margin-top:0}
+      .diary-foot{padding:16px;flex-wrap:wrap;gap:8px}
+      .panel-head{padding:16px}
+      .panel-head h3{font-size:.92rem}
+      .chart-toolbar,.chart-area,.chart-foot{padding-left:16px;padding-right:16px}
+      .chart-toolbar{padding-top:17px;padding-bottom:17px}
+      .filter-tabs{padding-left:16px;padding-right:16px}
+      .filter{font-size:.7rem;padding:8px 9px}
+      .axis{padding-left:126px;padding-right:43px;font-size:.59rem}
+      .chart-row{grid-template-columns:115px minmax(0,1fr) 42px;gap:10px;margin:23px 0}
+      .row-name{font-size:.78rem}
+      .row-count{font-size:.62rem}
+      .rate{font-size:.85rem}
+      .track{height:21px}
+      .focus-card{padding:19px;min-height:0}
+      .focus-card h3{font-size:1.19rem}
+      .quest-top,.quest-content{padding:19px 16px}
+      .upgrade-panel{min-height:400px}
+      .crest-wrap{width:240px}
+      .footer-inner{display:block}
+      .footer a{display:inline-block;margin-top:17px}
+    }
+    @media(max-width:365px){.brand{letter-spacing:0}.nav-link{padding:7px 4px}.chart-row{grid-template-columns:104px minmax(0,1fr) 40px;gap:7px}.axis{padding-left:112px;padding-right:40px}}
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+      .js .reveal{opacity:1;transform:none}
+      .fill{transition:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="top-progress" id="topProgress" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="#stage1" aria-label="처음으로 이동">
+        <span class="brand-symbol" aria-hidden="true"></span>
+        <span>ELO / INSIGHT<span class="brand-sub">RANKED PERFORMANCE LAB</span></span>
+      </a>
+      <nav class="nav" aria-label="스토리 단계">
+        <a href="#stage1" class="nav-link active" aria-current="step"><span>01</span><span class="nav-word">문제 인식</span></a>
+        <a href="#stage2" class="nav-link"><span>02</span><span class="nav-word">비밀 일지</span></a>
+        <a href="#stage3" class="nav-link"><span>03</span><span class="nav-word">승률 분석</span></a>
+        <a href="#stage4" class="nav-link"><span>04</span><span class="nav-word">승급 루틴</span></a>
+      </nav>
+      <span class="live-pill">CASE STUDY</span>
+    </div>
+  </header>
+  <nav class="rail" aria-label="스크롤 단계 바로가기">
+    <a href="#stage1" class="active" aria-label="1단계 문제 인식"></a>
+    <a href="#stage2" aria-label="2단계 비밀 일지"></a>
+    <a href="#stage3" aria-label="3단계 승률 분석"></a>
+    <a href="#stage4" aria-label="4단계 승급 루틴"></a>
+  </nav>
+
+  <main>
+    <!-- 01: BIG DATA -->
+    <section class="chapter hero" id="stage1" aria-labelledby="title-one">
+      <div class="hero-orbit" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="reveal in-view">
+          <p class="eyebrow">01 / BIG DATA VIEW</p>
+          <h1 id="title-one">티어가<br>안 오르는<br>진짜 <strong>이유</strong></h1>
+          <p class="hero-copy">랭크 게임을 50판이나 했는데, 여전히 제자리라면?<br><b>빅데이터가 알려주는 평균</b>만으로는 내가 왜 지는지 알 수 없습니다.</p>
+          <div class="hero-pills" aria-label="분석 주제">
+            <span>League of Legends</span><span>50 MATCH DATA</span><span>PERSONAL CONTEXT</span>
+          </div>
+          <a class="go-next" href="#stage2">숨겨진 패배 원인 찾기 <span class="down-arrow" aria-hidden="true">↓</span></a>
+        </div>
+        <div class="reveal" data-delay="1">
+          <div class="terminal" aria-label="빅데이터 분석 결과 시스템 메시지">
+            <div class="terminal-head"><span><span class="hex" aria-hidden="true">✦</span> RANKED ANALYTICS / SYSTEM LOG</span><span class="term-dot mono">v.50.0</span></div>
+            <div class="terminal-body">
+              <p class="terminal-caption mono">PLAYER PERFORMANCE · LAST 50 MATCHES</p>
+              <div class="metrics">
+                <div class="metric"><span class="value">2.5</span><span class="label">AVG. KDA</span></div>
+                <div class="metric"><span class="value">50</span><span class="label">MATCHES</span></div>
+                <div class="metric"><span class="value">42%</span><span class="label">WIN RATE</span></div>
+              </div>
+              <div class="system-log mono" aria-label="무미건조한 분석 메시지">
+                <div><span class="prompt">&gt;</span> <b>ANALYZE_PLAYER.exe</b></div>
+                <div><span class="prompt">&gt;</span> 최근 50판 KDA: <strong>2.5</strong></div>
+                <div><span class="prompt">&gt;</span> 시스템 평가: <strong>실력 평범</strong></div>
+                <div><span class="prompt">&gt;</span> 권장 사항: <strong>판수 부족 / 추가 플레이</strong></div>
+                <div><span class="prompt">&gt;</span> 상세 원인: <span style="color:var(--red)">UNKNOWN</span><span aria-hidden="true"> _</span></div>
+              </div>
+              <div class="terminal-result"><span class="tag mono">REPORT: INCOMPLETE</span><span class="explain">평균 점수는 보이지만, <b class="text-gold">지는 상황</b>은 보이지 않는다.</span></div>
+            </div>
+          </div>
+          <div class="blindspot"><b>BIG DATA의 사각지대</b><span>경기 수와 KDA는 알지만, <strong>게임 전 감정·일정·보이스 환경</strong>이라는 맥락은 기록되지 않았습니다.</span></div>
+        </div>
+      </div>
+      <div class="hero-down" aria-hidden="true">SCROLL TO INVESTIGATE <span>↓</span></div>
+    </section>
+
+    <!-- 02: SMALL DATA -->
+    <section class="chapter stage-two" id="stage2" aria-labelledby="title-two">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">02 / SMALL DATA INVENTORY</p>
+          <h2 id="title-two">게이머의 <span class="text-blue">비밀 일지</span></h2>
+          <p>대규모 통계가 놓친 게임 속 맥락을 직접 기록합니다.<br>같은 패배라도 <strong>언제, 누구와, 어떤 마음으로</strong> 플레이했는지에 따라 해석이 달라집니다.</p>
+        </header>
+        <div class="inventory" aria-label="수집할 스몰데이터 항목">
+          <div class="slot reveal">
+            <div class="slot-header"><div class="slot-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg></div><div><div class="slot-code mono">STAT SLOT 01</div><div class="slot-title">게임 시간대</div></div></div>
+            <div class="slot-detail">방과 후 / 학원 출발 직전 / 여유로운 주말<br><b>시간 압박이 있었는가?</b></div>
+          </div>
+          <div class="slot reveal" data-delay="1">
+            <div class="slot-header"><div class="slot-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M7 9v6M17 9v6M7 12h10"/><path d="M5 6c-2 0-3 2-3 6s1 6 3 6h14c2 0 3-2 3-6s-1-6-3-6H5Z"/></svg></div><div><div class="slot-code mono">STAT SLOT 02</div><div class="slot-title">디스코드 보이스</div></div></div>
+            <div class="slot-detail">보이스 채팅 ON / OFF<br>팀원과의 <b>소통 환경을 기록</b>합니다.</div>
+          </div>
+          <div class="slot reveal" data-delay="2">
+            <div class="slot-header"><div class="slot-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M6 8c1.3-2.5 3.3-3.5 6-3.5S16.7 5.5 18 8"/><path d="M4.5 10.5C3 15 7 20 12 20s9-5 7.5-9.5"/><path d="M8 12h.01M16 12h.01M9 16c2 1 4 1 6 0"/></svg></div><div><div class="slot-code mono">STAT SLOT 03</div><div class="slot-title">멘탈 · 감정</div></div></div>
+            <div class="slot-detail">평온 / 불안 / 짜증 / 3연패 후 과열<br><b>집중할 수 있는 상태인가?</b></div>
+          </div>
+        </div>
+        <div class="journal reveal">
+          <div class="panel-head"><h3>PERSONAL MATCH LOG <span class="text-gold">/ 작은 기록, 큰 단서</span></h3><span class="tag mono">CLICK TO INSPECT</span></div>
+          <div class="journal-cards" aria-label="게임 일지 예시: 카드를 누르면 해설 변경">
+            <button class="diary" type="button" data-log="academy" aria-pressed="true">
+              <span class="diary-top"><span class="mono">LOG #01 · 16:45</span><span class="diary-emotion">불안</span></span>
+              <span class="diary-title">방과 후 학원 가기 직전, 마음은 이미 다음 일정에</span>
+              <span class="diary-info">DISCORD <b>ON</b> · 일정 촉박 · <span class="text-red">패배</span></span>
+            </button>
+            <button class="diary" type="button" data-log="tilt" aria-pressed="false">
+              <span class="diary-top"><span class="mono">LOG #02 · 23:10</span><span class="diary-emotion">뇌절</span></span>
+              <span class="diary-title">디스코드 끄고, 솔랭 3연패 직후 무리한 재도전</span>
+              <span class="diary-info">DISCORD <b>OFF</b> · 연패 직후 · <span class="text-red">패배</span></span>
+            </button>
+            <button class="diary" type="button" data-log="calm" aria-pressed="false">
+              <span class="diary-top"><span class="mono">LOG #03 · 15:00</span><span class="diary-emotion ok">평온</span></span>
+              <span class="diary-title">주말 오후, 시간도 충분하고 집중도 잘되는 날</span>
+              <span class="diary-info">DISCORD <b>ON</b> · 여유 있음 · <span style="color:var(--mint)">승리</span></span>
+            </button>
+          </div>
+          <div class="diary-foot"><span class="log-flag mono">FIELD NOTE</span><div><strong id="diaryDetailTitle">시간 압박이 드러난 한 판</strong><p id="diaryDetail" aria-live="polite">급하게 큐를 잡으면 판단과 집중이 흔들릴 수 있습니다. 단, 한 번의 패배로 원인을 확정할 수는 없습니다.</p></div></div>
+        </div>
+        <p class="small-note" style="text-align:center;margin-top:15px">※ 각 일지와 통계는 분석 방법을 설명하기 위한 가상 사례입니다. 보이스 유무만으로 승패의 인과관계를 단정하지 않습니다.</p>
+        <div class="bridge reveal"><span class="arrow" aria-hidden="true">↓</span> 작은 기록을 50판의 조건별 데이터로 묶어 봅니다.</div>
+      </div>
+    </section>
+
+    <!-- 03: CONDITIONS + WIN RATES -->
+    <section class="chapter stage-three" id="stage3" aria-labelledby="title-three">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">03 / DATA SEGMENTATION</p>
+          <h2 id="title-three">승률 폭락 <span class="text-red">구간 발견</span></h2>
+          <p>총 50판을 일정과 감정 상태별로 나누었더니, 평균 42%에 가려졌던 위험 조건이 나타납니다.<br>아래 차트에서 조건을 클릭해 차이를 확인하세요.</p>
+        </header>
+        <div class="chart-card reveal" id="chartCard">
+          <div class="chart-toolbar"><strong>CONDITIONAL WIN RATE <span class="text-blue">/ 50 MATCHES</span></strong><span class="aside mono">WIN / TOTAL · ILLUSTRATIVE DATA</span></div>
+          <div class="filter-tabs" aria-label="조건 강조 선택">
+            <button class="filter" data-focus="all" type="button" aria-pressed="true">전체 비교</button>
+            <button class="filter" data-focus="calm" type="button" aria-pressed="false">여유 있을 때</button>
+            <button class="filter" data-focus="academy" type="button" aria-pressed="false">학원 직전</button>
+            <button class="filter" data-focus="tilt" type="button" aria-pressed="false">3연패 직후</button>
+          </div>
+          <div class="chart-area" role="group" aria-label="전체 50판 21승 42퍼센트, 여유로운 시간 30판 19승 63.3퍼센트, 학원 직전 12판 1승 8.3퍼센트, 3연패 직후 8판 1승 12.5퍼센트">
+            <div class="axis" aria-hidden="true"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+            <div class="chart-row" data-row="all"><div class="row-name">최근 50판 평균<span class="row-count">21승 / 50판</span></div><div class="track"><span class="fill overall" style="--fill:42%"></span></div><div class="rate">42%</div></div>
+            <div class="chart-row" data-row="calm"><div class="row-name">여유로운 시간<span class="row-count">19승 / 30판</span></div><div class="track"><span class="fill good" style="--fill:63.33%"></span></div><div class="rate good">63.3%</div></div>
+            <div class="chart-row" data-row="academy"><div class="row-name">학원 가기 직전<span class="row-count">1승 / 12판</span></div><div class="track"><span class="fill bad" style="--fill:8.33%"></span></div><div class="rate bad">8.3%</div></div>
+            <div class="chart-row" data-row="tilt"><div class="row-name">3연패 직후<span class="row-count">1승 / 8판</span></div><div class="track"><span class="fill bad" style="--fill:12.5%"></span></div><div class="rate bad">12.5%</div></div>
+          </div>
+          <div class="chart-foot"><span class="note">세 조건은 서로 겹치지 않도록 나눈 교육용 분류입니다. 각 판은 한 조건에만 포함되며 총 30+12+8=50판, 19+1+1=21승입니다.</span><span class="legend"><i></i> 15% 미만 위험 구간</span></div>
+        </div>
+        <div class="detail-grid">
+          <div class="focus-card reveal" aria-live="polite"><p class="focus-label mono">CONTEXT ANALYSIS · SELECTED</p><h3 id="focusTitle">전체 평균만 보면 놓치는 것</h3><p id="focusDescription">같은 50판이라도 시간을 충분히 확보한 게임과 심리적으로 불안한 게임의 결과가 다릅니다. 조건별로 살펴보면 더 유용한 질문이 생깁니다.</p></div>
+          <div class="focus-card warning reveal" data-delay="1"><p class="focus-label mono">⚠ WARNING · PERFORMANCE RISK</p><h3><span class="warn-symbol" aria-hidden="true">!</span> 피지컬만의 문제가 아니다</h3><p class="warning-summary">멘탈과 플레이 타이밍이 승률 저하와 <u>연관</u>될 가능성에 주목하세요.</p><p class="small-note" style="margin:8px 0 0;color:#d9aeb8">낮은 승률은 경고 신호이지만, 소수의 가상 표본으로 원인이나 효과를 증명할 수는 없습니다.</p></div>
+        </div>
+        <p class="stage-conclusion reveal">“더 많이 플레이하라” 대신, <strong>“언제 플레이하지 말아야 할까?”</strong>라는 질문으로 바뀝니다.</p>
+      </div>
+    </section>
+
+    <!-- 04: ACTIONABLE RULE -->
+    <section class="chapter stage-four" id="stage4" aria-labelledby="title-four">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">04 / PERSONAL ACTION PLAN</p>
+          <h2 id="title-four">퀘스트: <span class="text-gold">승급 루틴</span> 완성</h2>
+          <p>빅데이터는 전체 흐름을 알려주고, 스몰데이터는 <strong>나에게 맞는 행동 규칙</strong>을 찾아 줍니다.<br>아래 세 조건을 확인하고 랭크 큐 진입 규칙을 적용해 보세요.</p>
+        </header>
+        <div class="quest-layout">
+          <div class="quest-card reveal">
+            <div class="quest-top"><div class="micro mono">NEW QUEST UNLOCKED · RULE #01</div><h3>멘탈 체크 후 큐 돌리기</h3></div>
+            <div class="quest-content">
+              <div class="rule">“연패 직후나 불안할 때는 <span class="text-gold">랭크 큐를 돌리지 않기.</span>”</div>
+              <label class="quest-check"><input id="timeOk" type="checkbox"><span><span class="q-main">시간에 쫓기지 않는다</span><span class="q-sub">학원, 약속 등 바로 다음 일정까지 여유가 있다.</span></span></label>
+              <label class="quest-check"><input id="streakOk" type="checkbox"><span><span class="q-main">3연패 직후가 아니다</span><span class="q-sub">연패 후라면 휴식하고 다시 판단한다.</span></span></label>
+              <label class="quest-check"><input id="mentalOk" type="checkbox"><span><span class="q-main">감정이 안정되어 있다</span><span class="q-sub">조급함이나 분노보다 집중할 준비가 되어 있다.</span></span></label>
+              <div class="queue-status" id="queueStatus" role="status" aria-live="polite"><span class="status-dot" aria-hidden="true"></span><span id="queueMessage">QUEUE LOCKED · 조건을 확인하세요. 지금은 대기 권장.</span></div>
+              <button class="quest-action" id="completeQuest" type="button" disabled>먼저 3가지 조건을 확인하세요</button>
+              <p class="quest-hint" id="questHint">조건이 충족되면 승급 루틴 완료 이펙트가 활성화됩니다.</p>
+            </div>
+          </div>
+          <div class="upgrade-panel reveal" id="upgradePanel" aria-label="승급 루틴 완료를 상징하는 장식 패널">
+            <div class="sparks" id="sparks" aria-hidden="true"></div>
+            <div class="crest-wrap" aria-hidden="true"><div class="crest"></div></div>
+            <p class="tier-caption mono" id="tierCaption">QUEST STATUS · IN PROGRESS</p>
+            <h3 class="tier-big" id="tierTitle">RANK READY?</h3>
+            <p class="tier-sub" id="tierSubtitle">티어보다 먼저 바꿀 것은 플레이 습관. 3가지 조건을 확인하고 새로운 규칙을 완성하세요.</p>
+          </div>
+        </div>
+        <div class="footer-takeaway reveal">
+          <p><strong>BIG DATA</strong>는 “전체 유저 또는 많은 경기에서 무엇이 일어나는가?”를,<br><strong>SMALL DATA</strong>는 “나의 특정 상황에서 무엇이 다른가?”를 질문합니다.<br>좋은 분석은 통계에서 끝나지 않고, 검증할 수 있는 <strong>작은 행동 변화</strong>로 이어집니다.</p>
+          <a class="go-next" href="#stage1">처음부터 다시 보기 <span class="down-arrow" aria-hidden="true">↑</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container footer-inner"><div><strong>BIG DATA × SMALL DATA / E-SPORTS CASE STUDY</strong><p>교육용 가상 데이터입니다. 실제 LoL 계정·API·라이엇 게임즈 데이터와 연동되지 않으며, 특정 행동이 승률이나 티어 상승을 보장한다는 뜻이 아닙니다. 게임 이름은 사례의 맥락을 위해 사용했으며 본 자료는 비공식 독립 교육 콘텐츠입니다.</p></div><a href="#stage1">↑ BACK TO TOP</a></div></footer>
+
+  <script>
+  (() => {
+    'use strict';
+    document.documentElement.classList.add('js');
+    const $ = selector => document.querySelector(selector);
+    const $$ = selector => Array.from(document.querySelectorAll(selector));
+    const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // 스크롤 진행도 및 현재 단계 표시
+    const chapters = $$('.chapter');
+    const navLinks = $$('.nav-link');
+    const railLinks = $$('.rail a');
+    const progressBar = $('#topProgress');
+    let scrollScheduled = false;
+    function updateScroll(){
+      const doc = document.documentElement;
+      const scrollable = Math.max(1, doc.scrollHeight - window.innerHeight);
+      progressBar.style.width = Math.min(100, Math.max(0, window.scrollY / scrollable * 100)) + '%';
+      const point = window.scrollY + window.innerHeight * .42;
+      let current = chapters[0].id;
+      for (const section of chapters) {
+        if (point >= section.offsetTop) current = section.id;
+      }
+      navLinks.concat(railLinks).forEach(link => {
+        const isActive = link.getAttribute('href') === '#' + current;
+        link.classList.toggle('active', isActive);
+        if (isActive) link.setAttribute('aria-current', 'step');
+        else link.removeAttribute('aria-current');
+      });
+      scrollScheduled = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!scrollScheduled) { scrollScheduled = true; window.requestAnimationFrame(updateScroll); }
+    }, {passive:true});
+    window.addEventListener('resize', updateScroll);
+    updateScroll();
+
+    // IntersectionObserver: 카드 등장 및 조건별 승률 막대 그리기
+    const reveals = $$('.reveal');
+    const chart = $('#chartCard');
+    function showReveal(el){el.classList.add('in-view');if(el === chart) chart.classList.add('chart-animated');}
+    if ('IntersectionObserver' in window && !reducedMotion){
+      const revealObserver = new IntersectionObserver(entries => {
+        for (const entry of entries){
+          if(entry.isIntersecting){showReveal(entry.target);revealObserver.unobserve(entry.target);}
+        }
+      },{threshold:.10,rootMargin:'0px 0px -25px 0px'});
+      reveals.forEach(el => revealObserver.observe(el));
+      // 유저가 이미 3단계에 있는 상태로 페이지를 복원한 경우에도 대응
+    } else {
+      reveals.forEach(showReveal);
+    }
+
+    // 클릭 가능한 개인 일지
+    const logDetails = {
+      academy:{title:'시간 압박이 드러난 한 판',desc:'급하게 큐를 잡으면 판단과 집중이 흔들릴 수 있습니다. 단, 한 번의 패배로 원인을 확정할 수는 없습니다.'},
+      tilt:{title:'연패와 감정 상태가 겹친 한 판',desc:'3연패 이후 보이스를 끄고 바로 재도전한 상황입니다. 보이스 OFF 자체보다는 연패·감정·피로 같은 요인을 함께 살펴봐야 합니다.'},
+      calm:{title:'안정적인 플레이 환경의 한 판',desc:'시간 여유가 있고 감정이 차분했던 사례입니다. 이런 조건에서 더 좋은 결과가 반복되는지 여러 판을 모아 확인해 봅니다.'}
+    };
+    $$('.diary').forEach(card => card.addEventListener('click', () => {
+      const data = logDetails[card.dataset.log];
+      $$('.diary').forEach(item => item.setAttribute('aria-pressed', String(item === card)));
+      $('#diaryDetailTitle').textContent = data.title;
+      $('#diaryDetail').textContent = data.desc;
+    }));
+
+    // 버튼으로 각 차트 조건을 강조 (수치는 서로 중복되지 않는 가상 집계)
+    const focusDetails = {
+      all:{title:'전체 평균만 보면 놓치는 것',desc:'50판의 전체 승률은 42%(21승)입니다. 여유로운 시간, 학원 직전, 연패 직후를 나누어 보면 승률 차이가 선명해집니다.'},
+      calm:{title:'여유로운 시간: 63.3%',desc:'30판 중 19승. 조급하지 않은 환경에서 비교적 높은 승률이 나타났습니다. 다른 요인이 영향을 주었는지도 추가로 살펴봐야 합니다.'},
+      academy:{title:'학원 직전: 8.3% · 위험',desc:'12판 중 단 1승. 시간에 쫓기는 조건의 낮은 승률을 발견했습니다. 이 조건에서는 랭크 큐 진입을 피하는 규칙을 시험해 볼 수 있습니다.'},
+      tilt:{title:'3연패 직후: 12.5% · 위험',desc:'8판 중 단 1승. 연패 후 감정이 과열된 조건에서 큰 하락이 나타났습니다. 휴식 후 플레이하는 방법을 관찰·검증할 수 있습니다.'}
+    };
+    $$('.filter').forEach(btn => btn.addEventListener('click', () => {
+      const selected = btn.dataset.focus;
+      $$('.filter').forEach(item => item.setAttribute('aria-pressed',String(item === btn)));
+      $$('.chart-row').forEach(row => {
+        const isSelected = row.dataset.row === selected;
+        row.classList.toggle('active',isSelected);
+        row.classList.toggle('deemphasized',selected !== 'all' && !isSelected);
+      });
+      $('#focusTitle').textContent = focusDetails[selected].title;
+      $('#focusDescription').textContent = focusDetails[selected].desc;
+    }));
+
+    // 3개의 체크박스가 모두 충족되면 퀘스트 완료 연출 활성화
+    const checkboxes = ['timeOk','streakOk','mentalOk'].map(id => document.getElementById(id));
+    const status = $('#queueStatus');
+    const statusText = $('#queueMessage');
+    const action = $('#completeQuest');
+    const panel = $('#upgradePanel');
+    const sparks = $('#sparks');
+    const hint = $('#questHint');
+    for(let i=0;i<30;i++){
+      const particle = document.createElement('span');
+      particle.className = 'spark';
+      particle.style.setProperty('--angle',(i * (360/30))+'deg');
+      particle.style.setProperty('--distance',(110 + (i%5)*19)+'px');
+      particle.style.setProperty('--delay',((i%7)*.035)+'s');
+      sparks.appendChild(particle);
+    }
+    function resetReward(){
+      panel.classList.remove('completed');
+      $('#tierCaption').textContent = 'QUEST STATUS · IN PROGRESS';
+      $('#tierTitle').textContent = 'RANK READY?';
+      $('#tierSubtitle').textContent = '티어보다 먼저 바꿀 것은 플레이 습관. 3가지 조건을 확인하고 새로운 규칙을 완성하세요.';
+    }
+    function refreshQuest(){
+      const okCount = checkboxes.filter(input => input.checked).length;
+      const ready = okCount === checkboxes.length;
+      status.classList.toggle('ready',ready);
+      statusText.textContent = ready ? 'QUEUE READY · 오늘의 랭크 큐 진입 조건 충족' : 'QUEUE LOCKED · ' + (3-okCount) + '개 조건을 더 확인하세요. 지금은 대기 권장.';
+      action.disabled = !ready;
+      action.textContent = ready ? (panel.classList.contains('completed') ? '루틴 다시 시작하기' : '퀘스트 완료 · 승급 루틴 활성화') : '먼저 3가지 조건을 확인하세요';
+      if(!ready){resetReward();hint.textContent='조건이 충족되면 승급 루틴 완료 이펙트가 활성화됩니다.';}
+    }
+    checkboxes.forEach(input => input.addEventListener('change',refreshQuest));
+    action.addEventListener('click', () => {
+      if(action.disabled)return;
+      if(panel.classList.contains('completed')){
+        checkboxes.forEach(input => input.checked = false);
+        resetReward();refreshQuest();
+        return;
+      }
+      // 애니메이션 재실행을 위해 패널 상태 리셋 후 스타일 변경
+      panel.classList.remove('completed');
+      void panel.offsetWidth;
+      panel.classList.add('completed');
+      $('#tierCaption').textContent = 'QUEST COMPLETE · NEW ROUTINE';
+      $('#tierTitle').textContent = 'TIER UP!';
+      $('#tierSubtitle').textContent = '자기 상태를 확인하고 큐를 선택하는 습관을 획득했습니다. 실제 티어 승급은 플레이 결과에 따라 달라집니다.';
+      hint.textContent = '※ 티어 승급은 교육용 시각 연출이며, 실제 계정 랭크와 무관합니다.';
+      refreshQuest();
+      if(window.innerWidth < 900)panel.scrollIntoView({behavior:reducedMotion?'auto':'smooth',block:'center'});
+    });
+    refreshQuest();
+  })();
+  </script>
+</body>
+</html>

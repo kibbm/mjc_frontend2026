@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>Football Pass Lab | 3 vs 5 패스 축구 × 턴오버 데이터 분석</title>
+<style>
+:root{--bg:#08121e;--navy:#0c1928;--surface:#101f30;--surface2:#14273b;--border:#294059;--muted:#93a9b9;--text:#eaf4f6;--lime:#c7f86c;--cyan:#77dceb;--orange:#ffa16b;--red:#ff7883;--blue:#729aff;--soft:#182c3e}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Pretendard","Noto Sans KR","Malgun Gothic",Arial,sans-serif;font-size:15px;line-height:1.58}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}a{color:inherit;text-decoration:none}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--lime);outline-offset:2px} .container{width:min(1430px,calc(100% - 48px));margin:auto} .topbar{height:65px;background:#0b1926ec;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;backdrop-filter:blur(14px)}.nav{height:100%;display:flex;align-items:center;justify-content:space-between;gap:15px}.brand{display:flex;align-items:center;gap:11px;font-size:15px;font-weight:900;letter-spacing:.07em}.brand-icon{display:grid;place-items:center;width:31px;height:31px;color:#0c1a20;background:var(--lime);border-radius:9px;font-size:20px}.brand small{color:var(--muted);font-size:10px;letter-spacing:.13em;margin-left:4px}.navlinks{display:flex;gap:22px;font-size:12px;color:#b1c3cb;font-weight:700}.navlinks a:hover{color:var(--lime)}.offline{font-size:11px;color:var(--lime);border:1px solid #6b9653;background:#13291f;padding:6px 10px;border-radius:8px;white-space:nowrap}
+.hero{padding:52px 0 26px;background:radial-gradient(ellipse at 79% 9%,#19505177 0%,transparent 42%),radial-gradient(ellipse at 10% 55%,#1e305266 0%,transparent 45%)}.hero-grid{display:grid;grid-template-columns:1.6fr .62fr;gap:35px;align-items:center}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--lime);font-size:11px;font-weight:900;letter-spacing:.19em}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px #c7f86c2e}.hero h1{font-size:clamp(30px,3.8vw,57px);line-height:1.18;letter-spacing:-.057em;margin:13px 0 15px;font-weight:900}.hero h1 em{font-style:normal;color:var(--lime)}.hero p{color:#aabfca;font-size:14px;max-width:800px;margin:0;line-height:1.85}.hero-kicker{background:linear-gradient(135deg,#1b3645,#132335);border:1px solid #355366;padding:24px;border-radius:16px;position:relative;overflow:hidden}.hero-kicker:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #6cbca024;border-radius:50%;right:-72px;top:-93px;box-shadow:0 0 0 25px #6cbca010,0 0 0 50px #6cbca00b}.hero-kicker .mono{font-size:11px;font-weight:800;color:#c7f86c;letter-spacing:.14em}.hero-kicker strong{display:block;font-size:26px;margin:10px 0 3px;line-height:1.3}.hero-kicker p{font-size:12px;line-height:1.7}.stepstrip{margin:25px 0 28px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.step{background:#102135;border:1px solid #274156;min-height:54px;display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;color:#c3d5d9}.step b{font-size:12px;color:var(--lime);font-variant-numeric:tabular-nums}.step span{font-size:12px;font-weight:800}.step small{display:block;color:var(--muted);font-size:10px;font-weight:500}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:30px}.kpi{border:1px solid var(--border);border-radius:13px;padding:18px 20px;background:linear-gradient(155deg,#132639,#0d1b2a)}.kpi .label{color:#93adba;font-size:12px;font-weight:700}.kpi .num{font-size:32px;letter-spacing:-.05em;line-height:1.35;font-weight:900;font-variant-numeric:tabular-nums}.kpi .unit{color:#9db3be;font-size:11px;margin-left:6px;font-weight:600}.kpi .hint{font-size:11px;color:#8aa5af;margin-top:3px}.kpi:nth-child(2) .num{color:var(--cyan)}.kpi:nth-child(3) .num{color:var(--red)}.kpi:nth-child(4) .num{color:var(--lime)}
+.section{scroll-margin-top:85px;margin:28px 0 42px}.sect-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:16px}.sect-head h2{margin:4px 0 0;font-size:24px;letter-spacing:-.038em}.sect-head p{margin:4px 0 0;color:#9db1bd;font-size:12px}.section-num{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--lime)}.tag{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:8px;color:#a9c3cb;font-size:11px;font-weight:700}.panel{border:1px solid var(--border);background:var(--surface);border-radius:15px;overflow:hidden}.panel-head{padding:17px 19px;display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid var(--border);min-height:62px}.panel-title{font-size:14px;font-weight:900;letter-spacing:-.015em}.sub{font-size:11px;color:var(--muted);font-weight:500}.panel-body{padding:17px 19px}.split{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(305px,.82fr);gap:14px}.rightstack{display:grid;gap:14px;align-content:start}.signal{font-size:10px;font-weight:900;color:var(--lime);background:#1d3f33;border:1px solid #3b7255;border-radius:7px;padding:5px 9px;letter-spacing:.12em}.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}.pitch-wrap{position:relative;overflow:hidden;border-radius:10px;background:#0a2d36;border:1px solid #3f7274}.pitch-wrap canvas{display:block;width:100%;height:auto;aspect-ratio:105 / 68;touch-action:none}.play-overlay{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;background:#07161e69;transition:opacity .2s}.play-overlay.hidden{opacity:0}.play-overlay .overlay-inner{background:#0a1c2be0;border:1px solid #76a89a77;border-radius:13px;padding:15px 25px;text-align:center;box-shadow:0 12px 30px #0005}.overlay-inner strong{display:block;font-size:20px}.overlay-inner small{display:block;font-size:12px;color:#b9cdd2;margin-top:5px}.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.huditem{background:#091929;border:1px solid #2c4257;border-radius:9px;padding:10px;text-align:center}.huditem b{font-size:20px;display:block;font-variant-numeric:tabular-nums;line-height:1.25}.huditem small{color:var(--muted);font-size:10px}.huditem:nth-child(3) b{color:#ff9291}.huditem:nth-child(4) b{color:var(--lime)}.actionbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.btn{border:1px solid #506a79;background:#1b3043;color:#eaf3f5;font-weight:800;font-size:12px;padding:10px 14px;border-radius:9px;white-space:nowrap;transition:.15s}.btn:hover{background:#284258;border-color:#78959b}.btn.primary{border-color:var(--lime);color:#14291b;background:var(--lime)}.btn.primary:hover{background:#dbff9a}.btn.danger{border-color:#744b58;color:#ffa4ad;background:#3b2433}.btn.mini{padding:7px 10px;font-size:11px}.pill{display:inline-flex;gap:5px;align-items:center;font-size:11px;color:#b4c7cf;background:#0d2030;border:1px solid #2f475e;border-radius:20px;padding:6px 10px}.status-line{margin-top:10px;font-size:12px;color:#b0c9d0;min-height:22px}.help{background:#0b2331;border:1px solid #315067;padding:12px 14px;color:#a6c2cb;border-radius:9px;font-size:11px;margin-top:12px}.touch{display:none;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(2,38px);gap:5px;margin:11px auto 0;width:max-content}.touch button{border:1px solid #537482;background:#193e4d;color:#fff;border-radius:7px;touch-action:none;user-select:none}.touch .up{grid-column:2}.touch .left{grid-row:2;grid-column:1}.touch .down{grid-row:2;grid-column:2}.touch .right{grid-row:2;grid-column:3}.form-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;margin:13px 0}.form-row label{font-size:12px;color:#d8e6ea;font-weight:700}.form-row small{display:block;color:var(--muted);font-size:10px;font-weight:500;margin-top:2px}.range{width:132px;accent-color:var(--lime)}.field-select{border:1px solid #3c576b;border-radius:8px;padding:9px 12px;background:#0c2133;color:#e9f3f2;font-size:12px;max-width:100%;outline:0}.form-row strong{color:var(--lime);margin-left:5px}.table-note{font-size:11px;color:#9eb3bc;margin-top:10px}.config-card{background:#0b1b2b;padding:15px;border-radius:10px;border:1px solid #293f53}.config-card strong{font-size:12px}.config-card p{font-size:11px;color:#9cb3be;margin:7px 0 0;line-height:1.7}.legend-items{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:#aec5cb;margin-top:10px}.legend-items i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}.legend-items .attacker{background:#cffd76}.legend-items .defender{background:#ff7586}.legend-items .target{background:#76ddeb}
+.datagrid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.data-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}.pipe{border:1px solid var(--border);background:#0c1c2a;border-radius:9px;padding:12px}.pipe small{display:block;color:var(--muted);font-size:10px}.pipe strong{display:block;color:#e5f2f1;font-size:21px;line-height:1.5}.pipe.highlight strong{color:var(--lime)}.data-info{font-size:12px;color:#abc0c6;line-height:1.8;margin-top:15px}.data-info b{color:var(--lime)}.data-sample{width:100%;border-collapse:collapse;font-size:11px}.data-sample th{padding:9px 7px;color:#a9c2c9;text-align:left;background:#13283a;font-weight:800;white-space:nowrap}.data-sample td{padding:9px 7px;border-top:1px solid #24394b;color:#d7e5e8;white-space:nowrap}.data-sample td.hot{color:#ff9da4}.data-sample-wrap{overflow:auto;max-height:280px}.small-note{font-size:11px;color:#93aabb;margin-top:12px}.explain{background:#0c2430;padding:11px 13px;border-left:3px solid var(--cyan);font-size:12px;color:#b3c9d3;border-radius:3px;margin-top:14px}
+.heat-grid{display:grid;grid-template-columns:minmax(0,1.68fr) minmax(280px,.7fr);gap:14px}.map-switch{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.switch{border:1px solid #37536a;border-radius:7px;background:#102538;color:#aac3cf;font-size:11px;font-weight:800;padding:7px 10px}.switch.active{background:#c7f86c;color:#1a2f21;border-color:#c7f86c}.heat-wrap{position:relative;cursor:crosshair}.heat-wrap canvas{display:block;aspect-ratio:105/68;width:100%;height:auto}.tooltip{position:absolute;pointer-events:none;z-index:5;border:1px solid #58707c;background:#081522f2;padding:10px 12px;border-radius:9px;font-size:11px;color:#d4e8ea;box-shadow:0 8px 24px #0008;min-width:150px;white-space:nowrap}.tooltip strong{color:var(--lime)}.tooltip.hidden{display:none}.gradientline{display:flex;align-items:center;gap:9px;margin-top:10px;font-size:10px;color:#a9c0c9}.gradient{flex:1;height:8px;border-radius:5px;background:linear-gradient(90deg,#113c41,#48c6a2,#ffe07c,#ff9265,#f84f78)}.heat-controls{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.heat-controls label{font-size:11px;color:#b4cad1;display:flex;gap:6px;align-items:center}.heat-controls input{accent-color:var(--lime)}.zone-head{font-size:11px;color:var(--muted);letter-spacing:.11em;font-weight:900}.zone-title{font-size:23px;font-weight:900;margin:5px 0}.zone-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}.zone-metrics>div{border:1px solid #344a5b;background:#0c2131;padding:10px;border-radius:9px}.zone-metrics small{display:block;color:#a0bac5;font-size:10px}.zone-metrics b{display:block;font-size:22px;margin-top:4px}.hotlist{display:grid;gap:8px;margin-top:13px}.hotitem{display:grid;grid-template-columns:25px 1fr auto;align-items:center;gap:8px;font-size:12px}.hotitem em{font-style:normal;color:var(--orange);font-size:11px}.hottrack{height:6px;background:#2a3e4d;border-radius:5px;overflow:hidden;margin-top:4px}.hottrack i{display:block;background:linear-gradient(90deg,#ed9e54,#fb687d);height:100%;border-radius:5px}.coverage{font-size:11px;color:#a9bfc4;margin-top:14px;background:#0b2131;border:1px solid #2e4759;padding:10px;border-radius:7px}.keygrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.bars{display:grid;gap:10px;margin-top:13px}.barrow{display:grid;grid-template-columns:52px 1fr 45px;align-items:center;gap:9px;font-size:11px}.barrow span{color:#b8cbd0}.barouter{background:#253c4b;border-radius:5px;height:11px;overflow:hidden}.barinner{background:linear-gradient(90deg,#64bacd,#b4f288);height:100%;border-radius:5px}.barrow b{text-align:right;font-size:12px}.timeline{width:100%;height:153px;display:block}.timeline-label{display:flex;justify-content:space-between;color:#819ead;font-size:10px}
+.forecast-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.lane{background:#102638;border:1px solid #3e5668;border-radius:10px;text-align:left;padding:13px;display:flex;flex-direction:column;gap:3px}.lane.active{border-color:var(--lime);background:#1e372d}.lane small{font-size:10px;color:#b1c7cf}.lane b{font-size:15px}.lane span{color:#d4f795;font-size:18px;font-weight:900}.prob-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}.probc{border:1px solid #3c5261;border-radius:9px;background:#0c2332;padding:14px}.probc small{display:block;color:#a5bdc6;font-size:11px}.probc strong{font-size:34px;display:block;line-height:1.5;font-variant-numeric:tabular-nums}.probc:nth-child(1) strong{color:var(--orange)}.probc:nth-child(2) strong{color:var(--lime)}.meter{height:10px;background:#1c384a;border-radius:10px;overflow:hidden;margin-top:8px}.meter span{height:100%;display:block;background:linear-gradient(90deg,#72dbc7,#f7d078,#fa6974);border-radius:10px;transition:width .3s}.time-row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}.time-row label{font-size:12px;font-weight:800}.time-row b{color:var(--lime)}.wide-range{width:100%;accent-color:var(--lime);margin-top:8px}.alert{border-left:3px solid var(--orange);background:#3a2933;padding:11px 13px;color:#e2bfad;border-radius:3px;font-size:11px;margin-top:12px}.compare-row{display:grid;grid-template-columns:130px 1fr 64px;align-items:center;gap:9px;margin:12px 0;font-size:12px}.compare-row b{font-size:11px;text-align:right}.compare-row .barouter{height:14px}.compare-row .barinner{background:linear-gradient(90deg,#77d9e6,#c7f86c)}.compare-row.active .barinner{background:linear-gradient(90deg,#ffd475,#ff8e77)}.formula{font-size:11px;color:#b4c8cc;background:#0c2232;border:1px dashed #3c5a67;padding:12px;border-radius:8px;margin-top:13px}.formula strong{color:var(--lime)}.footer{padding:27px 0 46px;border-top:1px solid #294050;color:#8eaab4;font-size:12px}.footer strong{color:#d1dfe2}.footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:15px}.toast{position:fixed;right:18px;bottom:20px;z-index:99;padding:12px 18px;border:1px solid #719785;background:#17372c;color:#ddfadb;border-radius:10px;box-shadow:0 6px 30px #0007;font-size:12px;font-weight:800;opacity:0;transform:translateY(15px);transition:.18s;pointer-events:none}.toast.show{opacity:1;transform:translateY(0)}.hide{display:none!important}
+@media(max-width:1100px){.hero-grid{grid-template-columns:1fr 270px}.split,.heat-grid{grid-template-columns:minmax(0,1.4fr) minmax(250px,.8fr)}.stepstrip{grid-template-columns:repeat(5,1fr)}.navlinks{gap:12px}.step{padding:10px}}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}.hero-kicker{display:none}.split,.heat-grid,.datagrid,.forecast-grid{grid-template-columns:1fr}.rightstack{grid-template-columns:repeat(2,minmax(0,1fr))}.keygrid{grid-template-columns:1fr 1fr}.navlinks{display:none}}
+@media(max-width:610px){.container{width:min(100% - 24px,1430px)}.hero{padding-top:32px}.hero h1{font-size:31px}.stepstrip{grid-template-columns:repeat(3,1fr);gap:6px}.step{min-height:48px}.step:last-child{grid-column:span 2}.kpi-grid{grid-template-columns:repeat(2,1fr);gap:8px}.kpi{padding:12px}.kpi .num{font-size:28px}.rightstack,.keygrid{grid-template-columns:1fr}.panel-head{padding:12px 13px;flex-wrap:wrap}.panel-body{padding:12px}.sect-head h2{font-size:20px}.offline{font-size:9px}.brand small{display:none}.huditem{padding:7px 2px}.huditem b{font-size:17px}.touch{display:grid}.pipeline{grid-template-columns:repeat(2,1fr)}.lanes{gap:5px}.lane{padding:8px}.lane b{font-size:12px}.lane span{font-size:15px}.prob-row{grid-template-columns:1fr 1fr}.probc strong{font-size:26px}.actionbar{gap:6px}.btn{padding:9px 10px}.compare-row{grid-template-columns:110px 1fr 52px}.hero p{font-size:13px}}
+
+/* 3v5 passing game additions */
+.hud{grid-template-columns:repeat(5,minmax(0,1fr))}.kpi-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+.kpi:nth-child(5) .num{color:var(--cyan)}
+.teamscore{display:flex;justify-content:center;align-items:center;gap:16px;border:1px solid #38586b;background:linear-gradient(135deg,#172d39,#172536);border-radius:12px;padding:12px;margin-bottom:16px;text-align:center}
+.teamscore>div{min-width:90px;display:flex;flex-direction:column;align-items:center;gap:0}.teamscore small{font-size:10px;font-weight:900;color:#a4c2ca;letter-spacing:.1em}.teamscore b{font-size:34px;line-height:1.1;color:var(--lime)}.teamscore>div:last-child b{color:var(--red)}.teamscore span{font-size:10px;color:#afc3c9}.teamscore>strong{color:#b8d9de;font-size:14px}
+.touch-extra{display:none;justify-content:center;gap:8px;margin:12px 0 0}.touch-extra button{border:1px solid #5b8795;background:#16394b;color:#e8f2f4;padding:11px 12px;border-radius:9px;font-weight:900;font-size:12px;touch-action:manipulation;user-select:none}.touch-extra #mobilePass{border-color:var(--lime);background:var(--lime);color:#142921}
+.pass-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.pass-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.pass-kpis>div{border:1px solid #354f60;background:#0a2331;border-radius:9px;padding:10px;text-align:center}.pass-kpis small{display:block;font-size:10px;color:#9fb9c7}.pass-kpis b{font-size:22px;display:block}.pass-kpis>div:nth-child(2) b{color:var(--lime)}.pass-kpis>div:nth-child(3) b{color:var(--red)}.pass-kpis>div:nth-child(4) b{color:var(--cyan)}
+.pass-pred{border:1px solid #507274;background:#10323a;border-radius:8px;padding:12px;font-size:12px;color:#c4e5e6;margin-top:12px}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.pass-grid{grid-template-columns:1fr}}
+@media(max-width:610px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.kpi-grid>.kpi:last-child{grid-column:span 2}.hud{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}.huditem{padding:6px 2px}.huditem b{font-size:14px}.huditem small{font-size:9px}.touch-extra{display:flex}.pass-kpis b{font-size:19px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="container nav"><a class="brand" href="#top"><span class="brand-icon">⚽</span>FOOTBALL PASS LAB <small>/ 3 VS 5 · FIELD DATA STUDIO</small></a><nav class="navlinks" aria-label="실습 메뉴"><a href="#play">01 게임</a><a href="#collect">02 데이터 수집</a><a href="#analyze">03 시각화</a><a href="#predict">04 예측</a></nav><div class="offline">● OFFLINE READY</div></div></header>
+<main class="container" id="top">
+<section class="hero"><div class="hero-grid"><div><span class="eyebrow"><span class="dot"></span> DATA SCIENCE × RETRO FOOTBALL</span><h1>공을 빼앗기는 위치에는<br /><em>패턴이 있을까?</em></h1><p>우리 팀 3명과 상대 팀 수비수 5명이 맞붙는 2D 패스 축구 미니게임. 방향키로 볼 소유자를 조작하고 <b>Space로 동료에게 패스</b>합니다. 패스 성공·차단·태클 위치를 수집하여 피치 턴오버 히트맵과 예측 모델을 만들 수 있습니다.</p></div><div class="hero-kicker"><span class="mono">EXPERIMENT NO. 01</span><strong>PLAY → COLLECT<br />ANALYZE → PREDICT</strong><p>설치나 로그인 없이 바로 실행. 브라우저 내 로컬 저장 · CSV 출력 · Python 연계 실습</p></div></div><div class="stepstrip"><div class="step"><b>01</b><div><span>GAME</span><small>3 vs 5 · 패스</small></div></div><div class="step"><b>02</b><div><span>COLLECT</span><small>패스·태클 로그</small></div></div><div class="step"><b>03</b><div><span>CLEAN</span><small>오류 &amp; 중복 제거</small></div></div><div class="step"><b>04</b><div><span>VISUALIZE</span><small>턴오버 데스 맵</small></div></div><div class="step"><b>05</b><div><span>PREDICT</span><small>경로 위험 &amp; 밸런스</small></div></div></div></section>
+<div class="kpi-grid" aria-live="polite"><div class="kpi"><div class="label">분석 대상 세션</div><div><span id="kpiSessions" class="num">0</span><span class="unit">경기</span></div><div class="hint">모의 / 실제 플레이 세션</div></div><div class="kpi"><div class="label">정제된 이벤트</div><div><span id="kpiEvents" class="num">0</span><span class="unit">건</span></div><div class="hint">시계열 좌표 및 이벤트 로그</div></div><div class="kpi"><div class="label">턴오버 발생</div><div><span id="kpiTurnovers" class="num">0</span><span class="unit">건</span></div><div class="hint">상대 수비수에게 공을 빼앗긴 사건</div></div><div class="kpi"><div class="label">관측된 드리블 시간</div><div><span id="kpiMinutes" class="num">0.0</span><span class="unit">분</span></div><div class="hint">공 소유자의 위치 샘플 합계</div></div><div class="kpi"><div class="label">패스 성공률</div><div><span id="kpiPassRate" class="num">—</span><span class="unit">%</span></div><div class="hint" id="kpiPassHint">성공 0 / 시도 0</div></div></div>
+<section id="play" class="section"><div class="sect-head"><div><div class="section-num">01 / PLAY</div><h2>3 vs 5 패스 축구 미니게임</h2><p>우리 팀 3명(조작 선수 1명 + AI 동료 2명)과 상대 수비수 5명. <b>Space 패스, Q/E 대상 변경</b>으로 골문에 도전하세요. 패스·태클 로그가 자동 기록됩니다.</p></div><span class="tag">HTML5 CANVAS · VANILLA JS</span></div><div class="split"><article class="panel"><div class="panel-head"><div><div class="panel-title">LIVE PITCH <span class="sub"> · 105 × 68 m 표준화 좌표</span></div></div><span class="signal" id="gameSignal">READY</span></div><div class="panel-body"><div class="pitch-wrap" id="gameHolder"><canvas id="gameCanvas" width="1050" height="680" aria-label="3대5 축구 패스 게임: 방향키 이동, Q/E 패스 대상 선택, 스페이스 패스"></canvas><div id="gameOverlay" class="play-overlay"><div class="overlay-inner"><strong>READY TO PASS</strong><small>게임 시작 버튼을 누르세요</small></div></div></div><div class="hud"><div class="huditem"><b id="hudTime">90</b><small>남은 시간(초)</small></div><div class="huditem"><b id="hudGoals">0</b><small>득점</small></div><div class="huditem"><b id="hudTurns">0</b><small>턴오버</small></div><div class="huditem"><b id="hudPass">0/0</b><small>성공 패스 / 시도</small></div><div class="huditem"><b id="hudAccuracy">—</b><small>패스 성공률</small></div></div><div class="actionbar"><button id="startBtn" class="btn primary" type="button">▶ 게임 시작</button><button id="pauseBtn" class="btn" type="button" disabled>Ⅱ 일시정지</button><button id="resetBtn" class="btn" type="button">↻ 새 경기</button><span class="pill" id="savePill">● localStorage 대기</span></div><div class="touch" aria-label="모바일 방향 패드"><button type="button" class="up" data-pad="up">▲</button><button type="button" class="left" data-pad="left">◀</button><button type="button" class="down" data-pad="down">▼</button><button type="button" class="right" data-pad="right">▶</button></div><div class="touch-extra"><button id="mobileSwitch" type="button">↻ 패스 대상 변경 (Q/E)</button><button id="mobilePass" type="button">⚽ SPACE · 패스</button></div><div id="gameMessage" class="status-line" aria-live="polite">방향키 / WASD 이동 · Shift 가속 · Q/E 패스 대상 변경 · Space 패스 · 동료 클릭 선택</div><div class="legend-items"><span><i class="attacker"></i>공 소유자 (초록)</span><span><i class="target"></i>우리 팀 동료 2명 (하늘)</span><span><i class="defender"></i>상대 팀 5명 (빨강)</span><span>◎ 점선: 패스 대상</span></div></div></article><div class="rightstack"><article class="panel"><div class="panel-head"><div class="panel-title">3 vs 5 · 수비 난이도 설정</div><span class="sub">실험 변수</span></div><div class="panel-body"><div class="teamscore"><div><small>MY TEAM</small><b>3</b><span>패스·드리블</span></div><strong>VS</strong><div><small>OPPONENT</small><b>5</b><span>추적·패스 차단</span></div></div><div class="form-row"><label for="speedSlider">수비 속도 <small>높을수록 태클 위험이 커질 수 있음</small></label><div><input class="range" type="range" min="60" max="180" value="100" step="10" id="speedSlider"/><strong id="speedVal">1.0×</strong></div></div><div class="form-row"><label for="formationSelect">수비수 배치 <small>전술별 압력 분포 비교</small></label><select id="formationSelect" class="field-select"><option value="spread">균등 배치</option><option value="center">중앙 밀집</option><option value="press">전방 압박</option></select></div><div class="config-card"><strong id="formationDescTitle">균등 배치</strong><p id="formationDesc">측면과 중앙에 수비수를 분산하여 피치 전역에 비교적 고른 압력을 형성합니다.</p></div><div class="help">상대 수비수는 항상 <b>5명</b>이며, 이동 속도와 배치 전술만 변경됩니다. 수비수는 공 소유자를 압박하고 패스 경로를 가로막습니다. 실제 턴오버 예측은 <b>수집된 과거 이벤트를 기반</b>으로 하므로, 설정을 바꾸고 플레이해 추가 데이터를 모아 비교하세요.</div></div></article><article class="panel"><div class="panel-head"><div class="panel-title">수집하는 이벤트</div><span class="sub">스키마</span></div><div class="panel-body"><div class="table-note"><b style="color:var(--cyan)">MOVE</b> — 0.22초 간격 위치(X,Y)·체류시간<br /><b style="color:var(--orange)">KEY</b> — 이동/가속/Q·E·Space 입력<br /><b style="color:var(--cyan)">PASS_ATTEMPT</b> — 패스 출발 위치·대상·거리<br /><b style="color:var(--lime)">PASS_COMPLETE</b> — 동료가 공을 받은 위치<br /><b style="color:var(--orange)">PASS_INTERCEPT</b> — 상대 선수가 패스를 차단한 좌표<br /><b style="color:var(--red)">TURNOVER</b> — 태클 또는 패스 차단으로 공을 잃은 지점<br /><b style="color:var(--lime)">GOAL</b> — 골문 통과 성공<br /><b style="color:#b8a5ff">SESSION</b> — 경기 시작·종료 이벤트</div><div class="explain">위치 단위는 미터(m)이며, X는 왼쪽→오른쪽 <b>0~105</b>, Y는 위쪽→아래쪽 <b>0~68</b>입니다. 세션별 이벤트를 브라우저에 저장합니다.</div></div></article></div></div></section>
+<section id="collect" class="section"><div class="sect-head"><div><div class="section-num">02 / COLLECT & CLEAN</div><h2>시계열 데이터 수집 및 전처리</h2><p>모의 데이터를 생성하거나 실제 게임 로그를 사용하고, CSV로 내보내 Pandas 분석에 활용합니다.</p></div><span class="tag">LOCAL STORAGE → CSV</span></div><div class="datagrid"><article class="panel"><div class="panel-head"><div class="panel-title">데이터 관리</div><div><label class="sub" for="sourceSelect">분석할 데이터&nbsp;</label><select id="sourceSelect" class="field-select"><option value="all">전체</option><option value="demo">모의 데이터</option><option value="live">실제 플레이</option><option value="import">CSV 가져온 데이터</option></select></div></div><div class="panel-body"><div class="data-info">첫 실행 시 <b>3대5 패스 모의 경기 24개</b>를 생성해 성공 패스와 패스 차단 히트맵을 바로 분석할 수 있습니다. 실제 게임 로그와 모의 로그는 <b>source</b> 컬럼으로 구분됩니다. 동일 CSV를 두 번 불러와도 이벤트 ID로 중복을 걸러냅니다.</div><div class="data-actions"><button id="demoBtn" type="button" class="btn primary">↻ 3대5 모의 24경기 재생성</button><button id="importBtn" type="button" class="btn">↑ CSV 불러오기</button><input id="csvInput" type="file" accept=".csv,text/csv" hidden /><button id="rawBtn" type="button" class="btn">↓ 원시 CSV</button><button id="cleanBtn" type="button" class="btn">↓ 정제 CSV</button><button id="zoneBtn" type="button" class="btn">↓ 구역 집계 CSV</button><button id="deleteBtn" type="button" class="btn danger">전체 초기화</button></div><div class="pipeline"><div class="pipe"><small>수집된 원시 이벤트</small><strong id="pipeRaw">0</strong></div><div class="pipe"><small>스키마 오류</small><strong id="pipeInvalid">0</strong></div><div class="pipe"><small>중복 제거</small><strong id="pipeDup">0</strong></div><div class="pipe highlight"><small>분석 유효 이벤트</small><strong id="pipeClean">0</strong></div></div><div class="explain" id="cleanExplain">필수값, 이벤트 유형, 피치 좌표 범위, 시각 형식, 중복 ID를 검증합니다.</div><div class="small-note" id="storageInfo">원시 로그는 브라우저에 보존됩니다. 저장 공간 한도를 고려하여 최근 14,000개 이벤트까지 보존합니다.</div></div></article><article class="panel"><div class="panel-head"><div class="panel-title">정제 로그 미리보기</div><span class="sub">최신 이벤트 8건</span></div><div class="panel-body"><div class="data-sample-wrap"><table class="data-sample"><thead><tr><th>경과(s)</th><th>이벤트</th><th>X(m)</th><th>Y(m)</th><th>출처</th></tr></thead><tbody id="dataRows"><tr><td colspan="5">데이터를 준비 중입니다.</td></tr></tbody></table></div><div class="small-note">CSV 주요 컬럼: event_id, session_id, timestamp, type, x_m, y_m, player_id, target_id, pass_id, pass_distance_m, turnover_cause 등</div></div></article></div></section>
+<section id="analyze" class="section"><div class="sect-head"><div><div class="section-num">03 / EXPLORE</div><h2>피치 턴오버 데스 맵</h2><p>발생 건수와 이동 시간으로 보정한 위험률을 비교하여 위험 구역을 찾아봅니다.</p></div><span class="tag">12 × 8 GRID · 96 ZONES</span></div><div class="heat-grid"><article class="panel"><div class="panel-head"><div class="panel-title">2D PITCH HEATMAP <span class="sub"> · 태클·패스 차단 지점 시각화</span></div><div class="map-switch" role="group" aria-label="히트맵 모드"><button id="modeCount" type="button" class="switch active">턴오버 건수</button><button id="modeRate" type="button" class="switch">노출 보정 위험률</button><button id="modeIntercept" type="button" class="switch">패스 차단 위치</button></div></div><div class="panel-body"><div class="heat-controls"><label><input id="showRoutes" type="checkbox" checked /> 이동·패스 경로 표시</label><div><label for="routeSession" style="display:inline;font-size:11px">선택 세션</label> <select id="routeSession" class="field-select"><option value="">최신 세션</option></select></div></div><div class="pitch-wrap heat-wrap" id="mapHolder"><canvas id="heatCanvas" width="1050" height="680" aria-label="턴오버 발생 좌표 피치 히트맵: 구역을 클릭하여 세부 지표를 볼 수 있습니다"></canvas><div class="tooltip hidden" id="heatTooltip"></div></div><div class="gradientline"><span>낮음</span><span class="gradient"></span><span>높음</span></div><div class="small-note" id="heatModeHint">선택한 데이터에 기록된 턴오버 횟수를 구역별로 표시합니다. 칸을 클릭하면 수치를 확인할 수 있습니다.</div></div></article><article class="panel"><div class="panel-head"><div class="panel-title">위험 구역 진단</div><span class="sub">선택한 칸</span></div><div class="panel-body"><div class="zone-head">SELECTED GRID CELL</div><div id="zoneTitle" class="zone-title">ZONE —</div><div class="zone-metrics"><div><small>전체 턴오버</small><b id="zoneTurns">0건</b></div><div><small>패스 차단</small><b id="zoneIntercept">0건</b></div><div><small>관측시간</small><b id="zoneExposure">0초</b></div><div><small>위험률 / 분</small><b id="zoneRate">—</b></div></div><div class="small-note">유효 위치 샘플: <b id="zoneMoves">0</b>건</div><div class="zone-head" style="margin-top:22px">TOP TURNOVER ZONES</div><div class="hotlist" id="hotList"><div class="small-note">집계할 데이터가 없습니다.</div></div><div class="coverage" id="coverageNote">히트맵은 96개 구역으로 나누어 표시합니다.</div><div class="alert">위험률은 <b>턴오버 수 ÷ 해당 구역에서 머문 시간(분)</b>입니다. 체류시간이 짧은 구역은 과대평가될 수 있으므로, 부족한 표본은 별도 표시합니다.</div></div></article></div><div class="pass-grid" id="passLab">
+<article class="panel"><div class="panel-head"><div class="panel-title">패스 정확도 &amp; 성공률 분석</div><span class="sub">완료된 패스·차단 로그 기반</span></div><div class="panel-body">
+<div class="pass-kpis"><div><small>패스 시도</small><b id="passAttempts">0</b></div><div><small>성공</small><b id="passSuccess">0</b></div><div><small>차단</small><b id="passIntercepts">0</b></div><div><small>성공률</small><b id="passAccuracy">—</b></div></div>
+<div class="zone-head" style="margin:20px 0 10px">PASS SUCCESS BY STARTING LANE</div><div id="passLaneBars" class="bars"></div>
+<div class="small-note" id="passExplain">패스 성공률 = 완료된 패스 수 ÷ (완료 + 차단된 패스 수). 진행 중인 패스는 평가에서 제외합니다.</div></div></article>
+<article class="panel"><div class="panel-head"><div class="panel-title">최근 패스 시계열 로그</div><span class="sub">PASS ATTEMPT → COMPLETE / INTERCEPT</span></div><div class="panel-body"><div class="data-sample-wrap"><table class="data-sample"><thead><tr><th>경기</th><th>출발 선수</th><th>수신 선수</th><th>거리</th><th>결과</th></tr></thead><tbody id="recentPassRows"><tr><td colspan="5">패스 이벤트가 없습니다.</td></tr></tbody></table></div><div class="explain">패스가 차단되면 <b>PASS_INTERCEPT</b>와 <b>TURNOVER</b>를 같은 좌표에 기록합니다. 턴오버 데스 맵에서는 해당 사건을 1건만 집계합니다.</div></div></article>
+</div><div class="keygrid"><article class="panel"><div class="panel-head"><div class="panel-title">키보드 조작 빈도</div><span class="sub">입력 로그 분석</span></div><div class="panel-body"><div id="keyBars" class="bars"></div><div class="small-note">이동 키와 패스(Space), 대상 변경(Q/E)을 각각 기록합니다. 모의 데이터에는 입력 이벤트를 합성했습니다.</div></div></article><article class="panel"><div class="panel-head"><div class="panel-title">세션별 턴오버 분포</div><span class="sub">최근 14개 세션</span></div><div class="panel-body"><canvas id="sessionChart" width="620" height="156" class="timeline" aria-label="세션별 턴오버 발생 건수 그래프"></canvas><div class="timeline-label"><span>이전 경기</span><span>최근 경기</span></div><div class="small-note">각 막대는 한 세션의 턴오버 건수이며, 표본 수가 적을 경우 편차가 큽니다.</div></div></article></div></section>
+<section id="predict" class="section"><div class="sect-head"><div><div class="section-num">04 / PREDICT & BALANCE</div><h2>드리블·패스 위험 예측과 수비 난이도 균형</h2><p>이동 위치의 턴오버 위험률을 추정하고, 패스 차단율과 수비 배치 압력 편중도를 비교합니다.</p></div><span class="tag">PROBABILITY · DEFENDER FORMATION</span></div><div class="forecast-grid"><article class="panel"><div class="panel-head"><div class="panel-title">경로별 턴오버 예측</div><span class="sub">노출 보정 포아송 모형</span></div><div class="panel-body"><div class="sub">드리블 경로 3개와 해당 통로에서 출발하는 패스의 관측 차단율을 함께 비교합니다.</div><div class="lanes" id="laneButtons"><button class="lane" type="button" data-lane="top"><small>TOP CHANNEL</small><b>상단 측면</b><span id="laneTop">—</span></button><button class="lane active" type="button" data-lane="middle"><small>CENTRAL CHANNEL</small><b>중앙 돌파</b><span id="laneMiddle">—</span></button><button class="lane" type="button" data-lane="bottom"><small>BOTTOM CHANNEL</small><b>하단 측면</b><span id="laneBottom">—</span></button></div><div class="time-row"><label for="routeTime">예상 드리블 소요시간</label><b id="routeTimeVal">20초</b></div><input id="routeTime" class="wide-range" type="range" min="10" max="60" step="5" value="20"/><div class="prob-row"><div class="probc"><small>선택 경로에서 턴오버가 1회 이상 발생할 확률</small><strong id="predProb">—</strong><div class="meter"><span id="probMeter" style="width:0%"></span></div></div><div class="probc"><small>예상 턴오버 횟수 λ</small><strong id="predLambda">—</strong><span class="sub" id="predRiskLabel">과거 데이터 기반 추정</span></div></div><div class="formula"><strong>예측 원리</strong> — 구역별 관측 턴오버율(건/분)을 전체 평균으로 완만하게 보정한 뒤, 경로에서 머무는 시간을 곱하여 기대 턴오버 수 λ를 구합니다. 최소 1회 턴오버 확률 = <b>1 − e<sup>−λ</sup></b>.</div><div class="pass-pred" id="passPredSummary">선택 통로의 패스 데이터를 준비 중입니다.</div><div class="alert" id="predCaution">이 값은 교육용 통계 추정입니다. 실제 수비 AI 움직임, 사용자 숙련도, 팀 전술까지 학습한 예측 모델이 아닙니다.</div></div></article><article class="panel"><div class="panel-head"><div class="panel-title">수비수 배치 균형도</div><span class="sub">압력 편중도 비교</span></div><div class="panel-body"><div class="data-info">현재 수비수 수를 기준으로 세 가지 전술의 <b>공간 압력 편중도(CV)</b>를 비교합니다. 값이 낮을수록 구역 간 압력 편차가 작습니다.</div><div id="pressureBars" style="margin-top:17px"></div><div class="zone-head" style="margin:18px 0 8px">실제 로그 기준 전술별 턴오버 비교</div><div class="data-sample-wrap"><table class="data-sample"><thead><tr><th>배치</th><th>관측(분)</th><th>턴오버</th><th>건/분</th></tr></thead><tbody id="observedRows"></tbody></table></div><div class="config-card" style="margin-top:15px"><strong>배치 방식 실험</strong><p id="pressureSummary">배치 압력은 수비수 초기 위치와 주변 거리로 계산한 휴리스틱 점수입니다. 실제 태클 성공률이나 게임 재미를 보장하지 않습니다.</p><button id="applyBalanceBtn" type="button" class="btn primary" style="margin-top:12px">추천 균형 배치 적용</button></div><div class="small-note">제어 변수: 수비수 <b>5명 고정</b>, 이동 속도(0.6~1.8배), 배치 전술(3종). 하나씩 바꾸고 실제 플레이 데이터를 다시 수집한 뒤 비교하세요.</div></div></article></div></section>
+</main>
+<footer class="footer"><div class="container row"><div><strong>FOOTBALL PASS LAB · 3 VS 5</strong> · HTML5 / Canvas / Vanilla JS / localStorage</div><div>교육용 모의 데이터 · 외부 API 호출 없음 · 브라우저 내 로컬 분석</div></div></footer>
+<div class="toast" role="status" aria-live="polite" id="toast"></div>
+<script>
+(() => {
+'use strict';
+const FIELD_W=105,FIELD_H=68,COLS=12,ROWS=8,MAX_EVENTS=14000,STORE_KEY='football_passing_lab_3v5_v2',INIT_KEY='football_passing_lab_initialized_v2';
+const TYPES=new Set(['start','move','key','turnover','goal','skill','end','pass_attempt','pass_complete','pass_intercept']);
+const $=id=>document.getElementById(id);
+const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+const fmt=n=>Number(n||0).toLocaleString('ko-KR');
+const nval=(v,d=0)=>Number.isFinite(+v)?Number(v).toFixed(d):'—';
+const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const colorCanvas='#153d43';
+const G=$('gameCanvas'),g=G.getContext('2d');
+const H=$('heatCanvas'),h=H.getContext('2d');
+let all=[], clean=[], selected=[], report={invalid:0,duplicate:0}, stats={zones:[],turns:0,minutes:0,goals:0,sessionCount:0};
+let sourceFilter='all',heatMode='count',routeOn=true,selectedZone=4*COLS+6,selectedSession='',lane='middle',routeSeconds=20;
+let eventSeq=0,saveDue=0,refreshDue=0,messageDue=0,drawingFrame=0,lastFrame=0;
+let game={running:false,paused:false,seconds:0,duration:90,goals:0,turns:0,distance:0,session:'',team:[],carrier:0,player:{x:7,y:34},passTarget:1,pass:null,passes:0,passSuccess:0,defenders:[],trail:[],immune:0,skillFlash:0,sampleTimer:0};
+const keys=new Set();
+let touchPad=new Set();
+const settings={defenders:5,speed:1.0,formation:'spread'};
+function toast(msg){let el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),3500)}
+function setStatus(msg){$('gameMessage').textContent=msg;}
+function rndSeed(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296};}
+function gaussian(r){return (r()+r()+r()+r()-2)*1.3;}
+function freshId(prefix='ev'){eventSeq++;return prefix+'_'+Date.now().toString(36)+'_'+eventSeq.toString(36)}
+function rec(type,x,y,extras={}){let ev={event_id:freshId(),session_id:game.session,timestamp:new Date().toISOString(),elapsed_s:+game.seconds.toFixed(2),type,x_m:+x.toFixed(3),y_m:+y.toFixed(3),key:'',formation:settings.formation,defenders:5,speed:settings.speed,dt_s:0,source:'live',team_players:3,player_id:game.carrier+1,target_id:'',pass_id:'',pass_distance_m:0,turnover_cause:'',...extras};all.push(ev);if(all.length>MAX_EVENTS)all.splice(0,all.length-MAX_EVENTS);saveDue=Date.now()+1800;refreshDue=Date.now()+2000;return ev}
+function persist(){try{localStorage.setItem(STORE_KEY,JSON.stringify(all));localStorage.setItem(INIT_KEY,'1');$('savePill').textContent='● localStorage 저장됨';}catch(err){$('savePill').textContent='! 저장공간 부족';toast('로컬 저장공간이 부족합니다. 원시 CSV를 백업해 주세요.')}}
+function parseLoaded(){try{let val=JSON.parse(localStorage.getItem(STORE_KEY)||'null');return Array.isArray(val)?val:[]}catch{return []}}
+function demoData(seed=48){
+ const r=rndSeed(seed),base=Date.now()-32*60*1000,res=[];let counter=0,passCounter=0;
+ for(let s=0;s<24;s++){
+  let ses='demo_'+String(s+1).padStart(2,'0'),t0=base+s*76000,elapsed=0,x=7.5,y=12+r()*44,carrier=0;
+  const formation=['spread','center','press'][s%3],defenders=5,speed=.7+.1*(s%9);
+  function add(type,tx=x,ty=y,extra={}){
+   const ev={event_id:'demo3v5_'+seed+'_'+(++counter),session_id:ses,timestamp:new Date(t0+elapsed*1000).toISOString(),elapsed_s:+elapsed.toFixed(2),type,x_m:+tx.toFixed(3),y_m:+ty.toFixed(3),key:'',formation,defenders,speed:+speed.toFixed(1),dt_s:0,source:'demo',team_players:3,player_id:carrier+1,target_id:'',pass_id:'',pass_distance_m:0,turnover_cause:'',...extra};
+   res.push(ev);return ev;
+  }
+  add('start');const total=212+Math.floor(r()*68),laneY=[14,34,54][s%3];
+  for(let i=0;i<total;i++){
+   elapsed+=.25;
+   x=clamp(x+.64+r()*.72,3,103);y=clamp(y+gaussian(r)*1.2+(laneY-y)*.049,3,65);
+   add('move',x,y,{dt_s:.25});
+   if(i%9===0)add('key',x,y,{key:['ArrowRight','ArrowUp','ArrowDown','Shift','ArrowRight'][Math.floor(r()*5)]});
+   if(i%29===13){
+    const receiver=(carrier+(1+(i+s)%2))%3,tx=clamp(x+8+r()*17,4,101),ty=clamp(y+(r()-.5)*35,4,64);
+    const pid='demo_pass_'+seed+'_'+(++passCounter),len=Math.hypot(tx-x,ty-y);
+    add('key',x,y,{key:'Space'});
+    add('pass_attempt',x,y,{pass_id:pid,player_id:carrier+1,target_id:receiver+1,pass_distance_m:+len.toFixed(2)});
+    elapsed+=.34;
+    const fail=r()<(.20+(Math.abs(y-34)<13?.14:0)+(formation==='center'?.05:0));
+    if(fail){let frac=.35+r()*.3,ix=x+(tx-x)*frac,iy=y+(ty-y)*frac;
+      add('pass_intercept',ix,iy,{pass_id:pid,player_id:carrier+1,target_id:receiver+1,pass_distance_m:+Math.hypot(ix-x,iy-y).toFixed(2),turnover_cause:'interception'});
+      add('turnover',ix,iy,{key:'interception',turnover_cause:'interception',pass_id:pid,player_id:carrier+1,target_id:receiver+1});
+      x=7.5;y=5+r()*58;carrier=0;
+    }else{add('pass_complete',tx,ty,{pass_id:pid,player_id:carrier+1,target_id:receiver+1,pass_distance_m:+len.toFixed(2)});x=tx;y=ty;carrier=receiver;}
+   }
+   const dangerX=x>=32&&x<=88?.006:.001;
+   const middle=Math.abs(y-34)<13?.007:.001;
+   if(x>12&&r()<.001+dangerX+middle){add('turnover',x,y,{key:'tackle',turnover_cause:'tackle'});x=7.5;y=5+r()*58;carrier=0;}
+   else if(x>=102){if(y>=27&&y<=41)add('goal',x,y);x=7.5;y=5+r()*58;carrier=0;}
+  }
+  elapsed+=.001;add('end');
+ }
+ // Inject 8 exact duplicates and 5 intentionally invalid records for cleaning practice.
+ if(res.length){for(let k=0;k<8;k++)res.push({...res[100+k*37]});
+  for(let j=0;j<5;j++){const bad={...res[81+j*9],event_id:'demo_bad_3v5_'+j};if(j===0)bad.x_m=-5;if(j===1)bad.y_m=90;if(j===2)bad.type='teleport';if(j===3)bad.timestamp='not-a-time';if(j===4)bad.dt_s=-.3;res.push(bad)} }
+ return res;
+}
+function cleanData(arr){const valid=[],ids=new Set(),fingerprints=new Set();let invalid=0,duplicate=0;
+ for(let index=0;index<arr.length;index++){
+  const raw=arr[index];if(!raw||typeof raw!=='object'){invalid++;continue}
+  const ev={...raw};ev.event_id=String(ev.event_id??'').trim();ev.session_id=String(ev.session_id??'').trim();ev.type=String(ev.type??'').trim().toLowerCase();ev.key=String(ev.key??'');ev.source=String(ev.source||'import');ev.formation=String(ev.formation||'unknown');
+  ev.x_m=Number(ev.x_m);ev.y_m=Number(ev.y_m);ev.elapsed_s=Number(ev.elapsed_s);ev.dt_s=ev.dt_s===''?0:Number(ev.dt_s);
+  ev.defenders=ev.defenders===''?0:Number(ev.defenders??0);ev.speed=ev.speed===''?0:Number(ev.speed??0);ev.team_players=ev.team_players===''?0:Number(ev.team_players??0);ev.player_id=ev.player_id===undefined||ev.player_id===null||ev.player_id===''?'':Number(ev.player_id);ev.target_id=ev.target_id===undefined||ev.target_id===null||ev.target_id===''?'':Number(ev.target_id);ev.pass_id=String(ev.pass_id??'');ev.pass_distance_m=ev.pass_distance_m===''?0:Number(ev.pass_distance_m??0);ev.turnover_cause=String(ev.turnover_cause??'');
+  let t=Date.parse(ev.timestamp);
+  if(!ev.event_id||!ev.session_id||!TYPES.has(ev.type)||!Number.isFinite(t)||!Number.isFinite(ev.x_m)||!Number.isFinite(ev.y_m)||ev.x_m<0||ev.x_m>FIELD_W||ev.y_m<0||ev.y_m>FIELD_H||!Number.isFinite(ev.elapsed_s)||ev.elapsed_s<0||!Number.isFinite(ev.dt_s)||ev.dt_s<0||ev.dt_s>10||!Number.isFinite(ev.defenders)||!Number.isFinite(ev.speed)||!Number.isFinite(ev.pass_distance_m)||ev.pass_distance_m<0||ev.pass_distance_m>150||!Number.isFinite(ev.team_players)||(ev.player_id!==''&&(!Number.isInteger(ev.player_id)||ev.player_id<1||ev.player_id>3))||(ev.target_id!==''&&(!Number.isInteger(ev.target_id)||ev.target_id<1||ev.target_id>3))){invalid++;continue}
+  ev.timestamp=new Date(t).toISOString();
+  const signature=[ev.session_id,ev.timestamp,ev.type,ev.x_m,ev.y_m,ev.key].join('|');
+  if(ids.has(ev.event_id)||fingerprints.has(signature)){duplicate++;continue}
+  ids.add(ev.event_id);fingerprints.add(signature);valid.push(ev);
+ }
+ valid.sort((a,b)=>a.timestamp.localeCompare(b.timestamp)||a.event_id.localeCompare(b.event_id));return {valid,invalid,duplicate};
+}
+const zIndex=(x,y)=>clamp(Math.floor(x/FIELD_W*COLS),0,COLS-1)+COLS*clamp(Math.floor(y/FIELD_H*ROWS),0,ROWS-1);
+function zoneName(i){return String.fromCharCode(65+Math.floor(i/COLS))+'-'+String(i%COLS+1).padStart(2,'0')}
+function calcStats(events){
+ const zones=Array.from({length:COLS*ROWS},(_,i)=>({i,turns:0,intercepts:0,exposure:0,moves:0,rate:0,smoothed:0}));
+ let turns=0,goals=0,minutes=0,passAttempts=0,passComplete=0,passIntercepts=0,tackles=0,passDistance=0;
+ const sessions=new Set(),bySession=new Map(),keyCount={},passByLane={top:{attempts:0,complete:0,intercepts:0},middle:{attempts:0,complete:0,intercepts:0},bottom:{attempts:0,complete:0,intercepts:0}},passAttemptsMap=new Map(),passEvents=[];
+ function laneOf(y){return y<23?'top':y<45?'middle':'bottom'}
+ for(const ev of events){
+  sessions.add(ev.session_id);
+  if(!bySession.has(ev.session_id))bySession.set(ev.session_id,{id:ev.session_id,turns:0,goals:0,events:[],last:ev.timestamp});
+  const ses=bySession.get(ev.session_id);ses.events.push(ev);if(ev.timestamp>ses.last)ses.last=ev.timestamp;
+  const z=zones[zIndex(ev.x_m,ev.y_m)];
+  if(ev.type==='turnover'){z.turns++;turns++;ses.turns++;if(ev.turnover_cause==='tackle'||ev.key==='tackle')tackles++}
+  if(ev.type==='goal'){goals++;ses.goals++}
+  if(ev.type==='move'){z.exposure+=ev.dt_s;z.moves++;minutes+=ev.dt_s/60}
+  if(ev.type==='key'){const k=ev.key||'기타';keyCount[k]=(keyCount[k]||0)+1}
+  if(ev.type==='pass_attempt'){
+   passAttempts++;passDistance+=ev.pass_distance_m;
+   const group=laneOf(ev.y_m);passByLane[group].attempts++;
+   const k=ev.session_id+'|'+ev.pass_id;passAttemptsMap.set(k,{...ev,pass_lane:group,result:'진행 / 미완료'});
+  }
+  if(ev.type==='pass_complete'||ev.type==='pass_intercept'){
+   if(ev.type==='pass_complete')passComplete++;
+   else{passIntercepts++;z.intercepts++}
+   const k=ev.session_id+'|'+ev.pass_id,origin=passAttemptsMap.get(k);
+   if(origin){passByLane[origin.pass_lane][ev.type==='pass_complete'?'complete':'intercepts']++;origin.result=ev.type==='pass_complete'?'성공':'차단';origin.end_x=ev.x_m;origin.end_y=ev.y_m;}
+  }
+ }
+ for(const p of passAttemptsMap.values())passEvents.push(p);
+ const globalRate=minutes>0?turns/minutes:0,priorMin=.18;
+ for(const z of zones){z.rate=z.exposure>0?z.turns/(z.exposure/60):0;z.smoothed=(z.turns+globalRate*priorMin)/((z.exposure/60)+priorMin)}
+ return {zones,turns,goals,minutes,globalRate,sessionCount:sessions.size,bySession,keyCount,passAttempts,passComplete,passIntercepts,tackles,passDistance,passByLane,passEvents};
+}
+function refresh(){report=cleanData(all);clean=report.valid;selected=clean.filter(e=>sourceFilter==='all'||e.source===sourceFilter);stats=calcStats(selected);renderMetrics();renderData();renderMapControls();renderHeatMap();renderKeyBars();renderSessionChart();renderPassStats();renderPrediction();renderPressure();}
+function renderMetrics(){$('kpiSessions').textContent=fmt(stats.sessionCount);$('kpiEvents').textContent=fmt(selected.length);$('kpiTurnovers').textContent=fmt(stats.turns);$('kpiMinutes').textContent=nval(stats.minutes,1);$('kpiPassRate').textContent=(stats.passComplete+stats.passIntercepts)?(100*stats.passComplete/(stats.passComplete+stats.passIntercepts)).toFixed(1):'—';$('kpiPassHint').textContent='성공 '+fmt(stats.passComplete)+' / 완료된 시도 '+fmt(stats.passComplete+stats.passIntercepts);$('pipeRaw').textContent=fmt(all.length);$('pipeInvalid').textContent=fmt(report.invalid);$('pipeDup').textContent=fmt(report.duplicate);$('pipeClean').textContent=fmt(clean.length);
+ $('cleanExplain').textContent='원시 '+fmt(all.length)+'건 → 범위/시간/이벤트 형식 오류 '+fmt(report.invalid)+'건 제거 → 중복 '+fmt(report.duplicate)+'건 제거 → 정제 '+fmt(clean.length)+'건. 분석 필터로 선택한 이벤트는 '+fmt(selected.length)+'건입니다.';
+ const bytes=new Blob([JSON.stringify(all)]).size;$('storageInfo').textContent='브라우저 로컬 보관: '+(bytes/1024/1024).toFixed(2)+'MB (추정 JSON 크기). 최대 '+fmt(MAX_EVENTS)+'건 보관. 다른 PC로 이동하려면 원시 CSV를 저장하세요.';
+}
+function renderData(){const lines=selected.slice(-8).reverse();$('dataRows').innerHTML=lines.length?lines.map(e=>'<tr><td class="mono">'+nval(e.elapsed_s,1)+'</td><td class="'+(e.type==='turnover'?'hot':'')+'">'+escapeHTML(e.type.toUpperCase())+'</td><td class="mono">'+nval(e.x_m,1)+'</td><td class="mono">'+nval(e.y_m,1)+'</td><td>'+escapeHTML(e.source)+'</td></tr>').join(''):'<tr><td colspan="5">이 필터에 해당하는 로그가 없습니다.</td></tr>'}
+function renderMapControls(){const sel=$('routeSession'),v=sel.value||selectedSession;let sess=Array.from(stats.bySession.values()).sort((a,b)=>b.last.localeCompare(a.last));sel.innerHTML=sess.slice(0,80).map(s=>'<option value="'+escapeHTML(s.id)+'">'+escapeHTML(s.id)+' ('+s.turns+'턴오버)</option>').join('');if(!sess.length){sel.innerHTML='<option value="">세션 없음</option>';selectedSession='';return}sel.value=sess.some(s=>s.id===v)?v:sess[0].id;selectedSession=sel.value;}
+function drawPitch(ctx,{dim=false}={}){ctx.clearRect(0,0,1050,680);
+ const palette=dim?['#0c3943','#0e4048']:['#105b56','#11534e'];
+ for(let i=0;i<10;i++){ctx.fillStyle=palette[i%2];ctx.fillRect(i*105,0,105,680)}
+ ctx.strokeStyle=dim?'#a9d4d777':'#c5f2d4ad';ctx.lineWidth=2.2;ctx.strokeRect(8,8,1034,664);ctx.beginPath();ctx.moveTo(525,8);ctx.lineTo(525,672);ctx.stroke();ctx.beginPath();ctx.arc(525,340,93,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(525,340,3,0,Math.PI*2);ctx.fillStyle=ctx.strokeStyle;ctx.fill();ctx.strokeRect(8,140,162,400);ctx.strokeRect(8,233,63,214);ctx.strokeRect(880,140,162,400);ctx.strokeRect(979,233,63,214);ctx.beginPath();ctx.arc(117,340,3,0,2*Math.PI);ctx.arc(933,340,3,0,2*Math.PI);ctx.fill();ctx.beginPath();ctx.arc(110,340,95,-.95,.95);ctx.stroke();ctx.beginPath();ctx.arc(940,340,95,Math.PI-.95,Math.PI+.95);ctx.stroke();
+ // End goal mouth; emphasized cyan.
+ ctx.strokeStyle='#84edf6';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(1042,270);ctx.lineTo(1042,410);ctx.stroke();ctx.strokeStyle='#ffffff76';ctx.lineWidth=1.5;ctx.strokeRect(1032,270,17,140);
+ // Small possession arrows along field sides.
+ ctx.fillStyle=dim?'#b7dfe45c':'#dfffe15a';ctx.font='17px sans-serif';for(let k=0;k<3;k++)ctx.fillText('→',300+k*235,42);
+}
+function drawCircle(ctx,x,y,r,color,outline='#fff'){ctx.beginPath();ctx.arc(x*10,y*10,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();ctx.lineWidth=2;ctx.strokeStyle=outline;ctx.stroke()}
+function createAnchors(mode,count){let anchors=[];for(let i=0;i<count;i++){let x,y;if(mode==='center'){x=37+(i%3)*23+(Math.floor(i/3)%2)*4;y=26+(Math.floor(i/3)*9)+(i%2)*2;}else if(mode==='press'){x=24+(i%4)*13+(Math.floor(i/4)%2)*8;y=12+(i*19)%47;}else{x=30+(i%4)*21;y=10+((i*31)%49);}anchors.push({x:clamp(x,15,95),y:clamp(y,6,62)})}return anchors}
+function resetDefenders(){game.defenders=createAnchors(settings.formation,settings.defenders).map((a,i)=>({...a,homeX:a.x,homeY:a.y,phase:i*1.33}));}
+function createTeam(){return [{id:0,number:10,x:8,y:34},{id:1,number:7,x:21,y:16},{id:2,number:11,x:24,y:52}];}
+function resetPossession({resetOpponents=true}={}){
+ game.team=createTeam();game.carrier=0;game.player=game.team[0];game.pass=null;game.passTarget=1;game.trail=[];game.immune=1.15;game.sampleTimer=0;
+ if(resetOpponents)resetDefenders();
+}
+function bestReceiver(){
+ const me=game.team[game.carrier];let options=game.team.filter((p,i)=>i!==game.carrier);
+ options.sort((a,b)=>{
+  function score(p){const closest=Math.min(...game.defenders.map(d=>Math.hypot(d.x-p.x,d.y-p.y)),30);return (p.x-me.x)*.26+closest*.30-Math.abs(p.y-me.y)*.028}
+  return score(b)-score(a);
+ });return options[0]?.id??1;
+}
+function selectReceiver(direction=1,silent=false){
+ if(!game.running||game.paused||game.pass)return;
+ const options=game.team.map(p=>p.id).filter(i=>i!==game.carrier),idx=options.indexOf(game.passTarget);
+ game.passTarget=options[(idx+direction+options.length)%options.length];
+ if(!silent)setStatus('패스 대상: 우리 팀 '+game.team[game.passTarget].number+'번 · Space 키로 패스하세요.');
+}
+function segmentDistance(p,a,b){const vx=b.x-a.x,vy=b.y-a.y,len2=vx*vx+vy*vy;let t=len2?clamp(((p.x-a.x)*vx+(p.y-a.y)*vy)/len2,0,1):0;const x=a.x+t*vx,y=a.y+t*vy;return {dist:Math.hypot(p.x-x,p.y-y),x,y};}
+function passBall(){
+ if(!game.running||game.paused||game.pass)return;
+ const from=game.player,to=game.team[game.passTarget];if(!to||to.id===game.carrier)return;
+ const distance=Math.hypot(to.x-from.x,to.y-from.y);if(distance<3.5){setStatus('패스 대상이 너무 가까이 있습니다. Q/E로 다른 동료를 선택하세요.');return}
+ const pid=freshId('pass');game.passes++;
+ const props={player_id:game.carrier+1,target_id:to.id+1,pass_id:pid,pass_distance_m:+distance.toFixed(2)};
+ rec('key',from.x,from.y,{key:'Space'});
+ rec('pass_attempt',from.x,from.y,props);
+ game.pass={id:pid,from:game.carrier,to:to.id,fromX:from.x,fromY:from.y,x:from.x,y:from.y,elapsed:0,distance};
+ game.skillFlash=.28;setStatus('패스 중! '+from.number+'번 → '+to.number+'번 · 수비수가 패스 길목을 차단할 수 있습니다.');updateHud();
+}
+function interceptedPass(at,d){
+ const f=game.pass;if(!f)return;
+ const props={player_id:f.from+1,target_id:f.to+1,pass_id:f.id,pass_distance_m:+Math.hypot(at.x-f.fromX,at.y-f.fromY).toFixed(2),turnover_cause:'interception'};
+ rec('pass_intercept',at.x,at.y,props);
+ game.turns++;rec('turnover',at.x,at.y,{...props,key:'interception'});
+ const defenderNumber=game.defenders.indexOf(d)+1;
+ game.pass=null;resetPossession();setStatus('패스 차단! 상대 수비수 '+defenderNumber+'번이 ('+at.x.toFixed(1)+', '+at.y.toFixed(1)+')m 지점에서 가로챘습니다.');refreshDue=Date.now()+550;
+}
+function completedPass(){
+ const f=game.pass;if(!f)return;
+ const to=game.team[f.to];rec('pass_complete',to.x,to.y,{player_id:f.from+1,target_id:f.to+1,pass_id:f.id,pass_distance_m:+Math.hypot(to.x-f.fromX,to.y-f.fromY).toFixed(2)});
+ game.passSuccess++;game.carrier=f.to;game.player=to;game.pass=null;game.passTarget=bestReceiver();game.immune=.45;game.trail=[];
+ setStatus('패스 성공! '+to.number+'번이 공을 받았습니다. Q/E 대상 변경 · Space 재패스');refreshDue=Date.now()+500;
+}
+function drawGame(t=0){drawPitch(g);const time=t/1000;
+ // Light tactical grid.
+ g.lineWidth=1.2;g.strokeStyle='#f2ffe621';for(let i=1;i<COLS;i++){g.beginPath();g.moveTo(i*1050/COLS,0);g.lineTo(i*1050/COLS,680);g.stroke()}for(let j=1;j<ROWS;j++){g.beginPath();g.moveTo(0,j*680/ROWS);g.lineTo(1050,j*680/ROWS);g.stroke()}
+ if(game.trail.length>1){g.lineWidth=2.4;g.strokeStyle='#cafa7ebb';g.beginPath();game.trail.forEach((p,i)=>i===0?g.moveTo(p.x*10,p.y*10):g.lineTo(p.x*10,p.y*10));g.stroke()}
+ // 5 red defenders.
+ for(const [idx,d] of game.defenders.entries()){
+  const xx=d.x*10,yy=d.y*10,rad=g.createRadialGradient(xx,yy,2,xx,yy,32);rad.addColorStop(0,'#ff777c4b');rad.addColorStop(1,'#ff777c00');g.fillStyle=rad;g.beginPath();g.arc(xx,yy,32,0,Math.PI*2);g.fill();
+  drawCircle(g,d.x,d.y,11,'#ff7382','#ffe0df');g.fillStyle='#351e29';g.textAlign='center';g.font='bold 12px system-ui';g.fillText(String(idx+1),xx,yy+4);
+ }
+ const me=game.player,target=game.team[game.passTarget];
+ if(game.running&&!game.pass&&target){g.save();g.strokeStyle='#e5fb74aa';g.lineWidth=2.1;g.setLineDash([8,7]);g.beginPath();g.moveTo(me.x*10,me.y*10);g.lineTo(target.x*10,target.y*10);g.stroke();g.restore();}
+ for(let i=0;i<game.team.length;i++){
+  const p=game.team[i],hasBall=i===game.carrier&&!game.pass,isTarget=i===game.passTarget&&!game.pass;
+  if(isTarget){g.strokeStyle='#a8f4ff';g.lineWidth=3;g.setLineDash([5,5]);g.beginPath();g.arc(p.x*10,p.y*10,19+Math.sin(time*7)*1.6,0,2*Math.PI);g.stroke();g.setLineDash([])}
+  if(hasBall){g.strokeStyle='#dcff9c';g.lineWidth=3.5;g.beginPath();g.arc(p.x*10,p.y*10,19,0,Math.PI*2);g.stroke()}
+  if(hasBall&&game.immune>0){g.strokeStyle='#d6fb9280';g.lineWidth=3;g.beginPath();g.arc(p.x*10,p.y*10,25+Math.sin(time*14)*2,0,Math.PI*2);g.stroke()}
+  drawCircle(g,p.x,p.y,13,hasBall?'#cfff6d':'#65d5f0',hasBall?'#f4ffda':'#eafffd');
+  g.fillStyle='#153837';g.font='bold 13px system-ui';g.textAlign='center';g.fillText(String(p.number),p.x*10,p.y*10+4);
+ }
+ // Soccer ball at current owner or animated pass position.
+ const bx=game.pass?game.pass.x:me.x+1.25,by=game.pass?game.pass.y:me.y+.9;
+ g.beginPath();g.arc(bx*10,by*10,6.6,0,Math.PI*2);g.fillStyle='#fffdf1';g.fill();g.lineWidth=1.5;g.strokeStyle='#293b45';g.stroke();g.fillStyle='#2e3e46';g.beginPath();g.arc(bx*10,by*10,2.6,0,Math.PI*2);g.fill();
+ if(game.pass){const f=game.pass;g.save();g.strokeStyle='#efffaacc';g.lineWidth=3;g.setLineDash([9,5]);g.beginPath();g.moveTo(f.fromX*10,f.fromY*10);g.lineTo(bx*10,by*10);g.stroke();g.restore();}
+ g.fillStyle='#d0ff9a';g.font='bold 15px system-ui';g.textAlign='left';g.fillText('MY 3  :  5 AWAY',18,31);
+ g.font='bold 12px system-ui';g.fillText(game.pass?'PASS IN FLIGHT':'SPACE: PASS  ·  Q/E: TARGET '+(target?.number||'—'),20,653);
+}
+function updateHud(){
+ $('hudTime').textContent=Math.ceil(Math.max(0,game.duration-game.seconds));$('hudGoals').textContent=game.goals;$('hudTurns').textContent=game.turns;
+ $('hudPass').textContent=game.passSuccess+'/'+game.passes;$('hudAccuracy').textContent=game.passes?Math.round(game.passSuccess/game.passes*100)+'%':'—';
+ $('gameSignal').textContent=game.running?(game.paused?'PAUSED':'● LIVE 3 VS 5'):'READY';$('pauseBtn').disabled=!game.running;
+ $('pauseBtn').textContent=game.paused?'▶ 계속':'Ⅱ 일시정지';$('startBtn').textContent=game.running?'■ 경기 종료':'▶ 게임 시작';
+}
+function startGame(){
+ if(game.running){endGame(false);return}
+ game.running=true;game.paused=false;game.seconds=0;game.goals=0;game.turns=0;game.distance=0;game.passes=0;game.passSuccess=0;
+ game.session='live_'+new Date().toISOString().replace(/[-:.TZ]/g,'');resetPossession();
+ rec('start',game.player.x,game.player.y);$('gameOverlay').classList.add('hidden');
+ setStatus('3대5 시작! 방향키 이동 · Q/E 패스 대상 변경 · Space 동료에게 패스');updateHud();refresh();
+}
+function endGame(timeout){
+ if(!game.running)return;
+ // In-progress pass is stored as an attempt, but without a synthetic outcome.
+ rec('end',game.pass?.x??game.player.x,game.pass?.y??game.player.y);
+ game.running=false;game.paused=false;game.pass=null;keys.clear();touchPad.clear();persist();refresh();
+ $('gameOverlay').classList.remove('hidden');$('gameOverlay').querySelector('strong').textContent=timeout?'TIME UP · 경기 종료':'SESSION COMPLETE';
+ $('gameOverlay').querySelector('small').textContent='득점 '+game.goals+' / 턴오버 '+game.turns+' / 성공 패스 '+game.passSuccess+'/'+game.passes;
+ setStatus('경기 기록 저장 완료. 패스 성공률·차단 위치·턴오버 데스 맵을 확인하세요.');updateHud();
+}
+function togglePause(){
+ if(!game.running)return;game.paused=!game.paused;
+ if(game.paused){keys.clear();touchPad.clear();setStatus('일시정지 중');$('gameOverlay').classList.remove('hidden');$('gameOverlay').querySelector('strong').textContent='PAUSED';$('gameOverlay').querySelector('small').textContent='계속 버튼을 누르세요';}
+ else{$('gameOverlay').classList.add('hidden');setStatus('경기 진행 중 · Space 패스');}
+ updateHud();
+}
+function resetGame(){if(game.running)endGame(false);startGame()}
+function tick(dt){
+ if(!game.running||game.paused)return;
+ game.seconds+=dt;if(game.seconds>=game.duration){game.seconds=game.duration;endGame(true);return}
+ game.immune=Math.max(0,game.immune-dt);game.skillFlash=Math.max(0,game.skillFlash-dt);
+ const me=game.player;
+ let dx=(keys.has('ArrowRight')||keys.has('d')||touchPad.has('right')?1:0)-(keys.has('ArrowLeft')||keys.has('a')||touchPad.has('left')?1:0);
+ let dy=(keys.has('ArrowDown')||keys.has('s')||touchPad.has('down')?1:0)-(keys.has('ArrowUp')||keys.has('w')||touchPad.has('up')?1:0);
+ const norm=Math.hypot(dx,dy);if(norm){dx/=norm;dy/=norm}
+ if(!game.pass){const sprint=keys.has('Shift')?1.5:1,oldX=me.x,oldY=me.y;
+  me.x=clamp(me.x+dx*11.7*dt*sprint,2,103);me.y=clamp(me.y+dy*11.7*dt*sprint,2.5,65.5);
+  game.distance+=Math.hypot(me.x-oldX,me.y-oldY);
+ }
+ // 2 AI teammates maintain open passing lanes and follow the attack.
+ for(const p of game.team){if(p.id===game.carrier)continue;
+  const laneY=p.id===1?15.5:p.id===2?52:34;
+  const carrierLaneDelta=me.y-34;
+  const desiredX=clamp(me.x+(p.id===1?15:18),9,97);
+  const desiredY=clamp(laneY+carrierLaneDelta*.18,5,63);
+  const vx=desiredX-p.x,vy=desiredY-p.y,mag=Math.hypot(vx,vy);
+  if(mag>.45){const step=Math.min(mag,8.1*dt);p.x=clamp(p.x+vx/mag*step,3,101);p.y=clamp(p.y+vy/mag*step,3,65);}
+ }
+ // Opponent AI: pursue owner, mark support lanes, and intercept airborne passes.
+ for(let i=0;i<game.defenders.length;i++){
+  const d=game.defenders[i],ball=game.pass||me;
+  let targetX=d.homeX+Math.sin(game.seconds*.55+d.phase)*3.6,targetY=d.homeY+Math.cos(game.seconds*.62+d.phase)*4.8;
+  const distance=Math.hypot(ball.x-d.x,ball.y-d.y);
+  const focus=game.pass?32:23;
+  if(distance<focus){targetX=ball.x;targetY=ball.y}
+  else if(i>=2&&game.passTarget!==undefined){let receiver=game.team[game.passTarget];if(receiver&&Math.hypot(receiver.x-d.x,receiver.y-d.y)<19){targetX=receiver.x-2;targetY=receiver.y}}
+  const vx=targetX-d.x,vy=targetY-d.y,mm=Math.hypot(vx,vy);
+  if(mm>.01){const pace=(distance<focus?8.1:3.2)*settings.speed*dt;d.x+=vx/mm*Math.min(mm,pace);d.y+=vy/mm*Math.min(mm,pace)}
+  d.x=clamp(d.x,9,100);d.y=clamp(d.y,3,65);
+ }
+ if(game.pass){
+  const f=game.pass,receiver=game.team[f.to],old={x:f.x,y:f.y};
+  const vx=receiver.x-f.x,vy=receiver.y-f.y,distance=Math.hypot(vx,vy),step=Math.min(distance,45*dt);
+  if(distance>.001){f.x+=vx/distance*step;f.y+=vy/distance*step}
+  f.elapsed+=dt;
+  let intercept=null,interceptPoint=null;
+  if(f.elapsed>.08){for(const d of game.defenders){const cut=segmentDistance(d,old,{x:f.x,y:f.y});if(cut.dist<2.3){intercept=d;interceptPoint={x:cut.x,y:cut.y};break}}}
+  if(intercept){interceptedPass(interceptPoint,intercept)}
+  else if(Math.hypot(receiver.x-f.x,receiver.y-f.y)<1.2)completedPass();
+ }else{
+  for(const d of game.defenders){if(game.immune<=0&&Math.hypot(me.x-d.x,me.y-d.y)<2.65){
+    game.turns++;rec('turnover',me.x,me.y,{key:'tackle',turnover_cause:'tackle'});
+    const x=me.x,y=me.y;resetPossession();setStatus('태클 턴오버! ('+x.toFixed(1)+', '+y.toFixed(1)+')m. Space 패스로 수비를 피하세요.');refreshDue=Date.now()+550;break;
+  }}
+  if(!game.pass&&game.player.x>=102&&game.player.y>=27&&game.player.y<=41){
+    const x=game.player.x,y=game.player.y;game.goals++;rec('goal',x,y);resetPossession();setStatus('GOAL! 우리 팀 득점 · 새로운 공격을 시작합니다.');refreshDue=Date.now()+550;
+  }
+ }
+ if(!game.pass){game.trail.push({x:game.player.x,y:game.player.y});if(game.trail.length>85)game.trail.shift();game.sampleTimer+=dt;
+  if(game.sampleTimer>=.22){const elapsed=game.sampleTimer;game.sampleTimer=0;rec('move',game.player.x,game.player.y,{dt_s:+elapsed.toFixed(3)});}
+ }
+ updateHud();
+}
+function initInputs(){
+ $('startBtn').addEventListener('click',startGame);$('pauseBtn').addEventListener('click',togglePause);$('resetBtn').addEventListener('click',resetGame);
+ window.addEventListener('keydown',e=>{
+  if(/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement?.tagName||''))return;
+  const k=e.key,norm=k.length===1?k.toLowerCase():k;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' ','Shift','w','a','s','d','q','e'].includes(norm)){e.preventDefault();
+   if(k===' '){if(!e.repeat)passBall();return}
+   if(norm==='q'||norm==='e'){if(!e.repeat){if(game.running&&!game.paused)rec('key',game.player.x,game.player.y,{key:norm});selectReceiver(norm==='e'?1:-1)}return}
+   if(game.running&&!game.paused&&!keys.has(norm))rec('key',game.player.x,game.player.y,{key:norm});keys.add(norm);
+  }
+ });
+ window.addEventListener('keyup',e=>{const norm=e.key.length===1?e.key.toLowerCase():e.key;keys.delete(norm)});
+ window.addEventListener('blur',()=>{if(game.running&&!game.paused)togglePause()});
+ document.querySelectorAll('[data-pad]').forEach(btn=>{
+  const k=btn.dataset.pad;
+  const hold=e=>{e.preventDefault();touchPad.add(k);if(game.running&&!game.paused)rec('key',game.player.x,game.player.y,{key:k})};
+  const release=e=>{e.preventDefault();touchPad.delete(k)};
+  btn.addEventListener('pointerdown',hold);btn.addEventListener('pointerup',release);btn.addEventListener('pointercancel',release);btn.addEventListener('pointerleave',release);
+ });
+ $('mobilePass').addEventListener('click',passBall);
+ $('mobileSwitch').addEventListener('click',()=>{if(game.running&&!game.paused)rec('key',game.player.x,game.player.y,{key:'q'});selectReceiver(1)});
+ G.addEventListener('click',e=>{
+  if(!game.running||game.paused||game.pass)return;
+  const rect=G.getBoundingClientRect();const x=(e.clientX-rect.left)/rect.width*FIELD_W,y=(e.clientY-rect.top)/rect.height*FIELD_H;
+  const p=game.team.filter(q=>q.id!==game.carrier).find(q=>Math.hypot(q.x-x,q.y-y)<5);
+  if(p){game.passTarget=p.id;setStatus('동료 '+p.number+'번을 선택했습니다. Space로 패스합니다.');}
+ });
+ $('speedSlider').addEventListener('input',e=>{settings.speed=+e.target.value/100;$('speedVal').textContent=settings.speed.toFixed(1)+'×';renderPressure()});
+ $('formationSelect').addEventListener('change',e=>{settings.formation=e.target.value;resetDefenders();renderPressure();updateFormationDescription()});
+ $('sourceSelect').addEventListener('change',e=>{sourceFilter=e.target.value;refresh()});
+ $('demoBtn').addEventListener('click',()=>{let live=all.filter(e=>e.source!=='demo');all=[...live,...demoData(48)].slice(-MAX_EVENTS);persist();refresh();toast('3대5 패스 모의 24경기 데이터가 생성되었습니다 (실제 플레이 보존).')});
+ $('importBtn').addEventListener('click',()=>$('csvInput').click());
+ $('csvInput').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;
+  try{const str=await file.text(),rows=parseCSV(str),imported=rows.map((row,i)=>{
+   let norm={...row};const aliases={eventId:'event_id',eventid:'event_id',sessionId:'session_id',sessionid:'session_id',time:'timestamp',event_type:'type',event:'type',x:'x_m',y:'y_m',pos_x:'x_m',pos_y:'y_m',elapsed:'elapsed_s',dt:'dt_s'};
+   for(const [a,b] of Object.entries(aliases))if(norm[b]===undefined&&norm[a]!==undefined)norm[b]=norm[a];
+   norm.event_id='import_'+file.name+'_'+(norm.event_id||i);norm.session_id='import_'+file.name+'_'+(norm.session_id||'session');norm.elapsed_s=norm.elapsed_s??0;norm.dt_s=norm.dt_s??0;norm.source='import';return norm;
+  });if(!imported.length)throw Error('유효한 CSV 행이 없습니다.');all=[...all,...imported].slice(-MAX_EVENTS);persist();refresh();toast(fmt(imported.length)+'행 가져오기 완료. 오류/중복은 분석 전처리에서 제거됩니다.');}
+  catch(err){toast('CSV 읽기 실패: '+err.message)}e.target.value='';
+ });
+ $('rawBtn').addEventListener('click',()=>exportCsv(all,'football_3v5_pass_raw.csv'));
+ $('cleanBtn').addEventListener('click',()=>exportCsv(selected,'football_3v5_pass_clean.csv'));
+ $('zoneBtn').addEventListener('click',()=>{const z=stats.zones.map(p=>({zone:zoneName(p.i),col:p.i%COLS+1,row:Math.floor(p.i/COLS)+1,x_min:+(p.i%COLS*FIELD_W/COLS).toFixed(3),x_max:+((p.i%COLS+1)*FIELD_W/COLS).toFixed(3),y_min:+(Math.floor(p.i/COLS)*FIELD_H/ROWS).toFixed(3),y_max:+((Math.floor(p.i/COLS)+1)*FIELD_H/ROWS).toFixed(3),turnovers:p.turns,pass_intercepts:p.intercepts,exposure_s:+p.exposure.toFixed(3),position_samples:p.moves,turnovers_per_min:p.exposure>0?+p.rate.toFixed(4):'',smoothed_rate_per_min:+p.smoothed.toFixed(4)}));exportCsv(z,'football_3v5_pass_zones.csv')});
+ $('deleteBtn').addEventListener('click',()=>{if(!confirm('모의 데이터와 실제 플레이를 포함한 이번 3대5 패스 기록을 모두 삭제할까요? 삭제 전 CSV 백업을 권장합니다.'))return;all=[];localStorage.removeItem(STORE_KEY);localStorage.setItem(INIT_KEY,'1');refresh();toast('3대5 패스 분석 로그를 초기화했습니다.')});
+ $('modeCount').addEventListener('click',()=>{heatMode='count';renderHeatMap()});
+ $('modeRate').addEventListener('click',()=>{heatMode='rate';renderHeatMap()});
+ $('modeIntercept').addEventListener('click',()=>{heatMode='intercept';renderHeatMap()});
+ $('showRoutes').addEventListener('change',e=>{routeOn=e.target.checked;renderHeatMap()});
+ $('routeSession').addEventListener('change',e=>{selectedSession=e.target.value;renderHeatMap()});
+ $('heatCanvas').addEventListener('mousemove',e=>{const rect=H.getBoundingClientRect(),px=(e.clientX-rect.left)/rect.width*FIELD_W,py=(e.clientY-rect.top)/rect.height*FIELD_H;if(px<0||px>105||py<0||py>68)return;const i=zIndex(px,py),p=stats.zones[i];const tip=$('heatTooltip');tip.classList.remove('hidden');tip.innerHTML='<strong>'+zoneName(i)+'</strong><br>턴오버 '+p.turns+'건<br>패스 차단 '+p.intercepts+'건<br>체류 '+p.exposure.toFixed(1)+'초<br>관측 위험률 '+(p.exposure>0?p.rate.toFixed(1)+'건/분':'관측 없음');let left=e.clientX-rect.left+15,top=e.clientY-rect.top+15;tip.style.left=Math.max(4,Math.min(left,rect.width-177))+'px';tip.style.top=Math.max(4,Math.min(top,rect.height-112))+'px'});
+ $('heatCanvas').addEventListener('mouseleave',()=>$('heatTooltip').classList.add('hidden'));
+ $('heatCanvas').addEventListener('click',e=>{const r=H.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*FIELD_W,y=(e.clientY-r.top)/r.height*FIELD_H;selectedZone=zIndex(x,y);renderHeatMap()});
+ $('laneButtons').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{lane=b.dataset.lane;renderPrediction()}));
+ $('routeTime').addEventListener('input',e=>{routeSeconds=+e.target.value;renderPrediction()});
+ $('applyBalanceBtn').addEventListener('click',()=>{const entries=['spread','center','press'].map(m=>({mode:m,cv:pressureCV(m)})).sort((a,b)=>a.cv-b.cv);settings.formation=entries[0].mode;$('formationSelect').value=settings.formation;resetDefenders();updateFormationDescription();renderPressure();toast('압력 편중도가 가장 낮은 배치를 적용했습니다. 게임에서 비교해 보세요.')});
+}
+function updateFormationDescription(){const names={spread:['균등 배치','측면과 중앙에 수비수를 분산하여 피치 전역에 비교적 고른 압력을 형성합니다.'],center:['중앙 밀집','중앙 복도를 좁혀 중간 구역에서 돌파를 어렵게 하는 배치입니다.'],press:['전방 압박','드리블 시작 지점 가까이에 수비 압력을 집중시키는 배치입니다.']};$('formationDescTitle').textContent=names[settings.formation][0];$('formationDesc').textContent=names[settings.formation][1]}
+function drawHeatMap(){
+ drawPitch(h,{dim:true});
+ const values=stats.zones.map(z=>heatMode==='count'?z.turns:heatMode==='intercept'?z.intercepts:(z.exposure>=2?z.smoothed:0));
+ const mx=Math.max(1,...values);
+ for(let i=0;i<96;i++){const v=values[i],a=v/mx;if(v<=0)continue;h.fillStyle=heatColor(a);h.fillRect((i%COLS)*1050/COLS+1,Math.floor(i/COLS)*680/ROWS+1,1050/COLS-2,680/ROWS-2)}
+ h.lineWidth=1;h.strokeStyle='#def4ed5c';for(let i=1;i<COLS;i++){h.beginPath();h.moveTo(i*1050/COLS,0);h.lineTo(i*1050/COLS,680);h.stroke()}for(let i=1;i<ROWS;i++){h.beginPath();h.moveTo(0,i*680/ROWS);h.lineTo(1050,i*680/ROWS);h.stroke()}
+ const ss=stats.bySession.get(selectedSession);
+ if(routeOn&&ss){let points=[],pending=new Map();
+  function flush(){if(points.length>1){h.save();h.strokeStyle='#a6f8ecdd';h.lineWidth=3;h.beginPath();points.forEach((p,i)=>i===0?h.moveTo(p.x_m*10,p.y_m*10):h.lineTo(p.x_m*10,p.y_m*10));h.stroke();h.restore()}points=[]}
+  for(const e of ss.events){
+   if(e.type==='move')points.push(e);
+   if(e.type==='pass_attempt'){flush();pending.set(e.pass_id,e)}
+   if(e.type==='pass_complete'||e.type==='pass_intercept'){
+    flush();const origin=pending.get(e.pass_id);
+    if(origin){h.save();h.lineWidth=3.4;h.strokeStyle=e.type==='pass_complete'?'#d2fb70':'#ff9b83';h.setLineDash([12,7]);h.beginPath();h.moveTo(origin.x_m*10,origin.y_m*10);h.lineTo(e.x_m*10,e.y_m*10);h.stroke();h.restore();pending.delete(e.pass_id)}
+   }
+   if(e.type==='turnover'||e.type==='goal')flush();
+  }flush();
+ }
+ // All turnover points stay visible regardless of selected session.
+ const marks=heatMode==='intercept'?[]:selected.filter(e=>e.type==='turnover'),skip=Math.max(1,Math.ceil(marks.length/380));
+ for(let i=0;i<marks.length;i+=skip){const e=marks[i];drawCircle(h,e.x_m,e.y_m,4.2,'#fff4f0','#ff6679')}
+ if(heatMode==='intercept'){const interceptions=selected.filter(e=>e.type==='pass_intercept');for(const e of interceptions){drawCircle(h,e.x_m,e.y_m,5,'#ffda8a','#ff6e61')}}
+ const x=(selectedZone%COLS)*1050/COLS,y=Math.floor(selectedZone/COLS)*680/ROWS;
+ h.strokeStyle='#d6ff99';h.lineWidth=5;h.strokeRect(x+2,y+2,1050/COLS-4,680/ROWS-4);
+ h.font='bold 16px system-ui';h.fillStyle='#eaffbe';h.textAlign='center';h.fillText(zoneName(selectedZone),x+1050/COLS/2,y+680/ROWS-8);h.textAlign='left';
+}
+function heatColor(v){let a=clamp(v,0,1);if(a<.35)return 'rgba(58,205,164,'+(.28+a*.83)+')';if(a<.65)return 'rgba(255,209,95,'+(.4+a*.6)+')';if(a<.85)return 'rgba(255,140,84,.85)';return 'rgba(248,80,109,.93)'}
+function renderHeatMap(){
+ $('modeCount').classList.toggle('active',heatMode==='count');$('modeRate').classList.toggle('active',heatMode==='rate');$('modeIntercept').classList.toggle('active',heatMode==='intercept');
+ $('heatModeHint').textContent=heatMode==='count'?'구역별 실제 턴오버 횟수(태클 + 패스 차단)입니다.':heatMode==='intercept'?'PASS_INTERCEPT가 발생한 정확한 위치의 건수입니다. 노랑색 점은 패스를 가로챈 좌표입니다.':'관측 체류시간 2초 이상인 구역의 턴오버 위험률(건/분)입니다. 드리블 위치 샘플에 기반하므로 패스 중 공중 이동 시간은 제외됩니다.';
+ drawHeatMap();const z=stats.zones[selectedZone];
+ $('zoneTitle').textContent='ZONE '+zoneName(selectedZone);$('zoneTurns').textContent=fmt(z.turns)+'건';$('zoneIntercept').textContent=fmt(z.intercepts)+'건';$('zoneExposure').textContent=z.exposure.toFixed(1)+'초';$('zoneRate').textContent=z.exposure>0?z.rate.toFixed(1):'—';$('zoneMoves').textContent=fmt(z.moves);
+ const top=[...stats.zones].sort((a,b)=>b.turns-a.turns||b.exposure-a.exposure).slice(0,4),topMax=Math.max(1,...top.map(x=>x.turns));
+ $('hotList').innerHTML=top.map((p,i)=>'<div class="hotitem"><em>'+String(i+1).padStart(2,'0')+'</em><div><span>'+zoneName(p.i)+'</span><div class="hottrack"><i style="width:'+(p.turns/topMax*100)+'%"></i></div></div><strong>'+p.turns+'건</strong></div>').join('');
+ const total=stats.zones.filter(p=>p.exposure>0).length,covered=stats.zones.filter(p=>p.exposure>=2).length;
+ $('coverageNote').textContent='관측된 구역 '+total+'/96 · 2초 이상 관측 '+covered+'/96 · 평균 턴오버 위험률 '+nval(stats.globalRate,1)+'건/분 · 패스 차단 '+stats.passIntercepts+'건';
+}
+function renderPassStats(){
+ const completed=stats.passComplete+stats.passIntercepts;
+ $('passAttempts').textContent=fmt(stats.passAttempts);$('passSuccess').textContent=fmt(stats.passComplete);$('passIntercepts').textContent=fmt(stats.passIntercepts);
+ $('passAccuracy').textContent=completed? (stats.passComplete/completed*100).toFixed(1)+'%':'—';
+ const rows=[['top','상단'],['middle','중앙'],['bottom','하단']].map(([key,label])=>({key,label,...stats.passByLane[key]}));
+ $('passLaneBars').innerHTML=rows.map(r=>{
+  const ended=r.complete+r.intercepts,pct=ended?r.complete/ended*100:0;
+  return '<div class="barrow" style="grid-template-columns:52px 1fr 76px"><span>'+r.label+'</span><div class="barouter"><div class="barinner" style="width:'+pct.toFixed(1)+'%"></div></div><b>'+(ended?pct.toFixed(1)+'%':'표본없음')+'</b></div>';
+ }).join('');
+ $('passExplain').textContent='완료된 패스 '+fmt(completed)+'회 중 성공 '+fmt(stats.passComplete)+'회 · 차단 '+fmt(stats.passIntercepts)+'회. 아직 결과가 기록되지 않은 시도 '+fmt(Math.max(0,stats.passAttempts-completed))+'회는 성공률 분모에서 제외됩니다.';
+ const latest=stats.passEvents.slice(-8).reverse();
+ $('recentPassRows').innerHTML=latest.length?latest.map(p=>'<tr><td>'+escapeHTML(p.session_id.replace(/^demo_/,'연습 '))+'</td><td>'+p.player_id+'번</td><td>'+p.target_id+'번</td><td>'+p.pass_distance_m.toFixed(1)+'m</td><td class="'+(p.result==='차단'?'hot':'')+'">'+p.result+'</td></tr>').join(''):'<tr><td colspan="5">패스 이벤트가 없습니다. Space로 패스를 시작하세요.</td></tr>';
+}
+function renderKeyBars(){
+ const entries=[['SPACE','Space'],['Q','q'],['E','e'],['→','ArrowRight'],['←','ArrowLeft'],['↑','ArrowUp'],['↓','ArrowDown'],['D','d'],['A','a'],['W','w'],['S','s'],['Shift','Shift'],['터치','right']].map(([label,key])=>({label,count:stats.keyCount[key]||0}));
+ let mx=Math.max(1,...entries.map(p=>p.count));$('keyBars').innerHTML=entries.filter(p=>p.count>0).sort((a,b)=>b.count-a.count).slice(0,8).map(p=>'<div class="barrow"><span>'+p.label+'</span><div class="barouter"><div class="barinner" style="width:'+(p.count/mx*100)+'%"></div></div><b>'+fmt(p.count)+'</b></div>').join('')||'<div class="small-note">키 입력 이벤트가 없습니다. 게임을 플레이하거나 모의 데이터를 생성해 보세요.</div>';
+}
+function renderSessionChart(){const c=$('sessionChart'),ctx=c.getContext('2d');ctx.clearRect(0,0,c.width,c.height);const ses=[...stats.bySession.values()].sort((a,b)=>a.last.localeCompare(b.last)).slice(-14),max=Math.max(1,...ses.map(s=>s.turns));ctx.strokeStyle='#36536b';ctx.lineWidth=1;for(let k=0;k<4;k++){let y=15+k*38;ctx.beginPath();ctx.moveTo(4,y);ctx.lineTo(615,y);ctx.stroke()}if(!ses.length){ctx.fillStyle='#96aebb';ctx.font='14px sans-serif';ctx.fillText('데이터가 없습니다',20,68);return}const space=608/ses.length;ses.forEach((s,i)=>{let ht=(s.turns/max)*112,xx=8+i*space,yy=137-ht;ctx.fillStyle=i===ses.length-1?'#c9f76b':'#73cbd5';ctx.fillRect(xx,yy,Math.max(7,space-7),ht);ctx.fillStyle='#d8e8e8';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.fillText(s.turns,xx+(space-7)/2,Math.max(12,yy-5))});ctx.textAlign='left';}
+function laneProb(which,seconds){if(!stats.turns||stats.minutes<=0)return {lambda:0,prob:0};let row=which==='top'?1:which==='middle'?4:6;let lambda=0;for(let col=0;col<COLS;col++){const z=stats.zones[row*COLS+col];lambda+=z.smoothed*seconds/COLS/60}return {lambda,prob:100*(1-Math.exp(-lambda))}}
+function renderPrediction(){const enoughData=stats.turns>=3&&stats.minutes>=.5;const allProbs={top:laneProb('top',routeSeconds),middle:laneProb('middle',routeSeconds),bottom:laneProb('bottom',routeSeconds)};document.querySelectorAll('.lane').forEach(b=>b.classList.toggle('active',b.dataset.lane===lane));$('laneTop').textContent=enoughData?allProbs.top.prob.toFixed(1)+'%':'—';$('laneMiddle').textContent=enoughData?allProbs.middle.prob.toFixed(1)+'%':'—';$('laneBottom').textContent=enoughData?allProbs.bottom.prob.toFixed(1)+'%':'—';const v=allProbs[lane];$('predProb').textContent=enoughData?v.prob.toFixed(1)+'%':'—';$('predLambda').textContent=enoughData?v.lambda.toFixed(2)+'건':'—';$('probMeter').style.width=(enoughData?v.prob:0)+'%';$('routeTimeVal').textContent=routeSeconds+'초';$('predRiskLabel').textContent='기대 사건 수 / 선택 통로';const p=stats.passByLane[lane];const ended=p.complete+p.intercepts;const pred=(p.intercepts+1)/(ended+2)*100;$('passPredSummary').textContent='선택 통로의 패스 '+ended+'건 중 차단 '+p.intercepts+'건 · 차단 확률(베타 보정): '+(ended>=3?pred.toFixed(1)+'%':'표본 부족')+'. 패스 출발 Y좌표별로 계산하며, 실제 상대 수비수의 이동·각도와 개별 선수 실력을 반영하지 않은 학습용 추정입니다.';
+ const best=Object.entries(allProbs).sort((a,b)=>a[1].prob-b[1].prob)[0],names={top:'상단 측면',middle:'중앙 돌파',bottom:'하단 측면'};
+ $('predCaution').textContent=enoughData?'현재 추정상 가장 낮은 위험의 경로는 '+names[best[0]]+' ('+best[1].prob.toFixed(1)+'%)입니다. 다만 이는 경로의 각 구역에서 같은 시간을 보낸다고 가정한 교육용 추정이며, 표본 수와 난이도 설정의 영향을 받습니다.':'턴오버·체류시간 로그가 부족합니다. 모의 데이터를 생성하거나 직접 게임을 플레이하면 추정값을 확인할 수 있습니다.';
+}
+function pressureCV(mode){const anchors=createAnchors(mode,settings.defenders);let vals=[];for(let xi=3;xi<11;xi++){for(let yi=0;yi<ROWS;yi++){const x=(xi+.5)*FIELD_W/COLS,y=(yi+.5)*FIELD_H/ROWS;let pressure=0;for(const d of anchors){let d2=(x-d.x)**2+(y-d.y)**2;pressure+=Math.exp(-d2/(2*15*15))}vals.push(pressure*settings.speed)}}let avg=vals.reduce((a,b)=>a+b,0)/vals.length;if(avg===0)return 0;let variance=vals.reduce((a,b)=>a+(b-avg)**2,0)/vals.length;return Math.sqrt(variance)/avg}
+function renderPressure(){const rows=[['spread','균등 배치'],['center','중앙 밀집'],['press','전방 압박']].map(([mode,title])=>({mode,title,cv:pressureCV(mode)})),max=Math.max(.01,...rows.map(r=>r.cv));$('pressureBars').innerHTML=rows.map(r=>'<div class="compare-row '+(r.mode===settings.formation?'active':'')+'"><span>'+r.title+'</span><div class="barouter"><div class="barinner" style="width:'+((r.cv/max)*100)+'%"></div></div><b>CV '+r.cv.toFixed(2)+'</b></div>').join('');const records=Object.fromEntries(['spread','center','press'].map(mode=>[mode,{exposure:0,turns:0}]));for(const ev of selected){if(!records[ev.formation])continue;if(ev.type==='move')records[ev.formation].exposure+=ev.dt_s;if(ev.type==='turnover')records[ev.formation].turns++;}
+ $('observedRows').innerHTML=rows.map(r=>{const p=records[r.mode],mins=p.exposure/60,rate=mins>0?p.turns/mins:0;return '<tr><td>'+r.title+'</td><td>'+mins.toFixed(1)+'</td><td class="'+(p.turns>0?'hot':'')+'">'+p.turns+'</td><td>'+(mins>=.25?rate.toFixed(2):'표본 부족')+'</td></tr>'}).join('');const best=[...rows].sort((a,b)=>a.cv-b.cv)[0];$('pressureSummary').textContent='현재 설정: CV '+pressureCV(settings.formation).toFixed(2)+' · 이 지표 기준 가장 균등한 방식: '+best.title+'(CV '+best.cv.toFixed(2)+'). 점수가 낮다고 반드시 게임성이 우수한 것은 아닙니다.';}
+function encodeCSV(v){let s=String(v??'');return /[",\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
+const CSV_COLS=['event_id','session_id','timestamp','elapsed_s','type','x_m','y_m','key','formation','defenders','speed','dt_s','source','team_players','player_id','target_id','pass_id','pass_distance_m','turnover_cause'];
+function exportCsv(rows,name){if(!rows.length){toast('내보낼 데이터가 없습니다.');return}const headers=Object.keys(rows[0]);const out='\ufeff'+headers.map(encodeCSV).join(',')+'\r\n'+rows.map(o=>headers.map(k=>encodeCSV(o[k])).join(',')).join('\r\n');let url=URL.createObjectURL(new Blob([out],{type:'text/csv;charset=utf-8'}));let a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast(fmt(rows.length)+'행 CSV 다운로드 완료');}
+function parseCSV(csv){if(csv.charCodeAt(0)===65279)csv=csv.slice(1);let data=[],row=[],value='',inside=false;for(let i=0;i<csv.length;i++){let c=csv[i];if(inside){if(c==='"'&&csv[i+1]==='"'){value+='"';i++}else if(c==='"')inside=false;else value+=c}else{if(c==='"')inside=true;else if(c===','){row.push(value);value=''}else if(c==='\r'||c==='\n'){if(c==='\r'&&csv[i+1]==='\n')i++;row.push(value);data.push(row);row=[];value=''}else value+=c}}if(value||row.length){row.push(value);data.push(row)}if(!data.length)return[];const header=data.shift().map(h=>h.trim().toLowerCase());return data.filter(r=>r.some(v=>String(v).trim()!=='')).map(row=>Object.fromEntries(header.map((k,i)=>[k,row[i]??''])))}
+function animate(t){const dt=lastFrame?clamp((t-lastFrame)/1000,0,.043):0;lastFrame=t;tick(dt);drawGame(t);if(saveDue&&Date.now()>saveDue){saveDue=0;persist()}if(refreshDue&&Date.now()>refreshDue){refreshDue=0;refresh()}requestAnimationFrame(animate)}
+function init(){let prev=parseLoaded();if(prev.length){all=prev.slice(-MAX_EVENTS);$('savePill').textContent='● 지난 데이터 불러옴'}else if(localStorage.getItem(INIT_KEY)!=='1'){all=demoData(48);persist()}else{all=[]};resetPossession();updateFormationDescription();initInputs();refresh();updateHud();requestAnimationFrame(animate);}
+init();
+})();
+</script>
+</body>
+</html>

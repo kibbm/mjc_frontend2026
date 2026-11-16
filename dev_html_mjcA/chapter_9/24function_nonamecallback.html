@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Basic</title>
+    <script>
+        //함수를 선언합니다.
+        function callTenTimes(callback){
+            //10회 반복합니다.
+            for(let i=0; i<10; i++){
+                callback(); //매개변수로 전달된 함수를 호출합니다.
+            }            
+        }
+        
+        //함수를 호출합니다
+        callTenTimes(function(){
+            alert('함수 호출');
+        });
+    </script>
+</head>
+<body>
+    <h2>콜백 함수: 매개변수로 전달되는 함수</h2> 
+    -콜백 함수는 익명 함수로 사용할 때가 많습니다.<hr>
+
+    <h3>4. 함수 </h3>
+    <h5>    1_선언과 호출, 실행 우선순위</h5>
+    <h6>    1.1_익명 함수 선언하기</h6>
+    <h6>    1.2_선언적 함수 선언하기</h6>
+    <h5>    2_매개변수와 반환 값</h5>
+    <h5>    3_콜백 함수</h5>
+    
+</body>
+</html>

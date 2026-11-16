@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Basic</title>
+    <script>
+        //Date객체를 선언합니다.
+        let date = new Date();
+        //요소를 추출합니다. 
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1; //월은 0부터 시작하므로 1을 더합니다.
+        let day = date.getDay();
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        let seconds = date.getSeconds();
+
+        //KB추가!
+        alert(year + '-' + month + '-' + day + '  ' + hours + ':' + minutes + ':' + seconds); //2026-11-1  21:25:38
+        //alert(`${year}, ${month}, ${day}, ${hours}, ${minutes}, ${seconds}`);
+    </script>
+</head>
+<body>
+    if조건문으로 오전과 오후 판별 <hr>
+
+    <h3>3. 조건문과 반복문</h3>
+    <h5>    1_조건문</h5>
+    <h5>    2_반복문</h5>
+</body>
+</html>

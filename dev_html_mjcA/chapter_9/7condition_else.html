@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Basic</title>
+    <script>
+        //Date객체를 선언합니다.
+        let date = new Date();
+        let hours = date.getHours();
+
+        //조건문
+        if(hours < 12){ //..조건을 한번만 비교해서 두 경우를 처리하므로 효율적.
+            //표현식 "hours < 12"가 참일때 실행되는 문장
+            alert("오전입니다.");
+        }else{
+            //표현식 "hours < 12"가 거짓일때 실행되는 문장
+            alert("오후입니다.");
+        }
+
+        /*        //요소를 추출합니다. 
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1; //월은 0부터 시작하므로 1을 더합니다.
+        let day = date.getDay();
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        let seconds = date.getSeconds();
+
+        //조건문
+        if (day == 0) {
+            alert("오늘은 일요일입니다.");
+        } else if (day == 1) {
+            alert("오늘은 월요일입니다.");
+        } else if (day == 2) {
+            alert("오늘은 화요일입니다.");
+        } else if (day == 3) {
+            alert("오늘은 수요일입니다.");
+        } else if (day == 4) {
+            alert("오늘은 목요일입니다.");
+        } else if (day == 5) {
+            alert("오늘은 금요일입니다.");
+        } else if (day == 6) {
+            alert("오늘은 토요일입니다.");
+        }
+*/            
+    </script>
+</head>
+<body>
+        if else조건문으로 오전과 오후 구분하기<hr>
+
+    <h3>3. 조건문과 반복문</h3>
+    <h5>    1_조건문</h5>
+    <h5>    2_반복문</h5>
+</body>
+</html>

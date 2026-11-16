@@ -1,0 +1,2304 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="#071528" name="theme-color" />
+  <title>XR의 이해와 미래 | 메타 글라스·홀로그램·디지털 트윈 | 특강 10페이지</title>
+  <style>
+    :root {
+      --bg: #040d1a;
+      --navy: #08172b;
+      --panel: #102741;
+      --line: rgba(117, 201, 252, .25);
+      --text: #f0f9ff;
+      --muted: #aac7dc;
+      --aqua: #55e9f6;
+      --blue: #67a9ff;
+      --violet: #ab91ff;
+      --amber: #ffc76e;
+      --green: #77e2b9;
+      --scale: 1;
+      --radius: 18px
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+      background: #020918;
+      color: var(--text)
+    }
+
+    button {
+      font-family: inherit
+    }
+
+    .app {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: radial-gradient(circle at 10% 10%, #163356 0, transparent 35%), radial-gradient(circle at 95% 98%, #251b49 0, transparent 34%), #040c17
+    }
+
+    .toolbar {
+      width: min(100%, 1510px);
+      min-height: 62px;
+      padding: 8px 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px
+    }
+
+    .toolbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -.4px
+    }
+
+    .brand-mark {
+      width: 29px;
+      height: 29px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #56c8ff;
+      border-radius: 9px;
+      color: #8debff;
+      background: #08325d;
+      box-shadow: 0 0 15px #28d6ff44
+    }
+
+    .toolbar small {
+      color: #a7bfd8;
+      font-size: 12px;
+      font-weight: 500
+    }
+
+    .tools {
+      display: flex;
+      gap: 7px;
+      align-items: center
+    }
+
+    .ctl {
+      height: 33px;
+      border: 1px solid #2c5e85;
+      background: #0b2037;
+      color: #e0f2ff;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 750;
+      cursor: pointer;
+      padding: 0 13px
+    }
+
+    .ctl:hover,
+    .ctl:focus-visible {
+      background: #153b5e;
+      border-color: #56cced;
+      outline: none
+    }
+
+    .viewport {
+      position: relative;
+      flex: none;
+      display: block;
+      overflow: hidden;
+      box-shadow: 0 16px 72px #000a;
+      border-radius: 17px
+    }
+
+    .deck {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1280px;
+      height: 720px;
+      transform-origin: top left
+    }
+
+    .slide {
+      display: none;
+      position: absolute;
+      inset: 0;
+      width: 1280px;
+      height: 720px;
+      padding: 34px 43px 30px;
+      overflow: hidden;
+      color: #edf9ff;
+      background: radial-gradient(ellipse at 87% 12%, rgba(51, 83, 153, .35), transparent 42%), radial-gradient(ellipse at 15% 92%, rgba(7, 139, 162, .21), transparent 40%), linear-gradient(137deg, #071429 0%, #0b1d35 56%, #071a31 100%)
+    }
+
+    .slide.active {
+      display: block
+    }
+
+    .slide:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(85, 176, 255, .042) 1px, transparent 1px), linear-gradient(90deg, rgba(85, 176, 255, .042) 1px, transparent 1px);
+      background-size: 41px 41px;
+      mask-image: linear-gradient(90deg, transparent, black 24%, black 84%, transparent)
+    }
+
+    .slide:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--aqua), var(--blue), var(--violet), transparent);
+      box-shadow: 0 1px 20px #56dfff65
+    }
+
+    .decor-circle {
+      position: absolute;
+      border: 1px solid rgba(90, 210, 255, .10);
+      border-radius: 50%;
+      pointer-events: none
+    }
+
+    .decor-circle.one {
+      width: 510px;
+      height: 510px;
+      right: -235px;
+      top: -220px
+    }
+
+    .decor-circle.two {
+      width: 410px;
+      height: 410px;
+      left: -270px;
+      bottom: -260px
+    }
+
+    .slide-header {
+      position: relative;
+      z-index: 2;
+      height: 114px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2.3px;
+      text-transform: uppercase;
+      color: #7ee6f7;
+      margin-bottom: 9px
+    }
+
+    .slide-title {
+      margin: 0;
+      font-size: 43px;
+      line-height: 1.14;
+      letter-spacing: -1.7px;
+      font-weight: 850
+    }
+
+    .slide-sub {
+      margin: 9px 0 0;
+      color: #a9c4d8;
+      font-size: 17px;
+      letter-spacing: -.15px
+    }
+
+    .slide-index {
+      align-self: flex-start;
+      white-space: nowrap;
+      border: 1px solid #51cef68c;
+      background: #104b6c70;
+      color: #a8edff;
+      padding: 9px 15px;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1px
+    }
+
+    .slide-main {
+      height: 524px;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 13px
+    }
+
+    .slide-footer {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 24px;
+      margin-top: 8px;
+      color: #6f9ab9;
+      font-size: 12px;
+      border-top: 1px solid #31547688;
+      padding-top: 12px
+    }
+
+    .page-marker {
+      color: #a6deef;
+      font-weight: 800
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(18, 45, 75, .94), rgba(8, 27, 48, .87));
+      padding: 16px 18px;
+      box-shadow: inset 0 1px 0 #ffffff0b;
+      min-width: 0
+    }
+
+    .glass {
+      background: linear-gradient(135deg, #21486888, #0e2b49bb);
+      border: 1px solid #6cbde060;
+      box-shadow: inset 0 0 35px #123b5a30, 0 7px 24px #0002
+    }
+
+    .panel-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -.4px;
+      margin: 0 0 9px
+    }
+
+    .section-label {
+      color: #7ce9f8;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 7px
+    }
+
+    .body-copy {
+      font-size: 16px;
+      line-height: 1.55;
+      color: #d6e6f4;
+      margin: 0
+    }
+
+    .body-copy strong,
+    .highlight {
+      color: #8bebff
+    }
+
+    .small-copy {
+      font-size: 14px;
+      line-height: 1.53;
+      color: #c1d8e9
+    }
+
+    .lead-copy {
+      font-size: 20px;
+      line-height: 1.5;
+      font-weight: 600;
+      letter-spacing: -.25px
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .row {
+      display: flex;
+      gap: 14px;
+      min-height: 0
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+      min-width: 0
+    }
+
+    .grow {
+      flex: 1
+    }
+
+    .w-40 {
+      width: 40%
+    }
+
+    .w-42 {
+      width: 42%
+    }
+
+    .w-44 {
+      width: 44%
+    }
+
+    .w-45 {
+      width: 45%
+    }
+
+    .w-46 {
+      width: 46%
+    }
+
+    .w-48 {
+      width: 48%
+    }
+
+    .w-50 {
+      width: 50%
+    }
+
+    .w-52 {
+      width: 52%
+    }
+
+    .w-55 {
+      width: 55%
+    }
+
+    .scene {
+      position: relative;
+      margin: 0;
+      overflow: hidden;
+      border-radius: 19px;
+      min-width: 0;
+      min-height: 0;
+      border: 1px solid #4fc8e27a;
+      background: #061c35;
+      box-shadow: 0 14px 34px #0007, inset 0 0 24px #68ecff16
+    }
+
+    .scene img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.13) contrast(1.08)
+    }
+
+    .scene:before {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, transparent 55%, rgba(0, 10, 26, .93) 100%)
+    }
+
+    .scene figcaption {
+      position: absolute;
+      left: 14px;
+      bottom: 11px;
+      right: 14px;
+      z-index: 2;
+      font-size: 12px;
+      color: #d9f6ff;
+      line-height: 1.4;
+      text-shadow: 0 1px 5px #001
+    }
+
+    .scene .scanline {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent 0 5px, #a5f2ff09 5px 6px);
+      mix-blend-mode: screen
+    }
+
+    .scene.large {
+      height: 100%
+    }
+
+    .scene .corner {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 3;
+      border: 1px solid #70e4f8ac;
+      border-radius: 25px;
+      background: #092b48bd;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.1px;
+      padding: 6px 9px;
+      color: #b9f8ff
+    }
+
+    .caption-note {
+      font-size: 12px;
+      color: #85adc7
+    }
+
+    .pill {
+      display: inline-flex;
+      gap: 7px;
+      align-items: center;
+      border: 1px solid #64bad45b;
+      color: #bef7ff;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .1px;
+      background: #164d6470;
+      border-radius: 10px;
+      padding: 7px 11px
+    }
+
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px
+    }
+
+    .tech-pill {
+      background: linear-gradient(145deg, #1a496c, #0e2b48);
+      border: 1px solid #55cce257;
+      border-radius: 12px;
+      padding: 11px 8px;
+      min-height: 76px;
+      text-align: center
+    }
+
+    .tech-pill .tag {
+      font-size: 21px;
+      font-weight: 900;
+      color: #83e8ff;
+      letter-spacing: -.8px
+    }
+
+    .tech-pill .what {
+      font-size: 12px;
+      color: #b8cfe3;
+      margin-top: 3px
+    }
+
+    .takeaway {
+      padding: 12px 16px;
+      border-radius: 13px;
+      border: 1px solid #78e3ff75;
+      background: linear-gradient(105deg, #0b4964a6, #19346d88);
+      color: #dffbff;
+      font-size: 17px;
+      line-height: 1.35;
+      font-weight: 800;
+      letter-spacing: -.15px
+    }
+
+    .takeaway strong {
+      color: #f9d98a
+    }
+
+    .question {
+      display: flex;
+      gap: 9px;
+      align-items: center;
+      border-radius: 11px;
+      background: #1c436182;
+      border: 1px solid #6abedf53;
+      padding: 9px 12px;
+      font-size: 14px;
+      color: #d1f3ff
+    }
+
+    .question .qlabel {
+      white-space: nowrap;
+      color: #8befee;
+      font-weight: 800
+    }
+
+    .list {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    .list li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 15.5px;
+      color: #dce9f5;
+      line-height: 1.4
+    }
+
+    .list li:before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 8px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #69ebfa;
+      box-shadow: 0 0 10px #59e3ff8c
+    }
+
+    .number-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .number-item {
+      display: grid;
+      grid-template-columns: 31px 1fr;
+      align-items: start;
+      gap: 9px;
+      border: 1px solid #33658c70;
+      border-radius: 11px;
+      background: #112d4aab;
+      padding: 7px 10px
+    }
+
+    .number-item .num {
+      display: grid;
+      place-items: center;
+      border: 1px solid #82d8ed9c;
+      background: #1b63867a;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      font-weight: 850;
+      font-size: 13px;
+      color: #baf8ff
+    }
+
+    .number-item b {
+      font-size: 15px;
+      color: #e4fbff
+    }
+
+    .number-item span {
+      font-size: 13.4px;
+      color: #c5d9e8;
+      line-height: 1.35
+    }
+
+    .info-grid {
+      display: grid;
+      gap: 10px
+    }
+
+    .info-grid.c3 {
+      grid-template-columns: repeat(3, 1fr)
+    }
+
+    .info-grid.c2 {
+      grid-template-columns: repeat(2, 1fr)
+    }
+
+    .info-card {
+      border: 1px solid #5288ac80;
+      background: #1235559c;
+      border-radius: 13px;
+      padding: 11px 13px
+    }
+
+    .info-card h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      color: #adf2ff
+    }
+
+    .info-card p {
+      margin: 0;
+      color: #cce0ed;
+      font-size: 13px;
+      line-height: 1.4
+    }
+
+    .data-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      font-size: 14px;
+      line-height: 1.3;
+      overflow: hidden;
+      border: 1px solid #65b9dc69;
+      border-radius: 11px;
+      table-layout: fixed
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 9px 9px;
+      border-right: 1px solid #45799a74;
+      border-bottom: 1px solid #45799a74;
+      vertical-align: middle;
+      word-break: keep-all;
+      overflow-wrap: anywhere
+    }
+
+    .data-table th:last-child,
+    .data-table td:last-child {
+      border-right: 0
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: 0
+    }
+
+    .data-table th {
+      background: #1b567a;
+      letter-spacing: -.1px;
+      font-weight: 850;
+      color: #c9f7ff
+    }
+
+    .data-table td {
+      color: #e4eff7;
+      background: #102d4a9e
+    }
+
+    .data-table tr:nth-child(2n) td {
+      background: #153a589c
+    }
+
+    .data-table.compact {
+      font-size: 13px
+    }
+
+    .data-table.compact th,
+    .data-table.compact td {
+      padding: 7px 8px
+    }
+
+    .table-caption {
+      font-size: 13px;
+      font-weight: 800;
+      margin: 0 0 8px;
+      color: #9de6f5
+    }
+
+    .ghost-tag {
+      font-size: 12px;
+      color: #9af4e9;
+      font-weight: 800;
+      letter-spacing: 1px
+    }
+
+    .step-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 9px
+    }
+
+    .step {
+      min-height: 90px;
+      border: 1px solid #459ec47a;
+      border-radius: 13px;
+      padding: 11px 10px;
+      background: linear-gradient(145deg, #1b4868, #0b2748);
+      position: relative
+    }
+
+    .step .step-n {
+      display: block;
+      font-weight: 900;
+      font-size: 14px;
+      color: #69e7ff;
+      margin-bottom: 5px
+    }
+
+    .step strong {
+      display: block;
+      font-size: 15px;
+      color: #e9fdff
+    }
+
+    .step small {
+      display: block;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #a6c7de;
+      margin-top: 4px
+    }
+
+    .step:not(:last-child):after {
+      content: "›";
+      position: absolute;
+      right: -10px;
+      top: 34%;
+      font-size: 23px;
+      font-weight: 900;
+      color: #a2f8ff;
+      z-index: 5;
+      text-shadow: 0 0 6px #0c1a32
+    }
+
+    .triad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 13px
+    }
+
+    .tri-card {
+      padding: 16px;
+      min-width: 0;
+      border: 1px solid #4bd5eb70;
+      border-radius: 15px;
+      background: #10365b99
+    }
+
+    .tri-card h3 {
+      font-size: 23px;
+      margin: 0 0 5px;
+      color: #93ebff
+    }
+
+    .tri-card p {
+      font-size: 14px;
+      line-height: 1.45;
+      margin: 0;
+      color: #c6deee
+    }
+
+    .tri-card .holo-icon {
+      height: 105px;
+      margin-bottom: 11px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #58dbec32;
+      border-radius: 12px;
+      background: radial-gradient(circle, #17618288, transparent 75%)
+    }
+
+    .holo-icon svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 12px #2bcdff96)
+    }
+
+    .compare-table th:first-child {
+      width: 16%
+    }
+
+    .mt-auto {
+      margin-top: auto
+    }
+
+    .center {
+      text-align: center
+    }
+
+    .substrong {
+      color: #b4f5ff;
+      font-weight: 850
+    }
+
+    .linkstyle {
+      color: #9af7ff
+    }
+
+    .mini-rule {
+      height: 1px;
+      background: #407b9f66;
+      margin: 5px 0
+    }
+
+    .tiny {
+      font-size: 12px;
+      line-height: 1.35;
+      color: #9dbacc
+    }
+
+    .concept {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border-radius: 11px;
+      background: #0a3e5b9c;
+      border: 1px solid #5bdfed77;
+      color: #caefff;
+      font-size: 13px;
+      font-weight: 750
+    }
+
+    .holo-visual {
+      position: relative;
+      height: 100%;
+      border-radius: 18px;
+      border: 1px solid #55d6e975;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 50%, #164268 0, #07172f 75%)
+    }
+
+    .holo-visual:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(#4de5ff0b 1px, transparent 1px), linear-gradient(90deg, #4de5ff0b 1px, transparent 1px);
+      background-size: 32px 32px
+    }
+
+    .holo-visual svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%
+    }
+
+    .holo-visual .figlabel {
+      position: absolute;
+      left: 14px;
+      bottom: 13px;
+      z-index: 2;
+      color: #c0ebff;
+      font-size: 12px
+    }
+
+    .holo-visual .figcap {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      color: #8fedf8;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px
+    }
+
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .comp-mini {
+      background: #123753;
+      border: 1px solid #549dc17c;
+      border-radius: 11px;
+      padding: 11px
+    }
+
+    .comp-mini h3 {
+      color: #a6f5ff;
+      font-size: 15px;
+      margin: 0 0 7px
+    }
+
+    .comp-mini p {
+      font-size: 13px;
+      line-height: 1.4;
+      margin: 0
+    }
+
+    .simple-flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px
+    }
+
+    .flow-box {
+      border: 1px solid #69ccdd79;
+      background: linear-gradient(130deg, #103754, #1249687a);
+      border-radius: 12px;
+      padding: 10px 14px;
+      min-height: 78px;
+      position: relative;
+      text-align: center
+    }
+
+    .flow-box strong {
+      display: block;
+      color: #9eeaff;
+      margin-bottom: 5px;
+      font-size: 16px
+    }
+
+    .flow-box span {
+      display: block;
+      color: #c2dcea;
+      font-size: 13px
+    }
+
+    .flow-box:not(:last-child):after {
+      content: "→";
+      position: absolute;
+      right: -12px;
+      top: 21px;
+      font-size: 24px;
+      color: #8fefef;
+      text-shadow: 0 0 8px #0d243d;
+      z-index: 3
+    }
+
+    .tagline {
+      color: #b9d6e9;
+      font-size: 16px;
+      line-height: 1.45
+    }
+
+    .future-career td:first-child {
+      font-weight: 800;
+      color: #a7eeff
+    }
+
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .legend b {
+      color: #a1f3ff
+    }
+
+    .spacer {
+      flex: 1
+    }
+
+    .bottom-bar {
+      height: 57px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      width: 100%;
+      padding: 6px 15px
+    }
+
+    .nav-btn {
+      height: 38px;
+      min-width: 94px;
+      border: 1px solid #316588;
+      border-radius: 12px;
+      background: #112f4d;
+      color: #e1f7ff;
+      font-weight: 750;
+      font-size: 13px;
+      cursor: pointer
+    }
+
+    .nav-btn:disabled {
+      opacity: .35;
+      cursor: not-allowed
+    }
+
+    .nav-btn:not(:disabled):hover {
+      border-color: #5fe4ff;
+      background: #1a5072
+    }
+
+    .pager {
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .dot {
+      height: 9px;
+      width: 9px;
+      border-radius: 10px;
+      border: 0;
+      background: #3d617a;
+      cursor: pointer;
+      padding: 0;
+      transition: width .18s
+    }
+
+    .dot.active {
+      width: 29px;
+      background: linear-gradient(90deg, #53e7fc, #a595fa)
+    }
+
+    .status {
+      font-size: 12px;
+      color: #aac9d9;
+      min-width: 54px;
+      text-align: center
+    }
+
+    .print-instructions {
+      color: #9eb5c8;
+      font-size: 11px;
+      margin: 0 0 5px;
+      text-align: center
+    }
+
+    .note-a {
+      background: linear-gradient(90deg, #172f4d, #25324d);
+      border-left: 4px solid #f3c46f;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #f1dfb2;
+      border-radius: 8px;
+      line-height: 1.45
+    }
+
+    .scene-fit-top img {
+      object-position: center 37%
+    }
+
+    .scene-fit-bottom img {
+      object-position: center 70%
+    }
+
+    @media (max-width:720px) {
+      .toolbar {
+        padding: 8px 12px;
+        min-height: 54px
+      }
+
+      .toolbar-brand {
+        font-size: 12px
+      }
+
+      .toolbar small {
+        display: none
+      }
+
+      .tools .ctl {
+        padding: 0 8px;
+        font-size: 11px
+      }
+
+      .bottom-bar {
+        gap: 10px
+      }
+
+      .nav-btn {
+        min-width: 68px
+      }
+
+      .dot {
+        width: 7px;
+        height: 7px
+      }
+
+      .dot.active {
+        width: 19px
+      }
+
+      .pager {
+        gap: 5px
+      }
+
+      .print-instructions {
+        font-size: 9px
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      .dot {
+        transition: none
+      }
+    }
+
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0
+    }
+
+    @media print {
+
+      html,
+      body,
+      .app {
+        background: white !important;
+        margin: 0 !important;
+        display: block !important;
+        width: auto !important;
+        height: auto !important;
+        min-height: 0 !important
+      }
+
+      .toolbar,
+      .bottom-bar,
+      .print-instructions {
+        display: none !important
+      }
+
+      .viewport {
+        display: block !important;
+        position: static !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        width: 1280px !important;
+        height: auto !important
+      }
+
+      .deck {
+        position: static !important;
+        width: 1280px !important;
+        height: auto !important;
+        transform: none !important
+      }
+
+      .slide,
+      .slide.active {
+        display: block !important;
+        position: relative !important;
+        inset: auto !important;
+        width: 1280px !important;
+        height: 720px !important;
+        break-after: page;
+        page-break-after: always;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important
+      }
+
+      .slide:last-child {
+        break-after: auto;
+        page-break-after: auto
+      }
+
+      .scene img {
+        display: block !important
+      }
+    }
+  </style>
+  <style id="photo-upgrade-styles">
+    /* High-fidelity photographic presentation upgrade */
+    :root {
+      --aqua: #81e7ee;
+      --blue: #91b9ff;
+      --violet: #c1a7ff;
+      --line: rgba(147, 201, 224, .28)
+    }
+
+    .scene {
+      border-color: rgba(146, 208, 224, .7);
+      box-shadow: 0 14px 30px #0007, inset 0 0 19px #68ecff11
+    }
+
+    .scene img,
+    .xr-photo img {
+      filter: saturate(.97) contrast(1.04) brightness(.94)
+    }
+
+    .scene:before {
+      background: linear-gradient(180deg, rgba(2, 17, 32, .08) 10%, transparent 44%, rgba(0, 11, 24, .91) 100%)
+    }
+
+    .scene .scanline {
+      opacity: .34
+    }
+
+    .scene figcaption {
+      font-size: 11.6px;
+      line-height: 1.35
+    }
+
+    .photo-citation {
+      z-index: 5;
+      position: absolute;
+      right: 11px;
+      top: 12px;
+      padding: 5px 8px;
+      background: rgba(5, 22, 37, .63);
+      border: 1px solid rgba(187, 224, 243, .55);
+      border-radius: 7px;
+      letter-spacing: .75px;
+      color: #f2fbff;
+      font-size: 10px;
+      font-weight: 850;
+      pointer-events: none
+    }
+
+    .photo-annotation {
+      position: absolute;
+      z-index: 4;
+      top: 57px;
+      right: 14px;
+      max-width: 230px;
+      min-width: 176px;
+      border: 1px solid rgba(150, 225, 246, .73);
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(8, 40, 64, .86), rgba(12, 23, 46, .73));
+      backdrop-filter: blur(9px);
+      padding: 11px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      box-shadow: 0 12px 26px #0005
+    }
+
+    .photo-annotation .anno-head {
+      font-size: 11px;
+      color: #88efff;
+      font-weight: 850;
+      letter-spacing: .4px
+    }
+
+    .photo-annotation span {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: #e8f9ff;
+      font-size: 12px
+    }
+
+    .photo-annotation b {
+      color: #bdf8de
+    }
+
+    .photo-annotation.compact {
+      top: 54px;
+      max-width: 200px;
+      min-width: 160px;
+      padding: 9px
+    }
+
+    .photo-annotation.compact span {
+      line-height: 1.2
+    }
+
+    .ctl-photo {
+      border-color: #4fb5bb;
+      background: #1b4d54;
+      color: #ddfafd
+    }
+
+    .ctl-photo:focus-visible {
+      outline: 2px solid #aefcff
+    }
+
+    .photo-status {
+      font-size: 11px;
+      color: #c8e6ee;
+      white-space: nowrap
+    }
+
+    /* fully rebuilt slide 3 */
+    .s3-main {
+      gap: 9px;
+      height: 524px
+    }
+
+    .xr-example-row {
+      height: 255px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 13px
+    }
+
+    .xr-case {
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid #62c9e1a8;
+      border-radius: 14px;
+      background: linear-gradient(150deg, rgba(17, 56, 87, .93), rgba(8, 25, 47, .95));
+      box-shadow: 0 7px 21px #0004
+    }
+
+    .xr-case.vr {
+      border-color: #ac91ea9c
+    }
+
+    .xr-case.mr {
+      border-color: #e7bd709c
+    }
+
+    .xr-case-heading {
+      height: 59px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 8px 12px
+    }
+
+    .xr-acronym {
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -.7px;
+      color: #061b2f;
+      background: #92ecf7;
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 39px;
+      border-radius: 9px;
+      flex: none
+    }
+
+    .xr-case.vr .xr-acronym {
+      background: #d3bafa
+    }
+
+    .xr-case.mr .xr-acronym {
+      background: #ffe0a1
+    }
+
+    .xr-case-heading strong {
+      font-size: 17px;
+      display: block;
+      color: #f4fdff
+    }
+
+    .xr-case-heading small {
+      font-size: 11px;
+      display: block;
+      color: #b5cddb;
+      margin-top: 3px
+    }
+
+    .xr-photo {
+      position: relative;
+      min-height: 0;
+      margin: 0;
+      flex: 1;
+      overflow: hidden;
+      background: #132f43
+    }
+
+    .xr-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: saturate(.91) contrast(1.04) brightness(.83)
+    }
+
+    .xr-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 36%, rgba(2, 10, 25, .85));
+      pointer-events: none
+    }
+
+    .xr-photo figcaption {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 10px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 14px;
+      z-index: 2;
+      letter-spacing: -.1px
+    }
+
+    .xr-photo .photo-citation {
+      top: 8px;
+      right: 10px;
+      font-size: 9px;
+      letter-spacing: .2px
+    }
+
+    .xr-bottom {
+      padding: 9px 12px 8px;
+      min-height: 61px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px
+    }
+
+    .xr-bottom b {
+      font-size: 14px;
+      color: #b9f4ff
+    }
+
+    .xr-case.vr .xr-bottom b {
+      color: #e6caff
+    }
+
+    .xr-case.mr .xr-bottom b {
+      color: #ffe8b1
+    }
+
+    .xr-bottom span {
+      font-size: 12px;
+      color: #c9ddea
+    }
+
+    .xr-bottom em {
+      font-style: normal;
+      font-weight: 850;
+      color: #fff
+    }
+
+    .s3-table-panel {
+      padding: 10px 14px 11px;
+      flex: 1;
+      min-height: 0
+    }
+
+    .s3-table-panel .table-caption {
+      margin-bottom: 7px;
+      font-size: 13px;
+      color: #b8f5ff
+    }
+
+    .s3-table {
+      font-size: 12.8px;
+      line-height: 1.23
+    }
+
+    .s3-table th,
+    .s3-table td {
+      padding: 7px 8px
+    }
+
+    .s3-table td:first-child {
+      font-weight: 850;
+      color: #aff0ff
+    }
+
+    .s3-table th:first-child {
+      width: 15%
+    }
+
+    .s3-table th:nth-child(2) {
+      color: #d6ffff
+    }
+
+    .s3-table th:nth-child(3) {
+      color: #eed9ff
+    }
+
+    .s3-table th:nth-child(4) {
+      color: #ffe7b5
+    }
+
+    .s3-takeaway {
+      flex: none;
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      padding: 8px 14px;
+      font-size: 14.7px
+    }
+
+    /* Source credits modal */
+    .credits-modal {
+      border: 1px solid #6ec7df;
+      border-radius: 17px;
+      background: #0c2138;
+      color: #eef9ff;
+      box-shadow: 0 20px 100px #000c;
+      max-width: 750px;
+      max-height: 80vh;
+      padding: 22px 26px
+    }
+
+    .credits-modal::backdrop {
+      background: #000b;
+      backdrop-filter: blur(5px)
+    }
+
+    .credits-modal h2 {
+      margin: 0 0 7px;
+      font-size: 24px
+    }
+
+    .credits-modal p {
+      color: #b7d7e9;
+      line-height: 1.5
+    }
+
+    .credits-modal ul {
+      padding-left: 23px;
+      line-height: 1.9
+    }
+
+    .credits-modal li {
+      font-size: 13px
+    }
+
+    .credits-modal a {
+      color: #90f1ff;
+      text-decoration: underline
+    }
+
+    .credits-modal button {
+      margin-top: 8px
+    }
+
+    @media print {
+      .xr-photo img {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact
+      }
+
+      .credits-modal,
+      .photo-status {
+        display: none !important
+      }
+    }
+
+    @media(max-width:720px) {
+      .toolbar {
+        flex-wrap: wrap;
+        gap: 5px;
+        justify-content: center
+      }
+
+      .toolbar-brand {
+        width: 100%;
+        justify-content: center
+      }
+
+      .toolbar .tools {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 5px
+      }
+
+      .toolbar .tools .ctl {
+        height: 30px;
+        padding: 0 7px;
+        font-size: 10px
+      }
+    }
+
+    .xr-case-heading {
+      height: 54px
+    }
+
+    .xr-bottom {
+      min-height: 57px
+    }
+
+    .xr-photo .photo-citation {
+      font-size: 8.5px
+    }
+  </style>
+  <style id="external-photo-error-styles">
+    .scene img {
+      filter: saturate(1.07) contrast(1.045) brightness(.96);
+    }
+
+    .photo-load-error {
+      position: absolute;
+      inset: 25% 9% 20%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 28px;
+      line-height: 1.6;
+      font-size: 16px;
+      color: #d7f5ff;
+      background: linear-gradient(140deg, #113a5c, #0b213a);
+      border: 1px solid #5eaccc;
+      border-radius: 12px;
+      z-index: 2
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="toolbar">
+      <div class="toolbar-brand"><span class="brand-mark">XR</span><span>미래를 여는 확장현실 <small>· 미래기술 특강 /
+            2026</small></span></div>
+      <div class="tools"><button class="ctl" id="btn-toc" title="첫 페이지로 이동">처음으로</button><button class="ctl ctl-photo"
+          id="btn-photo-mode" title="인터넷 실사 사진과 내장 개념 이미지 전환">사진 보기</button><button class="ctl" id="btn-photo-sources"
+          title="실사 사진 저작권과 출처">사진 출처</button><button class="ctl" id="btn-fullscreen"
+          title="전체화면 전환">전체화면</button><button class="ctl" id="btn-print" title="10페이지 인쇄 또는 PDF 저장">인쇄 · PDF</button>
+      </div>
+    </header>
+    <div class="viewport" id="viewport">
+      <main class="deck" id="deck">
+        <!-- slides begin -->
+        <section aria-label="1페이지 AI 빅데이터 로봇 드론과 XR" class="slide active has-real-photo" data-page="1">
+          <span class="decor-circle one"></span><span class="decor-circle two"></span>
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">01 · 미래기술의 융합</div>
+              <h1 class="slide-title">AI·빅데이터·로봇·드론, 그리고 XR</h1>
+              <p class="slide-sub">미래의 정보를 눈앞에 3D로 펼치는 새로운 인터페이스</p>
+            </div>
+            <div class="slide-index">01 / 10</div>
+          </header>
+          <div class="slide-main">
+            <div class="row" style="height:429px">
+              <figure class="scene large w-48"><img alt="얇은 스마트안경을 착용한 학생과 AI, 로봇, 드론, 미래도시의 3D 홀로그램"
+                  data-fallback-src="https://uptodatewebdesign.s3.eu-west-3.amazonaws.com/image-assets/preview-1764331905215.jpg"
+                  data-photo-src="https://media.licdn.com/dms/image/v2/D5612AQEGq8O0rWZ-1A/article-cover_image-shrink_720_1280/B56Zwc_X7kHUAI-/0/1770012902152?e=2147483647&amp;t=v6hm1lRwsXvrJmSLvvbc69bh446oysCaeXllXH1hQ-U&amp;v=beta"
+                  data-source-credit="AI 비전·드론·로봇·XR 도시 개념 이미지 / LinkedIn 게재 자료"
+                  data-source-url="https://www.linkedin.com/pulse/behind-scenes-building-real-time-ai-vision-actually-thilagarajan-oxyyc"
+                  decoding="async" loading="eager" referrerpolicy="no-referrer"
+                  src="https://media.licdn.com/dms/image/v2/D5612AQEGq8O0rWZ-1A/article-cover_image-shrink_720_1280/B56Zwc_X7kHUAI-/0/1770012902152?e=2147483647&amp;t=v6hm1lRwsXvrJmSLvvbc69bh446oysCaeXllXH1hQ-U&amp;v=beta"
+                  style="object-position:center 48%;" />
+                <div class="scanline"></div><span class="corner">VISION 2035</span>
+                <figcaption>그림 1. AI·빅데이터·로봇·드론이 XR과 연결되는 미래사회 — 실사 사진 기반 개념</figcaption>
+                <div class="photo-citation">PHOTO · REAL WORLD</div>
+              </figure>
+              <div class="col grow">
+                <div class="panel glass" style="flex:1">
+                  <div class="section-label">미래기술은 서로 연결된다</div>
+                  <p class="lead-copy">인공지능은 <span class="highlight">판단</span>하고, 빅데이터는 <span
+                      class="highlight">분석</span>하며, 로봇과 드론은 현실에서 <span class="highlight">행동·탐색</span>한다.</p>
+                  <p class="body-copy" style="margin-top:11px">XR은 이 기술들이 수집하고 만들어 낸 정보를 사람이 <strong>현실 공간 속에서 보고, 이해하고,
+                      조작</strong>하도록 돕는다.</p>
+                </div>
+                <div class="panel" style="flex:1">
+                  <div class="section-label">5가지 기술의 역할</div>
+                  <div class="tech-grid">
+                    <div class="tech-pill">
+                      <div class="tag">AI</div>
+                      <div class="what">생각·판단</div>
+                    </div>
+                    <div class="tech-pill">
+                      <div class="tag">DATA</div>
+                      <div class="what">정보 분석</div>
+                    </div>
+                    <div class="tech-pill">
+                      <div class="tag">BOT</div>
+                      <div class="what">작업 수행</div>
+                    </div>
+                    <div class="tech-pill">
+                      <div class="tag">UAV</div>
+                      <div class="what">현장 수집</div>
+                    </div>
+                    <div class="tech-pill">
+                      <div class="tag">XR</div>
+                      <div class="what">3D 체험</div>
+                    </div>
+                  </div>
+                  <p class="small-copy" style="margin:13px 0 0">예: 드론이 도로를 촬영 → AI가 교통을 분석 → XR 안경에 3D 교통 정보 표시 → 로봇이 현장
+                    작업을 지원</p>
+                </div>
+              </div>
+            </div>
+            <div class="takeaway">핵심 메시지 · <strong>AI가 두뇌라면, XR은 미래의 정보를 눈앞에 펼쳐 주는 창</strong>이 될 수 있다.</div>
+          </div>
+          <footer class="slide-footer"><span>미래기술 특강 · XR의 이해와 미래</span><span class="page-marker">FUTURE TECHNOLOGY /
+              01</span></footer>
+        </section>
+        <section aria-label="2페이지 XR의 정의" class="slide has-real-photo" data-page="2">
+          <span class="decor-circle one"></span>
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">02 · XR 개념</div>
+              <h1 class="slide-title">XR은 현실을 어떻게 확장할까?</h1>
+              <p class="slide-sub">eXtended Reality · 확장현실의 정의와 핵심 특징</p>
+            </div>
+            <div class="slide-index">02 / 10</div>
+          </header>
+          <div class="slide-main">
+            <div class="row" style="height:410px">
+              <div class="col grow">
+                <div class="panel glass" style="flex:1">
+                  <div class="section-label">XR의 정의</div>
+                  <p class="lead-copy">XR은 현실 세계에 디지털 정보를 더하거나 현실과 가상세계를 결합해 <span class="highlight">새로운 공간적 경험</span>을
+                    제공하는 기술이다.</p>
+                  <p class="body-copy" style="margin-top:12px">과거에는 컴퓨터 화면에서만 보이던 정보를 XR에서는 실제 교실 바닥, 책상, 벽 위에 있는 것처럼 볼
+                    수 있다. 가상의 공룡이나 태양계도 눈앞에서 확인할 수 있다.</p>
+                </div>
+                <div class="panel" style="flex:1">
+                  <div class="section-label">현실 + 디지털 정보 + 3D 상호작용</div>
+                  <div class="info-grid c3">
+                    <div class="info-card">
+                      <h3>현실 인식</h3>
+                      <p>카메라·센서가 주변을 파악</p>
+                    </div>
+                    <div class="info-card">
+                      <h3>3D 표현</h3>
+                      <p>입체적인 가상 물체·정보 표시</p>
+                    </div>
+                    <div class="info-card">
+                      <h3>상호작용</h3>
+                      <p>손짓·시선·음성으로 조작</p>
+                    </div>
+                  </div>
+                  <p class="small-copy" style="margin:13px 0 0">XR은 한 종류의 장비 이름이 아니라 <strong>AR·VR·MR을 포괄하는
+                      개념</strong>이다.</p>
+                </div>
+              </div>
+              <figure class="scene large w-44"><img alt="얇은 스마트안경을 착용한 학생이 교실에서 푸른 공룡 홀로그램을 보는 모습"
+                  data-fallback-src="https://images.stockcake.com/public/7/0/8/7086ad08-eada-49ab-b1ea-d574c87daebf_large/dinosaurs-come-alive-stockcake.jpg"
+                  data-photo-src="https://static.wixstatic.com/media/d0d543_6f421ab011704012a7ae6ee2fe62371b~mv2.jpg/v1/fill/w_2500%2Ch_1401%2Cal_c/d0d543_6f421ab011704012a7ae6ee2fe62371b~mv2.jpg"
+                  data-source-credit="공룡 AR 학습 개념 이미지 / Escuela en Línea"
+                  data-source-url="https://www.escuelaenlinea-1.com/post/tendencias-en-escuelas-en-l%C3%ADnea-para-ni%C3%B1os-innovaci%C3%B3n-y-tecnolog%C3%ADa-avanzada"
+                  decoding="async" loading="eager" referrerpolicy="no-referrer"
+                  src="https://static.wixstatic.com/media/d0d543_6f421ab011704012a7ae6ee2fe62371b~mv2.jpg/v1/fill/w_2500%2Ch_1401%2Cal_c/d0d543_6f421ab011704012a7ae6ee2fe62371b~mv2.jpg"
+                  style="object-position:center 45%;" />
+                <div class="scanline"></div><span class="corner">WHAT IS XR?</span>
+                <figcaption>그림 2. 스마트안경을 통해 공룡의 3D 홀로그램을 보는 미래 수업 — 실사 사진 기반 개념</figcaption>
+                <div class="photo-citation">PHOTO · REAL WORLD</div>
+              </figure>
+            </div>
+            <div class="takeaway">쉽게 이해하기 · XR은 <strong>현실을 더 풍부하게 보고, 직접 체험하도록 돕는 기술</strong>이다.</div>
+            <div class="question"><span class="qlabel">생각해 보기</span>교실 책상 위에 가상의 공룡이 나타난다면 무엇을 가장 먼저 관찰해 보고 싶을까?</div>
+          </div>
+          <footer class="slide-footer"><span>XR = eXtended Reality</span><span class="page-marker">INTRODUCTION /
+              02</span></footer>
+        </section>
+
+
+        <section aria-label="5페이지 메타 스마트안경과 홀로그램" class="slide has-real-photo" data-page="5">
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">05 · 메타 글라스와 공간 인터페이스</div>
+              <h1 class="slide-title">메타 글라스, 현실 위에 펼치는 3D 정보</h1>
+              <p class="slide-sub">커다란 HMD 대신 안경형 기기의 미래를 중심으로 이해하기</p>
+            </div>
+            <div class="slide-index">05 / 10</div>
+          </header>
+          <div class="slide-main">
+            <div class="row" style="height:290px">
+              <figure class="scene large w-44"><img alt="얇은 메타 스타일 스마트안경을 쓴 학생 앞에 홀로그램 건물 설계도가 떠 있는 개념 장면"
+                  data-fallback-src="https://images.indianexpress.com/2024/03/meta-rayban-smart-glasses.jpg"
+                  data-photo-src="https://images.stockcake.com/public/6/8/1/68139d9d-131a-47a6-857b-7c5fb3d6fa52_large/futuristic-interface-interaction-stockcake.jpg"
+                  data-source-credit="안경형 XR 인터페이스 미래 개념 이미지 / StockCake"
+                  data-source-url="https://stockcake.com/i/futuristic-interface-interaction_169391_28294"
+                  decoding="async" loading="lazy" referrerpolicy="no-referrer"
+                  src="https://images.stockcake.com/public/6/8/1/68139d9d-131a-47a6-857b-7c5fb3d6fa52_large/futuristic-interface-interaction-stockcake.jpg"
+                  style="object-position:center 45%;" />
+                <div class="scanline"></div><span class="corner">SMART GLASSES</span>
+                <figcaption>그림 5. 실제 스마트안경 제품 사진과 미래형 3D 인터페이스의 개념 비교</figcaption>
+                <div class="photo-citation">PHOTO · REAL WORLD</div>
+              </figure>
+              <div class="col grow">
+                <div class="panel glass" style="flex:1">
+                  <div class="section-label">안경형 XR의 미래 비전</div>
+                  <p class="lead-copy" style="font-size:19px">앞으로는 <span class="highlight">가벼운 스마트안경</span>을 통해 현실을 보면서
+                    디지털 정보를 자연스럽게 확인하는 방식이 발전할 수 있다.</p>
+                  <ul class="list" style="margin-top:13px">
+                    <li>실제 주변 사람과 물체를 계속 볼 수 있다.</li>
+                    <li>양손을 비교적 자유롭게 사용할 수 있다.</li>
+                    <li>공중에 떠 있는 것 같은 3D 정보를 확인한다.</li>
+                    <li>친구·교사와 같은 공간에서 협업할 수 있다.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="panel" style="padding:12px 15px">
+              <p class="table-caption">HMD형 장치와 안경형 XR 장치 비교</p>
+              <table class="data-table compact">
+                <thead>
+                  <tr>
+                    <th>비교 항목</th>
+                    <th>HMD 중심 몰입형 장치</th>
+                    <th>안경형 스마트 글라스</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>착용 형태</td>
+                    <td>얼굴을 넓게 덮는 헤드셋</td>
+                    <td>일반 안경에 가까운 형태</td>
+                  </tr>
+                  <tr>
+                    <td>현실 보기</td>
+                    <td>가상현실 중심, 일부 패스스루 지원</td>
+                    <td>현실을 보며 정보 이용(기능은 기기별 차이)</td>
+                  </tr>
+                  <tr>
+                    <td>대표 활용</td>
+                    <td>몰입형 VR 게임·훈련</td>
+                    <td>안내·촬영·음성 AI·향후 공간 정보 표시</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="note-a">기술 구분 · 실제 판매되는 Ray-Ban Meta 등의 일부 스마트안경은 카메라·음성 AI 기능이 중심이며, 이 페이지의 공중 3D 홀로그램은 미래형 XR
+              개념 연출이다.</div>
+          </div>
+          <footer class="slide-footer"><span>스마트안경은 XR 장치의 한 형태이며, 제품별 기능은 다르다.</span><span
+              class="page-marker">META-STYLE GLASSES / 05</span></footer>
+        </section>
+        <section aria-label="6페이지 XR 활용 분야" class="slide has-real-photo" data-page="6">
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">06 · XR의 활용 사례</div>
+              <h1 class="slide-title">XR은 학교·병원·공장에서 어떻게 쓰일까?</h1>
+              <p class="slide-sub">게임을 넘어 교육·의료·산업·문화·안전 훈련으로 확대되는 확장현실</p>
+            </div>
+            <div class="slide-index">06 / 10</div>
+          </header>
+          <div class="slide-main">
+            <div class="row" style="height:207px">
+              <figure class="scene large w-44"><img alt="태양계, 인체, 기계 부품, 미래 공연장의 3D 홀로그램 활용 분야 이미지"
+                  data-fallback-src="https://s2-valor.glbimg.com/YICcAp1LJ7gh3a6_KvcdMA2Hrl0%3D/984x0/smart/filters%3Astrip_icc%28%29/i.s3.glbimg.com/v1/AUTH_63b422c2caee4269b8b34177e8876b93/internal_photos/bs/2021/b/A/4wt6SeTYKNGriznZvkdg/foto09emp-101-medicina-b9.jpg"
+                  data-photo-src="https://www.nist.gov/sites/default/files/styles/social/public/images/2024/01/10/Immersive%20Tech%20Blog.png?itok=Bo62es5q"
+                  data-source-credit="교육·산업·생활 속 AR·XR 활용 사진 모음 / NIST"
+                  data-source-url="https://www.nist.gov/image/immersive-tech" decoding="async" loading="lazy"
+                  referrerpolicy="no-referrer"
+                  src="https://www.nist.gov/sites/default/files/styles/social/public/images/2024/01/10/Immersive%20Tech%20Blog.png?itok=Bo62es5q"
+                  style="object-position:center 48%;" />
+                <div class="scanline"></div><span class="corner">XR USE CASES</span>
+                <figcaption>그림 6. 교육·의료·산업·게임에 적용된 홀로그램형 XR 활용 장면</figcaption>
+                <div class="photo-citation">PHOTO · REAL WORLD</div>
+              </figure>
+              <div class="col grow">
+                <div class="panel glass" style="flex:1">
+                  <div class="section-label">XR은 신기한 게임 이상의 기술이다</div>
+                  <p class="lead-copy" style="font-size:18px">보이지 않는 것을 <span class="highlight">입체적으로 이해</span>하고, 위험한
+                    상황을 <span class="highlight">안전하게 연습</span>하며, 복잡한 정보를 <span class="highlight">쉽게 확인</span>하도록 돕는다.
+                  </p>
+                  <div class="chip-list" style="margin-top:12px"><span class="pill">학교 · 과학 체험</span><span
+                      class="pill">병원 · 인체 학습</span><span class="pill">공장 · 정비 안내</span><span class="pill">안전 · 재난
+                      훈련</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel" style="padding:12px 15px">
+              <p class="table-caption">XR의 대표적인 활용 분야</p>
+              <table class="data-table compact">
+                <thead>
+                  <tr>
+                    <th>분야</th>
+                    <th>활용 사례</th>
+                    <th>기대 효과</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>교육</td>
+                    <td>3D 과학 실험, 역사 체험</td>
+                    <td>입체적 이해와 흥미 유발</td>
+                  </tr>
+                  <tr>
+                    <td>의료</td>
+                    <td>인체 장기 구조 학습, 수술 훈련</td>
+                    <td>시각화와 반복 학습</td>
+                  </tr>
+                  <tr>
+                    <td>산업</td>
+                    <td>설비 안내, 기계 정비 지원</td>
+                    <td>작업 효율과 정확도 향상</td>
+                  </tr>
+                  <tr>
+                    <td>게임·문화</td>
+                    <td>몰입형 체험, 전시·공연</td>
+                    <td>새로운 콘텐츠 경험</td>
+                  </tr>
+                  <tr>
+                    <td>안전 훈련</td>
+                    <td>화재 대피, 재난 대응</td>
+                    <td>위험 부담을 줄인 반복 연습</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="takeaway">활용의 핵심 · XR은 <strong>직접 보기 어려운 것을 보여주고, 실제 실험이 위험한 일을 가상으로 연습</strong>하게 한다.</div>
+          </div>
+          <footer class="slide-footer"><span>XR 사용의 목적은 ‘멋진 화면’보다 실제 문제 해결에 있다.</span><span
+              class="page-marker">APPLICATIONS / 06</span></footer>
+        </section>
+        <section aria-label="7페이지 XR 로봇 드론 결합" class="slide has-real-photo" data-page="7">
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">07 · 공간 기술과 현실 세계의 연결</div>
+              <h1 class="slide-title">XR × 로봇 × 드론: 멀리 있는 현장을 눈앞에</h1>
+              <p class="slide-sub">수집한 정보를 홀로그램으로 확인하고, 로봇의 작업을 더 쉽게 지원한다.</p>
+            </div>
+            <div class="slide-index">07 / 10</div>
+          </header>
+          <div class="slide-main">
+            <div class="row" style="height:343px">
+              <figure class="scene large w-48"><img alt="얇은 스마트안경을 쓴 학생이 드론 비행과 로봇 이동 정보를 3D 홀로그램 지도로 확인"
+                  data-fallback-src="https://images.stockcake.com/public/8/5/1/851687f3-805f-4e11-99c6-2d85ba9b6f94_large/connected-rescue-technologies-stockcake.jpg"
+                  data-photo-src="https://cdn.prod.website-files.com/67510567a502b6a7c4c13a49/68f6de10c30fdda25b8824c0_68f6cd911019c13c0b37a203-1761007317935.jpeg"
+                  data-source-credit="드론 조종사의 AR 정보 표시 개념 이미지 / Anvil Labs"
+                  data-source-url="https://anvil.so/post/ar-heads-up-displays-for-drone-pilots" decoding="async"
+                  loading="lazy" referrerpolicy="no-referrer"
+                  src="https://cdn.prod.website-files.com/67510567a502b6a7c4c13a49/68f6de10c30fdda25b8824c0_68f6cd911019c13c0b37a203-1761007317935.jpeg"
+                  style="object-position:center 45%;" />
+                <div class="scanline"></div><span class="corner">XR + ROBOT + DRONE</span>
+                <figcaption>그림 7. 스마트안경을 통해 드론 경로와 로봇 작업 정보를 확인하는 미래 시나리오</figcaption>
+                <div class="photo-citation">PHOTO · REAL WORLD</div>
+                <div aria-hidden="true" class="photo-annotation compact">
+                  <div class="anno-head">드론 현장 모니터링 · 예시</div><span>위치 추적 / 영상 수집</span>
+                </div>
+              </figure>
+              <div class="col grow">
+                <div class="panel" style="flex:1">
+                  <div class="section-label">드론과 XR</div>
+                  <p class="body-copy"><strong>드론</strong>은 높은 곳에서 영상과 지형 정보를 수집한다. 메타 스타일 스마트안경의 XR 인터페이스로 비행 경로, 건물
+                    정보, 위험 지역을 공간적으로 표시할 수 있다.</p>
+                  <p class="small-copy" style="margin:8px 0 0">재난 현장 탐색 · 시설물 점검 · 농경지 조사</p>
+                </div>
+                <div class="panel" style="flex:1">
+                  <div class="section-label">로봇과 XR</div>
+                  <p class="body-copy"><strong>로봇</strong>은 현실에서 움직이고 작업한다. XR은 로봇의 위치와 부품 상태, 이동 경로를 3D로 확인하거나 원격 작업을
+                    지원하는 데 활용될 수 있다.</p>
+                  <p class="small-copy" style="margin:8px 0 0">위험 작업 지원 · 공장 설비 점검 · 원격 작업</p>
+                </div>
+              </div>
+            </div>
+            <div class="simple-flow">
+              <div class="flow-box"><strong>드론</strong><span>하늘에서 정보 수집</span></div>
+              <div class="flow-box"><strong>로봇</strong><span>실제 작업 수행</span></div>
+              <div class="flow-box"><strong>XR 인터페이스</strong><span>정보를 3D로 보고·조작</span></div>
+            </div>
+            <div class="question"><span class="qlabel">생각해 보기</span>사람이 직접 들어가기 어려운 화재 현장에서는 드론·로봇·XR이 각각 어떤 역할을 할까?
+            </div>
+          </div>
+          <footer class="slide-footer"><span>드론 FPV 자체와 AR/XR 정보 표시 시스템은 구별할 수 있다.</span><span
+              class="page-marker">PHYSICAL WORLD / 07</span></footer>
+        </section>
+        <section aria-label="8페이지 디지털 트윈 정의" class="slide has-real-photo" data-page="8">
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">08 · 디지털 트윈의 이해</div>
+              <h1 class="slide-title">디지털 트윈: 현실의 ‘디지털 쌍둥이’</h1>
+              <p class="slide-sub">현실 사물·학교·도시를 가상으로 만들고 실제 데이터와 연결하는 기술</p>
+            </div>
+            <div class="slide-index">08 / 10</div>
+          </header>
+          <div class="slide-main">
+            <div class="row" style="height:222px">
+              <figure class="scene large w-44"><img alt="얇은 스마트안경을 쓴 학생이 실제 학교와 연결된 3D 학교 건물 디지털 트윈을 보는 모습"
+                  data-fallback-src="https://media.licdn.com/dms/image/sync/v2/D4D27AQEc3ACTkhpS9A/articleshare-shrink_800/articleshare-shrink_800/0/1712329934556?e=2147483647&amp;t=Fs8_Smkui8FnS9R8EK6gPc1zImQCt5NEUnhemAhyv6g&amp;v=beta"
+                  data-photo-src="https://media.xenospectrum.com/large_ai_building_generation_concept_602ec957a0.webp"
+                  data-source-credit="현실 학교 건물과 디지털 건물 모델의 연결 개념 / XenoSpectrum"
+                  data-source-url="https://xenospectrum.com/ai-architectural-design-multi-stage-rag-diffusion/"
+                  decoding="async" loading="lazy" referrerpolicy="no-referrer"
+                  src="https://media.xenospectrum.com/large_ai_building_generation_concept_602ec957a0.webp"
+                  style="object-position:center 50%;" />
+                <div class="scanline"></div><span class="corner">DIGITAL TWIN</span>
+                <figcaption>그림 8. 실사 학교 건물과 가상의 센서 데이터를 연결한 디지털 트윈 개념</figcaption>
+                <div class="photo-citation">PHOTO · REAL WORLD</div>
+                <div aria-hidden="true" class="photo-annotation">
+                  <div class="anno-head">학교 디지털 트윈 · 예시 데이터</div><span>교실 온도 <b>23.5°C</b></span><span>전력 사용량 <b>42
+                      kWh</b></span><span>조도 <b>500 lx</b></span>
+                </div>
+              </figure>
+              <div class="col grow">
+                <div class="panel glass" style="flex:1">
+                  <div class="section-label">디지털 트윈이란?</div>
+                  <p class="lead-copy" style="font-size:18px;line-height:1.4">현실의 사물·공간·시스템을 디지털로 표현하고, <span
+                      class="highlight">실제 데이터와 연결</span>해 상태를 확인하고 미래를 예측하는 기술이다.</p>
+                  <p class="small-copy" style="margin:8px 0 0">예: 학교의 온도·전력·조명 정보를 3D 학교 모델과 연결한다.</p>
+                  <div class="chip-list" style="margin-top:11px"><span class="pill">① 현실 센서</span><span class="pill">②
+                      디지털 학교</span><span class="pill">③ 분석·예측</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel" style="padding:12px 15px">
+              <p class="table-caption">일반 3D 모델과 디지털 트윈 비교</p>
+              <table class="data-table compact">
+                <thead>
+                  <tr>
+                    <th>구분</th>
+                    <th>일반 3D 모델</th>
+                    <th>디지털 트윈</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>목적</td>
+                    <td>모양·공간 시각화</td>
+                    <td>실제 상태 분석·예측</td>
+                  </tr>
+                  <tr>
+                    <td>데이터 연결</td>
+                    <td>필수가 아님</td>
+                    <td>핵심 요소</td>
+                  </tr>
+                  <tr>
+                    <td>변화 반영</td>
+                    <td>주로 수동 수정</td>
+                    <td>자동 또는 주기적으로 갱신</td>
+                  </tr>
+                  <tr>
+                    <td>활용</td>
+                    <td>전시·설계·시각화</td>
+                    <td>모니터링·시뮬레이션·개선</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="takeaway">기억하기 · <strong>3D 모델은 외형을 보여주고, 디지털 트윈은 실제 데이터와 연결해 살아 있는 상태를 나타낸다.</strong></div>
+          </div>
+          <footer class="slide-footer"><span>디지털 트윈은 XR 없이도 가능하지만, XR과 결합하면 공간적 이해가 쉬워진다.</span><span
+              class="page-marker">DIGITAL TWIN / 08</span></footer>
+        </section>
+        <section aria-label="9페이지 디지털 트윈 트렌드" class="slide has-real-photo" data-page="9">
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">09 · 2026년 기술 트렌드</div>
+              <h1 class="slide-title">도시와 공장을 바꾸는 디지털 트윈</h1>
+              <p class="slide-sub">AI 예측 · 스마트시티 · 스마트공장 · XR 공간 인터페이스</p>
+            </div>
+            <div class="slide-index">09 / 10</div>
+          </header>
+          <div class="slide-main">
+            <div class="row" style="height:416px">
+              <div class="col grow">
+                <div class="panel" style="flex:1;padding:14px 17px">
+                  <div class="section-label">TREND 01 · 스마트시티</div>
+                  <p class="body-copy">실제 도시의 도로·건물·교통·환경을 디지털로 표현하여 <strong>교통 혼잡과 재난 위험</strong>을 분석한다.</p>
+                </div>
+                <div class="panel" style="flex:1;padding:14px 17px">
+                  <div class="section-label">TREND 02 · 스마트공장</div>
+                  <p class="body-copy">설비 배치와 생산 과정을 변경하기 전에 가상공간에서 <strong>미리 시험</strong>하고 운영을 최적화한다.</p>
+                </div>
+                <div class="panel" style="flex:1;padding:14px 17px">
+                  <div class="section-label">TREND 03 · AI 디지털 트윈</div>
+                  <p class="body-copy">과거와 현재의 데이터를 인공지능이 분석하여 <strong>고장·수요·위험</strong> 등을 예측한다.</p>
+                </div>
+                <div class="panel" style="flex:1;padding:14px 17px">
+                  <div class="section-label">TREND 04 · XR 연결</div>
+                  <p class="body-copy">도시나 공장을 <strong>3D 홀로그램 형태</strong>로 확인하고 공간적으로 탐색·조작한다.</p>
+                </div>
+              </div>
+              <figure class="scene large w-46"><img alt="자동차와 건물 정보가 빛나는 스마트시티 3D 홀로그램 디지털 트윈"
+                  data-fallback-src="https://cdn.prod.website-files.com/64ccbd588c89106779c7dad1/6527cb9c4413d08cdc4c70f3_Blog%208%20-%20Main%20Image.jpeg"
+                  data-photo-src="https://www.fm-whoiswho.de/imgs/1/5/9/1/5/6/4/555f59520735a11c.jpeg"
+                  data-source-credit="스마트시티 도시 건축물 디지털 트윈 개념 이미지 / FM Who is Who"
+                  data-source-url="https://www.fm-whoiswho.de/unternehmen/siemens-ag-building-technologies-2955558.html"
+                  decoding="async" loading="lazy" referrerpolicy="no-referrer"
+                  src="https://www.fm-whoiswho.de/imgs/1/5/9/1/5/6/4/555f59520735a11c.jpeg"
+                  style="object-position:center 50%;" />
+                <div class="scanline"></div><span class="corner">SMART CITY · 2026</span>
+                <figcaption>그림 9. 실제 도시 사진과 스마트시티 디지털 트윈 데이터의 연계 개념</figcaption>
+                <div class="photo-citation">PHOTO · REAL WORLD</div>
+                <div aria-hidden="true" class="photo-annotation compact">
+                  <div class="anno-head">도시 데이터 연동 · 개념</div><span>교통 · 에너지 · 환경</span><span>센서 → 분석 → 예측</span>
+                </div>
+              </figure>
+            </div>
+            <div class="simple-flow">
+              <div class="flow-box"><strong>현실 도시·공장</strong><span>도로·건물·센서·설비</span></div>
+              <div class="flow-box"><strong>디지털 트윈 + AI</strong><span>현황 파악·가상 실험·예측</span></div>
+              <div class="flow-box"><strong>XR 홀로그램</strong><span>3D로 결과 관찰·의사결정</span></div>
+            </div>
+            <div class="takeaway">미래 방향 · 디지털 트윈은 <strong>현실을 복사하는 3D 그림에서, 현실을 분석하고 개선하는 시스템</strong>으로 발전한다.</div>
+          </div>
+          <footer class="slide-footer"><span>디지털 트윈이 실시간·고정밀일 필요는 없으며, 데이터 목적과 업데이트 주기에 따라 설계된다.</span><span
+              class="page-marker">TREND REPORT / 09</span></footer>
+        </section>
+        <section aria-label="10페이지 미래학교와 직업" class="slide has-real-photo" data-page="10">
+          <header class="slide-header">
+            <div>
+              <div class="eyebrow">10 · 우리의 미래와 진로</div>
+              <h1 class="slide-title">XR·디지털 트윈이 만드는 미래학교</h1>
+              <p class="slide-sub">미래를 먼저 체험하고, 데이터를 이해하며, 현실의 문제를 해결하는 사람</p>
+            </div>
+            <div class="slide-index">10 / 10</div>
+          </header>
+          <div class="slide-main">
+            <div class="row" style="height:248px">
+              <div class="col grow">
+                <div class="panel glass" style="flex:1">
+                  <div class="section-label">미래 학교의 수업 모습</div>
+                  <p class="body-copy">메타 스타일 스마트안경을 착용하고 <strong>태양계를 3D 홀로그램으로 관찰</strong>하거나, 사라진 역사 유적을 교실에서 재현할 수
+                    있다. 디지털 트윈 학교에서 에너지 사용량을 확인하고 가상 실험을 진행할 수도 있다.</p>
+                  <div class="chip-list" style="margin-top:15px"><span class="pill">과학 · 3D 태양계</span><span
+                      class="pill">역사 · 가상 유적</span><span class="pill">기술 · 가상 로봇</span><span class="pill">환경 ·
+                      스마트학교</span></div>
+                </div>
+              </div>
+              <figure class="scene large w-44"><img alt="얇은 스마트안경을 쓴 학생들이 교실에서 홀로그램 태양계를 함께 관찰하는 장면"
+                  data-fallback-src="https://colegios.cnec.br/fayal/imagens/95e0c2d03998af2235e606e002873f22"
+                  data-photo-src="https://images.stockcake.com/public/1/c/e/1ce38593-d51d-4d3d-b11f-53034ad2478f_large/future-education-technology-stockcake.jpg"
+                  data-source-credit="XR 태양계 수업과 미래교실의 실사형 개념 이미지 / StockCake"
+                  data-source-url="https://stockcake.com/i/future-education-technology_4324812_1913582" decoding="async"
+                  loading="lazy" referrerpolicy="no-referrer"
+                  src="https://images.stockcake.com/public/1/c/e/1ce38593-d51d-4d3d-b11f-53034ad2478f_large/future-education-technology-stockcake.jpg"
+                  style="object-position:center 48%;" />
+                <div class="scanline"></div><span class="corner">FUTURE CLASSROOM</span>
+                <figcaption>그림 10. 실제 과학 수업을 바탕으로 상상하는 XR 미래교실</figcaption>
+                <div class="photo-citation">PHOTO · REAL WORLD</div>
+                <div aria-hidden="true" class="photo-annotation compact">
+                  <div class="anno-head">미래 교실 · XR 가상 체험</div><span>학습 자료를 3D로 시각화</span>
+                </div>
+              </figure>
+            </div>
+            <div class="panel" style="padding:11px 14px">
+              <p class="table-caption">미래 XR·디지털 트윈 관련 직업</p>
+              <table class="data-table compact future-career">
+                <thead>
+                  <tr>
+                    <th>직업</th>
+                    <th>주요 역할</th>
+                    <th>직업</th>
+                    <th>주요 역할</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>XR 개발자</td>
+                    <td>AR·MR 교육 콘텐츠 제작</td>
+                    <td>3D 디자이너</td>
+                    <td>공간·물체 3차원 설계</td>
+                  </tr>
+                  <tr>
+                    <td>디지털 트윈 엔지니어</td>
+                    <td>현실 시스템 가상 모델링</td>
+                    <td>로봇 개발자</td>
+                    <td>로봇 동작·제어 개발</td>
+                  </tr>
+                  <tr>
+                    <td>드론 전문가</td>
+                    <td>드론 운용·데이터 수집</td>
+                    <td>AI 개발자</td>
+                    <td>데이터 분석·지능형 시스템 설계</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="takeaway" style="font-size:17px">마무리 메시지 · XR은 <strong>현실을 더 잘 이해하고, 미래를 미리 보고, 문제를 더 똑똑하게
+                해결</strong>하도록 돕는 기술이다.</div>
+            <div class="question"><span class="qlabel">학생 활동</span>2035년 우리 학교에 XR을 도입한다면 어떤 문제를 해결하고 싶을지 생각해 보자.</div>
+          </div>
+          <footer class="slide-footer"><span>기술의 목적은 체험 자체가 아니라 현실의 삶을 개선하는 데 있다.</span><span class="page-marker">OUR
+              FUTURE / 10</span></footer>
+        </section>
+        <!-- slides end -->
+      </main>
+    </div>
+    <nav aria-label="슬라이드 탐색" class="bottom-bar"><button class="nav-btn" id="prev-btn">← 이전</button>
+      <div aria-label="페이지 선택" class="pager" id="pager"></div><span class="status" id="status">1 / 10</span><button
+        class="nav-btn" id="next-btn">다음 →</button>
+    </nav>
+    <p class="print-instructions">키보드 ← →, 스페이스바로 페이지 이동 · 전체화면 발표 · 인쇄 버튼에서 PDF로 저장 가능 · 사진 속 3D 홀로그램은 미래기술 개념 연출</p>
+  </div>
+  <script>
+    (function () {
+      'use strict';
+      const viewport = document.getElementById('viewport');
+      const deck = document.getElementById('deck');
+      const slides = [...document.querySelectorAll('.slide')];
+      const pager = document.getElementById('pager');
+      const status = document.getElementById('status');
+      const prev = document.getElementById('prev-btn');
+      const next = document.getElementById('next-btn');
+      let current = 0;
+      let touchStart = null;
+      function fit() {
+        const fullscreen = !!document.fullscreenElement;
+        const availableWidth = Math.max(240, window.innerWidth - (fullscreen ? 18 : 28));
+        const availableHeight = Math.max(140, window.innerHeight - (fullscreen ? 20 : 145));
+        const scale = Math.min(availableWidth / 1280, availableHeight / 720);
+        viewport.style.width = (1280 * scale) + 'px'; viewport.style.height = (720 * scale) + 'px';
+        deck.style.transform = 'scale(' + scale + ')';
+      }
+      function show(page) {
+        current = Math.max(0, Math.min(slides.length - 1, page));
+        slides.forEach((s, i) => { s.classList.toggle('active', i === current); s.setAttribute('aria-hidden', String(i !== current)) });
+        [...pager.children].forEach((d, i) => { d.classList.toggle('active', i === current); d.setAttribute('aria-current', i === current ? 'page' : 'false') });
+        status.textContent = (current + 1) + ' / ' + slides.length;
+        prev.disabled = current === 0; next.disabled = current === slides.length - 1;
+        history.replaceState(null, '', '#slide-' + (current + 1));
+      }
+      slides.forEach((s, i) => { const b = document.createElement('button'); b.className = 'dot'; b.type = 'button'; b.setAttribute('aria-label', (i + 1) + '페이지로 이동'); b.title = (i + 1) + '페이지'; b.addEventListener('click', () => show(i)); pager.appendChild(b) });
+      prev.addEventListener('click', () => show(current - 1)); next.addEventListener('click', () => show(current + 1));
+      document.getElementById('btn-toc').addEventListener('click', () => show(0));
+      document.getElementById('btn-print').addEventListener('click', () => window.print());
+      document.getElementById('btn-fullscreen').addEventListener('click', () => {
+        if (document.fullscreenElement) { document.exitFullscreen?.() } else { viewport.requestFullscreen?.() }
+      });
+      document.addEventListener('fullscreenchange', () => { fit(); document.getElementById('btn-fullscreen').textContent = document.fullscreenElement ? '전체화면 종료' : '전체화면' });
+      document.addEventListener('keydown', (e) => {
+        const keysForward = ['ArrowRight', 'PageDown', ' '], keysBack = ['ArrowLeft', 'PageUp'];
+        if (keysForward.includes(e.key)) { e.preventDefault(); show(current + 1) }
+        else if (keysBack.includes(e.key)) { e.preventDefault(); show(current - 1) }
+        else if (e.key === 'Home') { e.preventDefault(); show(0) }
+        else if (e.key === 'End') { e.preventDefault(); show(slides.length - 1) }
+      });
+      viewport.addEventListener('touchstart', e => { touchStart = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY } }, { passive: true });
+      viewport.addEventListener('touchend', e => { if (!touchStart) return; const dx = e.changedTouches[0].clientX - touchStart.x; const dy = e.changedTouches[0].clientY - touchStart.y; if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4) show(current + (dx < 0 ? 1 : -1)); touchStart = null }, { passive: true });
+      window.addEventListener('resize', fit);
+      const hash = location.hash.match(/^#slide-(\d+)$/); show(hash ? Number(hash[1]) - 1 : 0); fit();
+    })();
+  </script>
+  <dialog class="credits-modal" id="photo-credits">
+    <h2>XR 실사형 이미지 출처 및 이용 안내</h2>
+    <p>이번 버전은 원본 3·4페이지를 제외한 8개 페이지로 구성됩니다. XR 적용 느낌의 실사 사진·실사형 개념 이미지를 외부 이미지 서버에서 불러오므로, 열람 시 인터넷 연결이 필요합니다. 미래형 홀로그램
+      연출은 실제 촬영 당시의 상용 기기 기능과 다를 수 있습니다.</p>
+    <ul>
+      <li>1페이지 · <a
+          href="https://www.linkedin.com/pulse/behind-scenes-building-real-time-ai-vision-actually-thilagarajan-oxyyc"
+          rel="noopener noreferrer" target="_blank">AI 비전·드론·로봇·XR 도시 개념 이미지 / LinkedIn 게재 자료</a></li>
+      <li>2페이지 · <a
+          href="https://www.escuelaenlinea-1.com/post/tendencias-en-escuelas-en-l%C3%ADnea-para-ni%C3%B1os-innovaci%C3%B3n-y-tecnolog%C3%ADa-avanzada"
+          rel="noopener noreferrer" target="_blank">공룡 AR 학습 개념 이미지 / Escuela en Línea</a></li>
+      <li>5페이지 · <a href="https://stockcake.com/i/futuristic-interface-interaction_169391_28294"
+          rel="noopener noreferrer" target="_blank">안경형 XR 인터페이스 미래 개념 이미지 / StockCake</a></li>
+      <li>6페이지 · <a href="https://www.nist.gov/image/immersive-tech" rel="noopener noreferrer" target="_blank">교육·산업·생활
+          속 AR·XR 활용 사진 모음 / NIST</a></li>
+      <li>7페이지 · <a href="https://anvil.so/post/ar-heads-up-displays-for-drone-pilots" rel="noopener noreferrer"
+          target="_blank">드론 조종사의 AR 정보 표시 개념 이미지 / Anvil Labs</a></li>
+      <li>8페이지 · <a href="https://xenospectrum.com/ai-architectural-design-multi-stage-rag-diffusion/"
+          rel="noopener noreferrer" target="_blank">현실 학교 건물과 디지털 건물 모델의 연결 개념 / XenoSpectrum</a></li>
+      <li>9페이지 · <a href="https://www.fm-whoiswho.de/unternehmen/siemens-ag-building-technologies-2955558.html"
+          rel="noopener noreferrer" target="_blank">스마트시티 도시 건축물 디지털 트윈 개념 이미지 / FM Who is Who</a></li>
+      <li>10페이지 · <a href="https://stockcake.com/i/future-education-technology_4324812_1913582"
+          rel="noopener noreferrer" target="_blank">XR 태양계 수업과 미래교실의 실사형 개념 이미지 / StockCake</a></li>
+    </ul>
+    <p>이미지는 각 제공처의 이용조건을 확인한 뒤 교육·발표 목적으로 활용하십시오. 본 파일은 사진을 내장하지 않고 온라인에서 호출합니다. 출처 정보는 사진 출처 버튼에서 확인할 수 있습니다.</p>
+    <button class="ctl" id="btn-close-credits">닫기</button>
+  </dialog>
+  <script id="photo-upgrade-script">
+    (function () {
+      'use strict';
+      const imgs = [...document.querySelectorAll('section.slide img[data-photo-src]')];
+      const b = document.getElementById('btn-photo-mode');
+      const dlg = document.getElementById('photo-credits');
+      const sourceBtn = document.getElementById('btn-photo-sources');
+      const creditClose = document.getElementById('btn-close-credits');
+      let alternate = false;
+      imgs.forEach(img => {
+        img.dataset.mode = 'main';
+        img.dataset.failed = '';
+        img.addEventListener('error', () => {
+          if (img.dataset.mode !== 'backup' && img.dataset.fallbackSrc) {
+            img.dataset.mode = 'backup';
+            img.src = img.dataset.fallbackSrc;
+          } else {
+            img.dataset.failed = 'yes';
+            img.style.visibility = 'hidden';
+            const scene = img.closest('figure');
+            if (scene && !scene.querySelector('.photo-load-error')) {
+              const msg = document.createElement('div');
+              msg.className = 'photo-load-error';
+              msg.textContent = '온라인 실사형 이미지를 불러올 수 없습니다. 인터넷 연결을 확인해 주세요.';
+              scene.appendChild(msg);
+            }
+          }
+        });
+        img.addEventListener('load', () => {
+          img.dataset.failed = '';
+          img.style.visibility = 'visible';
+          const e = img.closest('figure')?.querySelector('.photo-load-error');
+          if (e) e.remove();
+        });
+      });
+      function updateButton() {
+        b.textContent = alternate ? '기본 실사로' : '다른 실사로';
+        b.title = alternate ? '기본 XR 실사형 이미지로 돌아갑니다.' : '주제에 맞는 다른 실사형 이미지로 전환합니다.';
+      }
+      b.addEventListener('click', () => {
+        alternate = !alternate;
+        for (const img of imgs) {
+          img.dataset.mode = alternate ? 'backup' : 'main';
+          img.style.visibility = 'visible';
+          img.src = alternate ? img.dataset.fallbackSrc : img.dataset.photoSrc;
+        }
+        updateButton();
+      });
+      sourceBtn.addEventListener('click', () => { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); });
+      creditClose.addEventListener('click', () => dlg.close ? dlg.close() : dlg.removeAttribute('open'));
+      dlg.addEventListener('click', e => { if (e.target === dlg && dlg.close) dlg.close(); });
+      updateButton();
+    })();
+  </script>
+</body>
+
+</html>

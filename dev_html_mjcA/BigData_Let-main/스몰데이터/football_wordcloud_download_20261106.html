@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b203a">
+<title>해외축구 기사로 배우는 형태소 분석 · 워드클라우드</title>
+<style>
+:root{--navy:#0b203a;--navy2:#122e50;--ink:#18324c;--muted:#62758a;--blue:#1769d2;--cyan:#25c9ed;--line:#dbe5ef;--bg:#f1f5fa;--white:#fff;--gold:#ffbf55;--mint:#10a89b;--danger:#ce4d69;--shadow:0 16px 50px rgba(21,55,96,.09)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;line-height:1.62;word-break:keep-all}
+button,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,textarea:focus-visible{outline:3px solid #38bdf8;outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.42}
+.top-progress{height:4px;width:0;background:linear-gradient(90deg,#1489db,#21d3cd);position:fixed;left:0;top:0;z-index:90;transition:width .1s}
+.topbar{height:70px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100vw - 1210px)/2));box-shadow:0 1px 0 #e4eaf0;position:sticky;top:4px;z-index:80;gap:20px}
+.brand{font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:12px;white-space:nowrap}.brand-mark{height:34px;width:34px;border-radius:11px;background:var(--navy);display:grid;place-items:center;color:#fff;font-size:20px;box-shadow:inset 0 0 0 1px #50678a}.brand-name{font-size:15px;line-height:1.2}.brand-name small{display:block;color:#7a8ea2;letter-spacing:2px;font-size:9px;margin-top:4px}
+.mini-nav{display:flex;align-items:center;gap:8px;min-width:0}.mini-nav button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:7px 12px;color:#647a91;font-size:12px;font-weight:800;white-space:nowrap;transition:.2s}.mini-nav button.unlocked{background:#edf5ff;color:var(--blue);border-color:#b5d3fa}.mini-nav button.selected{background:var(--navy);color:#fff;border-color:var(--navy)}
+.hero{background:radial-gradient(ellipse at 90% 15%,#134e71 0,transparent 45%),linear-gradient(120deg,#0b203a,#112e52 65%,#123a52);color:#fff;overflow:hidden;position:relative}
+.hero:before{content:"";position:absolute;width:540px;height:540px;border-radius:50%;border:1px solid rgba(91,182,225,.12);top:-230px;right:-100px;box-shadow:0 0 0 58px rgba(91,182,225,.025),0 0 0 118px rgba(91,182,225,.022);pointer-events:none}
+.hero-inner{max-width:1210px;margin:auto;padding:80px 26px 86px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(290px,.8fr);gap:48px;align-items:center;position:relative}
+.eyebrow{font-weight:850;letter-spacing:2.6px;font-size:11px;text-transform:uppercase;color:#66d8f0}.hero h1{font-size:clamp(34px,4.5vw,60px);line-height:1.19;letter-spacing:-2.6px;margin:19px 0 22px;font-weight:900}.hero h1 em{color:#70dfff;font-style:normal}.hero p{color:#bdcfe1;font-size:16px;max-width:640px;margin:0}.hero-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:29px}.hero-tags span{border:1px solid #315674;background:rgba(11,41,75,.65);border-radius:50px;color:#d7edff;padding:8px 13px;font-size:11px;font-weight:750}
+.hero-card{background:linear-gradient(145deg,rgba(37,87,123,.8),rgba(8,28,52,.82));border:1px solid rgba(120,194,225,.3);border-radius:25px;padding:25px;box-shadow:0 20px 65px #061c326c;position:relative}.hero-card .card-overline{font-size:10px;color:#83c8e8;letter-spacing:2.5px;font-weight:900}.hero-card h3{font-size:19px;margin:12px 0 21px}.hero-steps{display:grid;gap:11px}.hero-step{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:12px;background:rgba(7,24,46,.43);border:1px solid #ffffff19;border-radius:12px;padding:10px 12px;font-size:13px}.hero-step b{background:#2497d52c;color:#91ddff;border-radius:8px;text-align:center;padding:4px 0;font-size:11px}.hero-step small{font-size:10px;color:#93b6cb}
+.container{max-width:1210px;margin:0 auto;padding:56px 24px 95px;display:grid;grid-template-columns:235px minmax(0,1fr);gap:35px;align-items:start}.side{position:sticky;top:100px}.side-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:21px;box-shadow:var(--shadow)}.side-label{font-size:10px;letter-spacing:2px;font-weight:900;color:#8498ab}.side h3{margin:6px 0 20px;font-size:16px}.side-step{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:13px;color:#9cabb9;font-weight:700}.side-step .dot{width:27px;height:27px;flex:none;background:#eef2f5;border-radius:9px;display:grid;place-items:center;font-size:11px}.side-step.done{color:#1683b7}.side-step.done .dot{background:#dff4fb;color:#1083af}.side-step.current{color:var(--ink)}.side-step.current .dot{background:var(--navy);color:#fff}.side-note{border-top:1px solid var(--line);padding-top:17px;margin:20px 0 0;color:#768b9f;font-size:11px;line-height:1.8}
+.story{min-width:0}.stage{scroll-margin-top:98px}.stage-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:24px}.number{width:54px;height:54px;flex:none;display:grid;place-items:center;border-radius:16px;background:var(--navy);color:#fff;font-size:19px;font-weight:900;box-shadow:0 8px 20px #164a6d22}.stage.locked .number{background:#bac6d3}.stage-name{font-size:10px;letter-spacing:1.8px;color:#197cb4;font-weight:900;margin:4px 0}.stage h2{font-size:clamp(22px,2.6vw,29px);margin:0;line-height:1.36;letter-spacing:-.8px}.stage-desc{font-size:13px;color:#71869b;margin:8px 0 0}
+.panel{background:white;border:1px solid var(--line);border-radius:21px;padding:27px;box-shadow:var(--shadow);overflow:hidden}.card-label{font-size:11px;font-weight:900;color:#1d71ae;letter-spacing:1.3px;text-transform:uppercase}.editor-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}.article-type{font-size:11px;color:#8597a8;background:#eef4f9;padding:7px 11px;border-radius:8px;font-weight:750}.article-title{font-weight:900;font-size:20px;letter-spacing:-.5px;margin:0 0 14px}.editor{display:block;width:100%;min-height:218px;resize:vertical;background:#f8fbfe;border:1px solid #cddce9;border-radius:13px;padding:20px 21px;line-height:2.05;color:#24394c;font-size:15px;transition:.2s}.editor:focus{background:#fff;border-color:#3b98db}.input-info{display:flex;gap:17px;flex-wrap:wrap;margin-top:14px;color:#788da0;font-size:12px}.input-info strong{color:#1d4668}.input-footer{border-top:1px solid var(--line);margin-top:22px;padding-top:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.btn{background:var(--navy);color:#fff;border:1px solid var(--navy);font-weight:850;border-radius:11px;padding:13px 18px;font-size:13px;transition:transform .2s,background .2s,box-shadow .2s;white-space:normal}.btn:hover:not(:disabled){background:#194777;transform:translateY(-1px);box-shadow:0 7px 16px #133d6b21}.btn.secondary{color:#315570;background:#f3f8fc;border-color:#d8e6f1}.btn.secondary:hover:not(:disabled){background:#e4f1fc}.btn.blue{background:#1769d2;border-color:#1769d2}.btn.gold{background:#f4ad3f;border-color:#f4ad3f;color:#182b3c}.btn.sm{padding:9px 13px;font-size:11px;border-radius:8px}.btn-wrap{display:flex;gap:9px;flex-wrap:wrap}.hint{font-size:11px;color:#8295a7}.connector{height:100px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;color:#8aa6b8}.connector .down{font-size:29px;line-height:1;color:#1b83b7;animation:float 1.9s ease-in-out infinite}.connector small{font-size:9px;letter-spacing:2px;font-weight:900}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+.gate{padding:50px 25px;text-align:center;border:2px dashed #ccd9e7;border-radius:17px;background:#f9fbfd;color:#8395a8}.gate .lock{font-size:33px;display:block;margin-bottom:10px;opacity:.8}.gate strong{display:block;font-size:16px;color:#647a8e}.gate p{font-size:12px;margin:8px 0 0}
+.result[hidden],.gate[hidden]{display:none!important}.stage.locked .panel{box-shadow:none;background:#fbfcfe}.stage.locked .stage-name{color:#9eb0c0}
+.section-row{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:15px}.info-pill{font-size:11px;color:#227cb9;font-weight:850;background:#e7f5fc;border-radius:99px;padding:7px 12px}.summary-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:19px 0 22px}.summary-tile{border-radius:12px;background:#f3f7fb;padding:15px 17px}.summary-tile .metric{font-size:26px;font-weight:900;color:#143e66;letter-spacing:-1px}.summary-tile small{display:block;color:#7890a6;font-size:11px;margin-top:3px}
+.legend{display:flex;gap:9px;flex-wrap:wrap;margin:8px 0 21px}.legend span{display:flex;align-items:center;gap:6px;color:#738aa0;font-weight:750;font-size:11px}.legend i{width:11px;height:11px;display:inline-block;border-radius:3px}
+.tokenbox{background:#f7fafc;border:1px solid #e4edf5;border-radius:13px;padding:19px;display:flex;gap:9px;flex-wrap:wrap;min-height:132px;align-content:flex-start}.token{display:inline-flex;gap:7px;align-items:center;border-radius:8px;border:1px solid transparent;padding:7px 10px;font-size:12px;font-weight:850;animation:pop .3s ease both;max-width:100%}.token small{font-size:9px;opacity:.75;font-weight:800}.noun{background:#e0f0ff;border-color:#b3d8fa;color:#0d68a1}.particle{background:#ffebf2;border-color:#f8cbd9;color:#a34569}.verb{background:#fff0d7;border-color:#f7d7a0;color:#98620a}.adjective{background:#f1eaff;border-color:#ddccfb;color:#7044a8}.ending{background:#e9eef3;border-color:#d5dfe8;color:#6f8191}.other{background:#eff3f7;border-color:#d8e3ec;color:#53687d}@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.explain{border-left:3px solid #46a5d6;background:#eff8fe;border-radius:0 10px 10px 0;color:#526d81;padding:13px 17px;font-size:12px;margin-top:18px}.step-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:24px;padding-top:21px;border-top:1px solid var(--line)}
+.filter-flow{display:grid;grid-template-columns:1fr 42px 1fr;align-items:center;gap:11px}.filter-box{border-radius:13px;background:#f7fafc;border:1px solid #dae5ee;padding:17px;min-height:144px}.filter-box h4{margin:0 0 12px;font-size:13px}.flow-arrow{color:#2493c8;font-size:27px;font-weight:900;text-align:center}.example-chips{display:flex;gap:7px;flex-wrap:wrap}.mini-chip{font-size:11px;font-weight:850;padding:6px 9px;border-radius:6px;background:#deefff;color:#146599}.mini-chip.cut{background:#fff1f3;color:#b34c68;text-decoration:line-through;text-decoration-thickness:2px;animation:fadeCut 1.5s ease both}@keyframes fadeCut{from{opacity:1;transform:translateY(0)}to{opacity:.57;transform:translateY(4px)}}
+.frequency-title{margin:28px 0 13px;font-size:16px;font-weight:900}.freq-wrap{border:1px solid #dbe7f0;border-radius:13px;overflow:hidden}.freq-head{display:grid;grid-template-columns:35px 114px 1fr 55px;gap:10px;background:#eef5fb;border-bottom:1px solid #dbe7f0;padding:11px 14px;color:#668299;font-size:10px;font-weight:900}.freq-list{max-height:488px;overflow:auto}.freq-row{display:grid;grid-template-columns:35px 114px 1fr 55px;gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid #eef3f7;font-size:12px;transition:.3s}.freq-row:last-child{border:0}.freq-rank{color:#9aaabb;font-size:10px;font-weight:850}.freq-word{font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.freq-track{height:9px;background:#e9f1f8;border-radius:99px;overflow:hidden}.freq-fill{height:100%;width:0;background:linear-gradient(90deg,#4eabf8,#0c74cb);border-radius:99px;transition:width 1s cubic-bezier(.14,.8,.3,1)}.freq-count{text-align:right;font-size:13px;color:#12416a;font-weight:950}.freq-empty{padding:28px;text-align:center;font-size:12px;color:#8ca0b2}
+.analysis-note{display:flex;gap:13px;background:#0e2f50;color:#fff;border-radius:13px;padding:19px;margin-top:22px;align-items:flex-start}.analysis-note .icon{width:33px;height:33px;border-radius:9px;display:grid;place-items:center;background:#287bac;color:#cdefff;flex:none}.analysis-note strong{font-size:14px}.analysis-note p{font-size:12px;color:#b6d0e5;margin:5px 0 0;line-height:1.8}
+.cloud-filters{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 18px}.filter-btn{border:1px solid #d4e1ec;background:#f2f6fa;color:#5a7890;border-radius:9px;padding:8px 12px;font-size:11px;font-weight:850}.filter-btn.active{background:#123f68;color:white;border-color:#123f68}.cloud-card{background:#0a3149;border-radius:17px;padding:14px;box-shadow:inset 0 0 0 1px #2c6676,0 12px 27px #0d3e5e16}.pitch{position:relative;height:380px;width:100%;border-radius:10px;overflow:hidden;isolation:isolate;background:repeating-linear-gradient(90deg,#0c4e56 0%,#0c4e56 14.285%,#105961 14.285%,#105961 28.57%)}.pitch:before{content:"";position:absolute;inset:21px;border:2px solid #ffffff24;border-radius:2px;pointer-events:none}.pitch:after{content:"";position:absolute;top:21px;bottom:21px;left:50%;border-left:2px solid #ffffff21;pointer-events:none}.mid-circle{position:absolute;width:136px;height:136px;border:2px solid #ffffff23;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}.mid-circle:before{content:"";position:absolute;top:50%;left:50%;width:7px;height:7px;transform:translate(-50%,-50%);background:#ffffff27;border-radius:50%}.penalty{position:absolute;top:30%;bottom:30%;width:10%;border:2px solid #ffffff1d;pointer-events:none}.penalty.left{left:21px;border-left:0}.penalty.right{right:21px;border-right:0}
+.cloud-layer{position:absolute;inset:0;z-index:2}.cloud-word{position:absolute;display:inline-block;white-space:nowrap;line-height:1.05;font-weight:900;letter-spacing:-1px;text-shadow:0 2px 10px #05293588;transform:translate(-50%,-50%);animation:wordIn .65s cubic-bezier(.19,1,.22,1) both;cursor:default;user-select:none}.cloud-word:focus-visible{outline:2px solid #fff;outline-offset:4px}.cloud-word:hover{filter:brightness(1.25);text-shadow:0 0 12px #ffffff90;z-index:5}.cloud-word[data-category="전술"]{color:#81d7ff}.cloud-word[data-category="공격"]{color:#ffda89}.cloud-word[data-category="수비"]{color:#9eeec8}.cloud-word[data-category="지표"]{color:#ffabd7}.cloud-word[data-category="팀"]{color:#fff}.cloud-word[data-category="일반"]{color:#bfd5e8}@keyframes wordIn{from{opacity:0;filter:blur(7px);scale:.72}to{opacity:1;filter:blur(0);scale:1}}
+.cloud-foot{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:14px;color:#6f8799;font-size:11px}.color-key{display:flex;gap:12px;flex-wrap:wrap}.color-key span{font-size:11px;color:#738b9f}.color-key i{width:9px;height:9px;display:inline-block;margin-right:5px;border-radius:2px}.cloud-empty{position:absolute;inset:0;display:grid;place-items:center;padding:20px;color:#c9e3f0;font-size:13px;text-align:center}.insight{margin-top:20px;background:#eff7fc;border:1px solid #d3e9f7;padding:19px;border-radius:13px}.insight h4{margin:0 0 9px;font-size:14px;color:#174b72}.insight p{margin:0;font-size:12px;color:#657e93;line-height:1.8}
+.footer{border-top:1px solid #dce6ef;padding:35px 22px 45px;text-align:center;font-size:11px;color:#8a9dae}.footer b{color:#4e718d}.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#0d2943;color:white;border-radius:12px;padding:12px 20px;box-shadow:0 12px 36px #072b4860;z-index:100;font-size:12px;transition:.25s;max-width:90vw;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1050px){.container{grid-template-columns:190px minmax(0,1fr);gap:20px}.hero-inner{gap:24px}.panel{padding:22px}.freq-head,.freq-row{grid-template-columns:28px 96px minmax(0,1fr) 37px}}
+@media(max-width:820px){.hero-inner{grid-template-columns:1fr;padding:60px 24px}.hero-card{max-width:520px}.container{display:block;padding:35px 17px 65px}.side{display:none}.mini-nav{overflow:auto;scrollbar-width:none}.mini-nav button{padding:7px 10px}.topbar{padding:0 16px}.brand-name{display:none}.stage{scroll-margin-top:90px}.pitch{height:340px}}
+@media(max-width:560px){.topbar{height:60px;gap:8px}.brand-mark{width:31px;height:31px;font-size:17px}.mini-nav{gap:5px}.mini-nav button{font-size:10px;padding:7px 8px}.hero-inner{padding:48px 18px 60px;gap:30px}.hero h1{font-size:37px;letter-spacing:-1.8px}.hero p{font-size:13px}.hero-card{padding:20px}.hero-tags span{font-size:10px}.container{padding:30px 12px 65px}.stage-head{gap:11px}.number{width:44px;height:44px;font-size:16px;border-radius:12px}.stage-name{font-size:9px;margin-top:1px}.stage h2{font-size:22px}.panel{padding:16px;border-radius:17px}.editor{padding:14px;font-size:13px;min-height:236px}.article-title{font-size:17px}.summary-tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.summary-tile{padding:11px 8px}.summary-tile .metric{font-size:22px}.summary-tile small{font-size:10px}.filter-flow{grid-template-columns:1fr;gap:8px}.flow-arrow{transform:rotate(90deg);font-size:24px;line-height:1}.filter-box{min-height:auto}.freq-head,.freq-row{grid-template-columns:22px 82px minmax(0,1fr) 32px;gap:6px;padding-left:9px;padding-right:9px}.freq-word{font-size:11px}.pitch{height:330px}.cloud-card{padding:8px}.mid-circle{width:94px;height:94px}.btn{width:100%;padding:12px}.btn-wrap{width:100%}.btn-wrap .btn{width:auto;flex:1}.step-actions .btn{flex:1}.cloud-foot{gap:6px}.input-footer{align-items:stretch}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="top-progress" id="scrollProgress" aria-hidden="true"></div>
+<nav class="topbar" aria-label="상단 메뉴">
+  <div class="brand"><span class="brand-mark" aria-hidden="true">⚽</span><span class="brand-name">FOOTBALL TEXT LAB<small>ARTICLE → DATA → INSIGHT</small></span></div>
+  <div class="mini-nav" id="topNav" aria-label="학습 단계">
+    <button type="button" data-go="1" class="selected">01 원문</button>
+    <button type="button" data-go="2" disabled>02 형태소</button>
+    <button type="button" data-go="3" disabled>03 전처리</button>
+    <button type="button" data-go="4" disabled>04 워드클라우드</button>
+  </div>
+</nav>
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Football Article · Korean NLP · Data Visualization</div>
+      <h1>해외축구 기사가<br><em>전술 워드클라우드</em>가 되는 과정</h1>
+      <p>축구 기사에서 ‘압박’, ‘역습’, ‘점유율’은 얼마나 자주 등장할까? 기사 입력부터 형태소 분석, 불용어 제거, 빈도 계산, 시각화까지 네 단계를 직접 클릭하며 체험하는 데이터 분석 실습입니다.</p>
+      <div class="hero-tags"><span>단일 HTML · 완전 오프라인</span><span>한국어 교육용 토큰 분석</span><span>클릭형 4단계 진행</span></div>
+    </div>
+    <div class="hero-card" aria-label="데이터 분석 파이프라인">
+      <div class="card-overline">MATCH ANALYSIS PIPELINE</div><h3>뉴스 텍스트에서 경기 키워드까지</h3>
+      <div class="hero-steps">
+        <div class="hero-step"><b>01</b><span>해외축구 기사 입력</span><small>INPUT</small></div>
+        <div class="hero-step"><b>02</b><span>형태소 · 품사 태깅</span><small>NLP</small></div>
+        <div class="hero-step"><b>03</b><span>핵심 용어 · 빈도 분석</span><small>COUNT</small></div>
+        <div class="hero-step"><b>04</b><span>축구장 워드클라우드</span><small>VISUAL</small></div>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="container">
+  <aside class="side">
+    <div class="side-card"><div class="side-label">YOUR PROGRESS</div><h3>분석 워크플로</h3>
+      <div class="side-step current" data-side="1"><span class="dot">01</span>기사 원문</div>
+      <div class="side-step" data-side="2"><span class="dot">02</span>형태소 분석</div>
+      <div class="side-step" data-side="3"><span class="dot">03</span>데이터 전처리</div>
+      <div class="side-step" data-side="4"><span class="dot">04</span>워드클라우드</div>
+      <p class="side-note">기본 기사는 실습용 가상 해외축구 기사입니다. 분석 결과는 <b>기사에 등장한 단어의 빈도</b>이며 실제 경기 통계가 아닙니다.</p>
+    </div>
+  </aside>
+  <div class="story">
+    <section class="stage" id="step1" data-stage="1">
+      <div class="stage-head"><span class="number">01</span><div><div class="stage-name">SOURCE ARTICLE · INPUT</div><h2>해외축구 기사 원문 입력</h2><p class="stage-desc">선수·팀·전술·경기 지표가 섞인 기사를 입력합니다.</p></div></div>
+      <div class="panel">
+        <div class="editor-head"><span class="card-label">FOOTBALL NEWS DESK</span><span class="article-type">예시 · 교육용 가상 기사</span></div>
+        <h3 class="article-title">전방 압박 vs 빠른 역습, 경기 흐름을 바꾼 전술은?</h3>
+        <label for="sourceText" class="hint">아래 기사를 자유롭게 수정해 보세요. 실제 경기 결과를 설명하는 기사가 아닌 형태소 분석 실습 문장입니다.</label>
+        <textarea id="sourceText" class="editor" spellcheck="false" aria-label="분석할 해외축구 기사"></textarea>
+        <div class="input-info"><span>글자 수 <strong id="charCount">0</strong></span><span>어절 수 <strong id="eojeolCount">0</strong></span><span>문장 수 <strong id="sentenceCount">0</strong></span></div>
+        <div class="input-footer"><div class="btn-wrap"><button type="button" id="restore" class="btn secondary sm">예시 기사 복원</button><button type="button" id="repeatWords" class="btn secondary sm">‘압박·역습’ 반복 추가</button></div><button type="button" id="runMorph" class="btn blue">형태소 분석 시작 →</button></div>
+      </div>
+    </section>
+    <div class="connector" aria-hidden="true"><span class="down">↓</span><small>TOKENIZATION + POS TAGGING</small></div>
+    <section class="stage locked" id="step2" data-stage="2">
+      <div class="stage-head"><span class="number">02</span><div><div class="stage-name">NATURAL LANGUAGE PROCESSING</div><h2>형태소 분석 · 품사 태깅</h2><p class="stage-desc">‘압박과’는 명사 ‘압박’ + 조사 ‘과’로 구분됩니다.</p></div></div>
+      <div class="panel"><div class="gate" id="gate2"><span class="lock" aria-hidden="true">▤</span><strong>원문 분석이 준비되지 않았습니다</strong><p>1단계에서 ‘형태소 분석 시작’을 클릭하세요.</p></div>
+        <div class="result" id="result2" hidden>
+          <div class="section-row"><span class="card-label">TOKEN STREAM / POS TAGGING</span><span class="info-pill" id="tokenTotal">0개 토큰</span></div>
+          <div class="summary-tiles"><div class="summary-tile"><div class="metric" id="metricTokens">0</div><small>전체 토큰</small></div><div class="summary-tile"><div class="metric" id="metricNouns">0</div><small>명사 토큰</small></div><div class="summary-tile"><div class="metric" id="metricOthers">0</div><small>조사 · 용언 · 어미 등</small></div></div>
+          <div class="legend"><span><i style="background:#82bdef"></i>명사</span><span><i style="background:#f5b9ce"></i>조사</span><span><i style="background:#f4d39a"></i>동사</span><span><i style="background:#d0b7f3"></i>형용사</span><span><i style="background:#cbd6e0"></i>어미·기타</span></div>
+          <div id="tokenBox" class="tokenbox" aria-label="품사 태깅된 토큰 목록"></div>
+          <div class="explain"><b>분석 원리</b> · 축구 용어 사전과 조사·어미 규칙으로 문장을 나누는 <strong>교육용 간이 분석</strong>입니다. 실제 형태소 분석기(Kiwi, MeCab 등)와 세부 결과는 다를 수 있습니다.</div>
+          <div class="step-actions"><span class="hint">색상이 다른 토큰을 비교해 보세요.</span><button type="button" id="runClean" class="btn blue">불용어 제거 및 빈도 분석 →</button></div>
+        </div>
+      </div>
+    </section>
+    <div class="connector" aria-hidden="true"><span class="down">↓</span><small>STOPWORD REMOVAL + FREQUENCY</small></div>
+    <section class="stage locked" id="step3" data-stage="3">
+      <div class="stage-head"><span class="number">03</span><div><div class="stage-name">CLEANING &amp; KEYWORD COUNT</div><h2>불용어 제거와 핵심 키워드 빈도</h2><p class="stage-desc">조사와 어미 등을 제외하고 기사 속 주요 명사를 집계합니다.</p></div></div>
+      <div class="panel"><div class="gate" id="gate3"><span class="lock" aria-hidden="true">⌁</span><strong>형태소 분석 결과가 필요합니다</strong><p>2단계 결과 아래의 ‘불용어 제거’ 버튼을 클릭하세요.</p></div>
+        <div class="result" id="result3" hidden>
+          <div class="section-row"><span class="card-label">PREPROCESSING / FILTER</span><span class="info-pill" id="filteredInfo">0개 토큰 제외</span></div>
+          <div class="filter-flow"><div class="filter-box"><h4>원본 토큰 · 제거 대상</h4><div class="example-chips" id="beforeChips"></div></div><div class="flow-arrow" aria-hidden="true">➜</div><div class="filter-box"><h4>명사 키워드 · 보존</h4><div class="example-chips" id="afterChips"></div></div></div>
+          <p class="hint" style="margin-top:12px">조사·동사·어미 및 분석에 기여하지 않는 일반 불용어는 집계에서 제외됩니다.</p>
+          <div class="summary-tiles"><div class="summary-tile"><div class="metric" id="cleanTotal">0</div><small>보존된 명사 토큰</small></div><div class="summary-tile"><div class="metric" id="uniqueTotal">0</div><small>서로 다른 키워드</small></div><div class="summary-tile"><div class="metric" id="removedTotal">0</div><small>제외된 토큰</small></div></div>
+          <h3 class="frequency-title">해외축구 기사 키워드 빈도 TOP 15</h3>
+          <div class="freq-wrap"><div class="freq-head"><span>순위</span><span>키워드</span><span>상대 빈도</span><span style="text-align:right">횟수</span></div><div id="freqList" class="freq-list"></div></div>
+          <div class="analysis-note"><div class="icon" aria-hidden="true">⌕</div><div><strong id="keyInsightTitle">기사 핵심 단어 추출</strong><p id="keyInsightText">주요 키워드를 살펴보세요.</p></div></div>
+          <div class="step-actions"><button type="button" id="csvDownload" class="btn secondary sm">빈도 분석 CSV 저장</button><button type="button" id="runCloud" class="btn blue">축구 워드클라우드 만들기 →</button></div>
+        </div>
+      </div>
+    </section>
+    <div class="connector" aria-hidden="true"><span class="down">↓</span><small>DATA VISUALIZATION</small></div>
+    <section class="stage locked" id="step4" data-stage="4">
+      <div class="stage-head"><span class="number">04</span><div><div class="stage-name">VISUALIZE / WORD CLOUD</div><h2>축구장 워드클라우드 완성</h2><p class="stage-desc">많이 등장한 단어일수록 크게 표시됩니다. 축구 용어 유형별 필터도 체험해 보세요.</p></div></div>
+      <div class="panel"><div class="gate" id="gate4"><span class="lock" aria-hidden="true">◉</span><strong>시각화할 키워드를 기다리는 중</strong><p>3단계의 빈도표를 확인한 뒤 ‘워드클라우드 만들기’를 클릭하세요.</p></div>
+        <div class="result" id="result4" hidden>
+          <div class="section-row"><span class="card-label">FOOTBALL KEYWORD MAP</span><span class="info-pill" id="cloudCount">상위 0개 키워드</span></div>
+          <div class="cloud-filters" id="categoryFilters" aria-label="키워드 유형 필터">
+            <button class="filter-btn active" type="button" data-cat="전체" aria-pressed="true">전체</button>
+            <button class="filter-btn" type="button" data-cat="전술" aria-pressed="false">전술</button>
+            <button class="filter-btn" type="button" data-cat="공격" aria-pressed="false">공격</button>
+            <button class="filter-btn" type="button" data-cat="수비" aria-pressed="false">수비</button>
+            <button class="filter-btn" type="button" data-cat="지표" aria-pressed="false">경기 지표</button>
+            <button class="filter-btn" type="button" data-cat="팀" aria-pressed="false">팀</button>
+          </div>
+          <div class="cloud-card"><div class="pitch" id="pitch" role="img" aria-label="빈도 기반 축구장 모양 워드클라우드"><div class="mid-circle"></div><div class="penalty left"></div><div class="penalty right"></div><div class="cloud-layer" id="cloudLayer"></div></div></div>
+          <div class="cloud-foot"><div class="color-key"><span><i style="background:#81d7ff"></i>전술</span><span><i style="background:#ffda89"></i>공격</span><span><i style="background:#9eeec8"></i>수비</span><span><i style="background:#ffabd7"></i>지표</span><span><i style="background:#fff;border:1px solid #bacad7"></i>팀</span></div><span>단어 위에 마우스를 올리면 빈도를 확인할 수 있습니다.</span></div>
+          <div class="insight"><h4>이 워드클라우드가 의미하는 것</h4><p id="cloudInsight">단어 크기는 기사 내부의 언급 빈도를 뜻합니다. 실제 승률·슈팅 개수·경기력의 우열을 뜻하지는 않습니다.</p></div>
+          <div class="step-actions"><button type="button" class="btn secondary sm" id="downloadPng">워드클라우드 PNG 저장</button><button type="button" class="btn gold" id="restart">처음부터 다시 분석 ↻</button></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+<footer class="footer"><b>FOOTBALL TEXT LAB</b> · 기사 텍스트 → 형태소/품사 → 전처리/빈도 → 시각화<br>본 문서는 교육용 실습입니다. 예시 기사는 가상이며 형태소 분석은 별도 사전 설치가 필요 없는 간이 규칙 기반으로 수행합니다.</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+// 교육 목적의 가상 기사. 실제 특정 경기의 결과나 기록을 주장하지 않습니다.
+const ARTICLE = '잉글랜드 프리미어리그의 아스널과 리버풀 맞대결에서는 전방 압박과 역습이 경기 흐름을 결정했다. 아스널은 높은 점유율과 빠른 패스로 중원을 장악했지만, 리버풀은 측면 돌파와 역습으로 슈팅 기회를 만들었다. 후반에는 수비 전환과 세트피스가 전술의 핵심으로 떠올랐고, 골키퍼 선방과 유효슈팅이 경기 분위기를 바꿨다. 전술 분석에서는 압박, 점유율, 역습, 수비 조직력, 슈팅과 득점 기회가 반복해서 강조됐다.';
+const $ = id => document.getElementById(id);
+const lexicon = {
+  '잉글랜드':'일반','프리미어리그':'일반','챔피언스리그':'일반','아스널':'팀','리버풀':'팀','맨체스터':'팀','시티':'팀','레알':'팀','마드리드':'팀','바르셀로나':'팀','토트넘':'팀','뮌헨':'팀','파리':'팀','생제르맹':'팀','손흥민':'팀','홀란':'팀','음바페':'팀',
+  '맞대결':'일반','경기':'일반','분위기':'일반','흐름':'일반','후반':'일반','전반':'일반','승부':'일반','핵심':'일반','분석':'일반','반복':'일반','변수':'일반','전문가':'일반','차이':'일반','영향':'일반',
+  '전방':'전술','압박':'전술','전술':'전술','중원':'전술','장악':'전술','포메이션':'전술','빌드업':'전술','세트피스':'전술','라인':'전술','전개':'전술','전략':'전술','조직':'전술','공간':'전술',
+  '역습':'공격','패스':'공격','측면':'공격','돌파':'공격','득점':'공격','기회':'공격','공격':'공격','크로스':'공격','침투':'공격','드리블':'공격','결정력':'공격','골':'공격','공격수':'공격',
+  '수비':'수비','전환':'수비','조직력':'수비','골키퍼':'수비','선방':'수비','수비수':'수비','태클':'수비','차단':'수비','클리어링':'수비',
+  '점유율':'지표','슈팅':'지표','유효슈팅':'지표','기대득점':'지표','패스성공률':'지표','파울':'지표','경고':'지표','코너킥':'지표','기록':'지표','스탯':'지표','승률':'지표'
+};
+const stopNouns = new Set(['것','수','등','때문','상황','이번','정도','사실','경우','관련','동안','이후']);
+const particleList = ['에게서는','으로부터','에서부터','에게서','에서는','으로는','에게는','에게도','까지는','에서는','에서도','에게','까지','부터','에게','에서','으로','에는','과는','와는','에게','만큼','이라도','처럼','보다','마저','조차','라고','이나','로는','으로','을','를','은','는','이','가','의','에','도','만','와','과','로'].sort((a,b)=>b.length-a.length);
+const descriptive = new Set(['높은','빠른','강한','정확한','새로운','뛰어난','중요한','치열한','다양한','빠르게','높게','매우','다시','긴','깊은']);
+const verbPattern = /(했다|됐다|졌다|렸다|꿨다|렸다|렀다|였다|었다|았다|했지만|했으며|했으나|했는데|했을|했을까|됐고|했고|랐고|였고|웠고|꿨고|았고|었고|았지만|었지만|했다고|했다며|했다면|하자|해서|한다|한다면|되는|된|하던|했다는|보였다|보이며|보인|했다)$/;
+const state = {level:1,tokens:[],frequency:[],excluded:[],category:'전체',cloudPositions:[]};
+let toastHandle=0,resizeHandle=0;
+function showToast(message){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastHandle);toastHandle=setTimeout(()=>el.classList.remove('show'),2600)}
+function scrollToStage(step){const el=$('step'+step);el.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})}
+function updateSourceStats(){const s=$('sourceText').value.trim();$('charCount').textContent=s.length.toLocaleString('ko-KR');$('eojeolCount').textContent=s?(s.match(/\S+/g)||[]).length:0;$('sentenceCount').textContent=s?s.split(/[.!?。]+/).filter(v=>v.trim()).length:0}
+function setLevel(level){state.level=level;for(let n=1;n<=4;n++){const stage=$('step'+n), unlocked=n<=level, gate=$('gate'+n),result=$('result'+n);stage.classList.toggle('locked',!unlocked);if(gate)gate.hidden=unlocked;if(result)result.hidden=!unlocked;const nav=document.querySelector('[data-go="'+n+'"]');nav.disabled=!unlocked;nav.classList.toggle('unlocked',unlocked);nav.classList.toggle('selected',n===level);const side=document.querySelector('[data-side="'+n+'"]');if(side){side.classList.toggle('done',n<level);side.classList.toggle('current',n===level)}}}
+function invalidate(){if(state.level>1){setLevel(1);state.tokens=[];state.frequency=[];state.excluded=[];state.cloudPositions=[];$('cloudLayer').replaceChildren();showToast('기사가 변경되어 이전 분석 결과를 초기화했습니다.')}updateSourceStats()}
+function nounOrOther(root){if(/^[가-힣]{2,}$/.test(root)||/^[A-Za-z][A-Za-z0-9-]*$/.test(root))return '명사';return '기타'}
+function analyzeWord(raw){
+  if(/^\d/.test(raw))return [{text:raw,pos:'기타'}];
+  if(descriptive.has(raw))return [{text:raw,pos:raw==='매우'||raw==='다시'||raw==='빠르게'?'기타':'형용사'}];
+  if(Object.prototype.hasOwnProperty.call(lexicon,raw))return [{text:raw,pos:'명사'}];
+  // 가장 긴 조사 우선 분리. 사전에 없는 명사는 간단한 어절 기반 휴리스틱 사용.
+  for(const part of particleList){if(raw.endsWith(part)&&raw.length>part.length+1){const root=raw.slice(0,-part.length);if(root.length>=2 && (!verbPattern.test(raw)||lexicon[root]))return [{text:root,pos:nounOrOther(root)},{text:part,pos:'조사'}]}}
+  if(verbPattern.test(raw)||/(했|됐|왔|갔|였|었|았)(지만|고|는데|으며|다고|으며|다)$/.test(raw)){
+    if(raw.length>2&&raw.endsWith('다'))return [{text:raw.slice(0,-1),pos:'동사'},{text:'다',pos:'어미'}];
+    if(raw.length>3&&raw.endsWith('지만'))return [{text:raw.slice(0,-2),pos:'동사'},{text:'지만',pos:'어미'}];
+    if(raw.length>2&&raw.endsWith('고'))return [{text:raw.slice(0,-1),pos:'동사'},{text:'고',pos:'어미'}];
+    return [{text:raw,pos:'동사'}];
+  }
+  if(/(스럽|답|좋|높|낮|많|크)(은|고|다|게)$/.test(raw))return [{text:raw,pos:'형용사'}];
+  return [{text:raw,pos:nounOrOther(raw)}];
+}
+function tokenize(text){const rawWords=text.normalize('NFC').match(/[가-힣]+|[A-Za-z][A-Za-z0-9-]*|\d+(?:\.\d+)?/g)||[];return rawWords.flatMap(analyzeWord).map((t,index)=>({...t,index,category:t.pos==='명사'?(lexicon[t.text]||'일반'):null}))}
+function makeToken(t){const el=document.createElement('span');const names={명사:'noun',조사:'particle',동사:'verb',형용사:'adjective',어미:'ending',기타:'other'};el.className='token '+(names[t.pos]||'other');const word=document.createElement('span');word.textContent=t.text;const pos=document.createElement('small');pos.textContent=t.pos;el.append(word,pos);return el}
+function renderMorph(){const tokens=state.tokens;$('tokenTotal').textContent=tokens.length+'개 토큰';const nouns=tokens.filter(t=>t.pos==='명사').length;$('metricTokens').textContent=tokens.length;$('metricNouns').textContent=nouns;$('metricOthers').textContent=tokens.length-nouns;const box=$('tokenBox');box.replaceChildren();const frag=document.createDocumentFragment();tokens.forEach((t,i)=>{const e=makeToken(t);e.style.animationDelay=(i%25)*22+'ms';frag.appendChild(e)});box.appendChild(frag)}
+function computeFrequency(){const freq=new Map(),excluded=[];let kept=0;for(const t of state.tokens){if(t.pos!=='명사'||stopNouns.has(t.text)||t.text.length<2){excluded.push(t);continue}kept++;const current=freq.get(t.text);if(current){current.count++}else{freq.set(t.text,{word:t.text,count:1,category:t.category||'일반',first:t.index})}}state.frequency=[...freq.values()].sort((a,b)=>b.count-a.count||a.first-b.first||a.word.localeCompare(b.word,'ko'));state.excluded=excluded;return kept}
+function appendMini(parent,text,cut){const el=document.createElement('span');el.className='mini-chip'+(cut?' cut':'');el.textContent=text;parent.appendChild(el)}
+function renderPreprocessing(kept){$('filteredInfo').textContent=state.excluded.length+'개 토큰 제외';$('cleanTotal').textContent=kept;$('uniqueTotal').textContent=state.frequency.length;$('removedTotal').textContent=state.excluded.length;const before=$('beforeChips'),after=$('afterChips');before.replaceChildren();after.replaceChildren();state.excluded.slice(0,8).forEach(t=>appendMini(before,t.text+(t.pos==='조사'?' · 조사':''),true));if(!state.excluded.length)appendMini(before,'제외할 토큰 없음',false);state.frequency.slice(0,8).forEach(v=>appendMini(after,v.word,false));if(!state.frequency.length)appendMini(after,'명사 키워드 없음',false);
+ const list=$('freqList');list.replaceChildren();const top=state.frequency.slice(0,15);if(!top.length){const empty=document.createElement('div');empty.className='freq-empty';empty.textContent='추출된 명사가 없습니다. 기사에 축구 키워드를 넣어 다시 분석해 주세요.';list.appendChild(empty)}else{const max=top[0].count;top.forEach((v,i)=>{const row=document.createElement('div');row.className='freq-row';const rank=document.createElement('span');rank.className='freq-rank';rank.textContent=String(i+1).padStart(2,'0');const name=document.createElement('span');name.className='freq-word';name.textContent=v.word;const track=document.createElement('div');track.className='freq-track';const fill=document.createElement('div');fill.className='freq-fill';track.appendChild(fill);const cnt=document.createElement('span');cnt.className='freq-count';cnt.textContent=v.count+'회';row.append(rank,name,track,cnt);list.appendChild(row);requestAnimationFrame(()=>setTimeout(()=>fill.style.width=(v.count/max*100).toFixed(1)+'%',120+i*70))})}
+ const top3=top.slice(0,3).map(v=>'‘'+v.word+'’ '+v.count+'회').join(' · ');$('keyInsightTitle').textContent='빈도가 높은 핵심 키워드';$('keyInsightText').textContent=top3?top3+'가 상대적으로 자주 등장합니다. 이는 기사에서 자주 다룬 주제를 보여주지만 실제 경기 우수성이나 승패 원인을 증명하지는 않습니다.':'집계할 키워드가 없습니다.'}
+function filterItems(){return state.frequency.filter(v=>state.category==='전체'||v.category===state.category).slice(0,24)}
+function measureWord(ctx,word,font){ctx.font=`900 ${font}px "Malgun Gothic",sans-serif`;return ctx.measureText(word).width}
+function layoutWords(words,width,height){
+ const ctx=document.createElement('canvas').getContext('2d'),positions=[],max=Math.max(1,...words.map(v=>v.count));const margin=width<470?13:20;
+ words.forEach((v,i)=>{
+   let font=Math.round((width<500?14:17)+Math.pow(v.count/max,.74)*(width<500?20:33));font=Math.min(font,66);let found=null;
+   for(let shrink=0;shrink<5&&!found;shrink++){
+     const f=Math.max(13,Math.round(font*Math.pow(.86,shrink)));const tw=measureWord(ctx,v.word,f)+9,th=f*1.16+6;
+     if(tw>width-margin*2)continue;
+     for(let j=0;j<750;j++){
+       const phi=j*2.399963229728653+i*.59,rad=Math.sqrt(j)*(width<500?6.8:9.4);
+       const x=width/2+Math.cos(phi)*rad*1.30,y=height/2+Math.sin(phi)*rad*.72;
+       if(x-tw/2<margin||x+tw/2>width-margin||y-th/2<margin||y+th/2>height-margin)continue;
+       const box={x:x-tw/2-5,y:y-th/2-4,w:tw+10,h:th+8};
+       if(positions.some(p=>!(box.x+box.w<p.box.x||box.x>p.box.x+p.box.w||box.y+box.h<p.box.y||box.y>p.box.y+p.box.h)))continue;
+       found={...v,x,y,font:f,box};break;
+     }
+   }
+   if(found)positions.push(found);
+ });return positions;
+}
+function renderCloud(){const items=filterItems();const pitch=$('pitch'),layer=$('cloudLayer');layer.replaceChildren();const w=pitch.clientWidth,h=pitch.clientHeight;state.cloudPositions=layoutWords(items,w,h);$('cloudCount').textContent=state.cloudPositions.length+'개 키워드 표시';
+ if(!state.cloudPositions.length){const empty=document.createElement('div');empty.className='cloud-empty';empty.textContent='해당 분야의 키워드가 없습니다. ‘전체’ 필터를 선택해 보세요.';layer.appendChild(empty)}
+ state.cloudPositions.forEach((v,i)=>{const span=document.createElement('span');span.className='cloud-word';span.dataset.category=v.category;span.textContent=v.word;span.title=v.word+' · '+v.count+'회 · '+v.category;span.setAttribute('aria-label',span.title);span.style.left=v.x+'px';span.style.top=v.y+'px';span.style.fontSize=v.font+'px';span.style.animationDelay=(i*55)+'ms';layer.appendChild(span)});
+ const leaders=items.slice(0,4).map(v=>`${v.word}(${v.count}회)`).join(', ');$('cloudInsight').textContent=leaders?`기사 안에서 많이 언급된 단어: ${leaders}. 색상은 축구 용어 분야를, 글자 크기는 기사 내 단어 빈도를 나타냅니다. 이 결과만으로 경기 승률·실제 점유율·팀 전력은 판단할 수 없습니다.`:'선택한 필터에 해당하는 단어가 없습니다. 다른 필터를 선택하세요.';
+}
+function saveCsv(){const rows=[['순위','키워드','빈도','유형'],...state.frequency.map((v,i)=>[i+1,v.word,v.count,v.category])];const data='\ufeff'+rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\r\n');saveBlob(new Blob([data],{type:'text/csv;charset=utf-8'}),'football_article_keyword_frequency.csv')}
+function saveBlob(blob,name){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function drawPitch(ctx,w,h){ctx.fillStyle='#0c4e56';ctx.fillRect(0,0,w,h);for(let i=0;i<7;i++){ctx.fillStyle=i%2?'#105961':'#0c4e56';ctx.fillRect(i*w/7,0,w/7+1,h)}ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=2;ctx.strokeRect(20,20,w-40,h-40);ctx.beginPath();ctx.moveTo(w/2,20);ctx.lineTo(w/2,h-20);ctx.stroke();ctx.beginPath();ctx.arc(w/2,h/2,65,0,2*Math.PI);ctx.stroke();ctx.strokeRect(20,h*.3,w*.1,h*.4);ctx.strokeRect(w-20-w*.1,h*.3,w*.1,h*.4)}
+function savePng(){const orig=$('pitch');const w=orig.clientWidth,h=orig.clientHeight,scale=2;const c=document.createElement('canvas');c.width=w*scale;c.height=h*scale;const ctx=c.getContext('2d');ctx.scale(scale,scale);drawPitch(ctx,w,h);const colors={전술:'#81d7ff',공격:'#ffda89',수비:'#9eeec8',지표:'#ffabd7',팀:'#fff',일반:'#bfd5e8'};ctx.textAlign='center';ctx.textBaseline='middle';for(const v of state.cloudPositions){ctx.font=`900 ${v.font}px "Malgun Gothic",sans-serif`;ctx.shadowColor='#052935';ctx.shadowBlur=5;ctx.fillStyle=colors[v.category]||colors['일반'];ctx.fillText(v.word,v.x,v.y);ctx.shadowBlur=0}c.toBlob(blob=>{if(blob)saveBlob(blob,'football_article_wordcloud.png');else showToast('이미지를 저장할 수 없습니다.')},'image/png')}
+$('sourceText').value=ARTICLE;updateSourceStats();setLevel(1);
+$('sourceText').addEventListener('input',invalidate);
+$('restore').addEventListener('click',()=>{$('sourceText').value=ARTICLE;invalidate();showToast('가상 기사 원문으로 복원했습니다.')});
+$('repeatWords').addEventListener('click',()=>{$('sourceText').value=$('sourceText').value.trim()+' 압박과 역습, 압박과 역습, 점유율과 슈팅을 다시 분석했다.';invalidate();showToast('반복 표현을 추가했습니다. 빈도 차이를 확인해 보세요.')});
+$('runMorph').addEventListener('click',()=>{const s=$('sourceText').value.trim();if(!s){showToast('기사 내용을 먼저 입력해 주세요.');$('sourceText').focus();return}state.tokens=tokenize(s);if(!state.tokens.length){showToast('분석할 한글 또는 영문 단어가 필요합니다.');return}renderMorph();setLevel(2);scrollToStage(2)});
+$('runClean').addEventListener('click',()=>{const kept=computeFrequency();renderPreprocessing(kept);setLevel(3);scrollToStage(3)});
+$('runCloud').addEventListener('click',()=>{state.category='전체';document.querySelectorAll('.filter-btn').forEach(b=>{b.classList.toggle('active',b.dataset.cat==='전체');b.setAttribute('aria-pressed',String(b.dataset.cat==='전체'))});setLevel(4);scrollToStage(4);requestAnimationFrame(()=>renderCloud())});
+$('csvDownload').addEventListener('click',saveCsv);$('downloadPng').addEventListener('click',savePng);
+$('restart').addEventListener('click',()=>{setLevel(1);state.tokens=[];state.frequency=[];state.excluded=[];state.cloudPositions=[];state.category='전체';$('cloudLayer').replaceChildren();scrollToStage(1);showToast('처음 단계로 돌아왔습니다. 기사는 유지됩니다.')});
+$('topNav').addEventListener('click',e=>{const btn=e.target.closest('button[data-go]');if(btn&&!btn.disabled)scrollToStage(Number(btn.dataset.go))});
+$('categoryFilters').addEventListener('click',e=>{const btn=e.target.closest('button[data-cat]');if(!btn)return;state.category=btn.dataset.cat;document.querySelectorAll('.filter-btn').forEach(b=>{const active=b===btn;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});renderCloud()});
+window.addEventListener('resize',()=>{clearTimeout(resizeHandle);resizeHandle=setTimeout(()=>{if(state.level>=4)renderCloud()},130)});
+let progressTick=false;window.addEventListener('scroll',()=>{if(progressTick)return;progressTick=true;requestAnimationFrame(()=>{const max=document.documentElement.scrollHeight-window.innerHeight;$('scrollProgress').style.width=(max>0?(window.scrollY/max*100):0)+'%';progressTick=false})},{passive:true});
+</script>
+</body>
+</html>

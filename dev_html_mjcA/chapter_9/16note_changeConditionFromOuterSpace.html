@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Basic</title>
+    <script>
+
+        //변수를 선언합니다.
+
+        /* 시작시각에서 1초가 지날때까지 반복하고, 반복횟수를 출력
+        
+           new Date()는 현재 날짜와 시각을 나타내는 객체를 만듭니다.
+           .getTime()은 그 시각을 1970년 1월 1일 00:00:00 UTC부터 경과한 밀리초로 반환합니다.
+           start에는 시작 시각을 저장하고, count에는 반복 횟수를 기록합니다.
+           1,000밀리초 = 1초입니다. */
+        let start = new Date().getTime();
+        let count = 0;
+        //alert("start:"+start); //start:1,794,224,517,523
+        /* 시작 시각을 저장한 뒤 알림을 띄우므로, 알림을 보고 있는 시간도 경과 시간에 포함됩니다. 
+        확인 버튼을 누르기까지 1초 이상 걸리면, while의 첫 조건 검사부터 거짓이 되어 반복 횟수가 0이 됩니다.*/
+
+        //반복을 수행합니다.
+        while (start + 1000 > new Date().getTime()) {
+            count++;
+        }
+
+        //출력합니다.
+        alert(count + '만큼 반복했습니다.'); //9848494...반복 횟수는 컴퓨터 성능과 실행 상황에 따라 달라지므로, 주석의 9848494는 고정된 결과가 아닙니다.
+
+    </script>
+</head>
+
+<body>
+    <h1>시작시각에서 1초가 지날때까지 반복하고, 반복횟수를 출력</h1>
+    <hr>
+
+    <h2><b>"언제 while반복문을 사용하고, 언제 for문을 사용해야 하나요?"</b></h2>
+    <h3>반복문 조건을 외부 요인으로 변경<br>
+        정해진 횟수만큼 반복해야 할 때는 for반복문을 많이 사용합니다. </h3>
+
+    <hr>
+    <h3>3. 조건문과 반복문</h3>
+    <h5> 1_조건문</h5>
+    <h5> 2_반복문</h5>
+</body>
+
+</html>

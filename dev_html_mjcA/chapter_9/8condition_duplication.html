@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Basic</title>
+    <script>
+        //Date객체를 선언합니다:현재 시간 측정
+        let date = new Date();
+        let hours = date.getHours();
+
+        //조건문
+        if(hours < 5){ 
+            alert("잠을 자렴....");
+        }else{
+            if(hours < 7){ 
+                alert("준비");
+            }else{
+                if(hours<9){
+                    alert('출근');
+                }else{
+                    if(hours<12){
+                        alert('업무...오전 빈둥빈둥?!');
+                    }else{
+                        if(hours<14){
+                            alert('식사');
+                        }else{
+                            //여러가지 업무를 수행합니다. 
+                            alert('여러가지 업무를 수행합니다. ');
+                        }
+                    }
+                }
+            }
+        }
+
+        /*        //요소를 추출합니다. 
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1; //월은 0부터 시작하므로 1을 더합니다.
+        let day = date.getDay();
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        let seconds = date.getSeconds();
+
+        //조건문
+        if (day == 0) {
+            alert("오늘은 일요일입니다.");
+        } else if (day == 1) {
+            alert("오늘은 월요일입니다.");
+        } else if (day == 2) {
+            alert("오늘은 화요일입니다.");
+        } else if (day == 3) {
+            alert("오늘은 수요일입니다.");
+        } else if (day == 4) {
+            alert("오늘은 목요일입니다.");
+        } else if (day == 5) {
+            alert("오늘은 금요일입니다.");
+        } else if (day == 6) {
+            alert("오늘은 토요일입니다.");
+        }
+*/            
+    </script>
+</head>
+<body>
+    중첩 조건문으로 하루 일정 표현<hr>
+    
+    <h3>3. 조건문과 반복문</h3>
+    <h5>    1_조건문</h5>
+    <h5>    2_반복문</h5>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>SNS × SLEEP LAB · Start</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: #15172e;
+            color: white;
+            font: 16px/1.7 system-ui, 'Malgun Gothic', sans-serif
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: auto;
+            padding: 55px 28px
+        }
+
+        .mini {
+            font-size: 12px;
+            color: #84e5d3;
+            font-weight: 900;
+            letter-spacing: .18em
+        }
+
+        h1 {
+            font-size: clamp(37px, 6vw, 72px);
+            line-height: 1.18;
+            letter-spacing: -.065em;
+            margin: 25px 0
+        }
+
+        p {
+            color: #b8bfd9;
+            max-width: 800px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 35px
+        }
+
+        .card {
+            background: #232645;
+            border: 1px solid #363a64;
+            padding: 30px;
+            border-radius: 20px
+        }
+
+        .card .num {
+            color: #aca0ff;
+            font-weight: 900
+        }
+
+        .card h2 {
+            font-size: 28px;
+            letter-spacing: -.06em
+        }
+
+        .button {
+            display: inline-block;
+            margin: 15px 0;
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            background: #8069dd;
+            color: white;
+            font-size: 13px;
+            font-weight: 850
+        }
+
+        .button.alt {
+            background: #3faeab
+        }
+
+        .foot {
+            padding: 32px 0;
+            color: #a0a9c8;
+            font-size: 12px
+        }
+
+        .note {
+            background: #29304c;
+            padding: 20px;
+            border-left: 4px solid #6dd4c8;
+            margin-top: 28px;
+            border-radius: 5px
+        }
+
+        @media(max-width:700px) {
+            .grid {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="mini">2026 · SCHOOL DATA WORKSHOP</div>
+        <h1>스크롤하는 시간,<br>잠드는 시간의 관계.</h1>
+        <p>가상의 고등학교 1~3학년 데이터를 이용하여 <b>수집 → CSV 저장 → 전처리 → 분석 → 인포그래픽·미래 시나리오</b>를 실습합니다. 코딩하는 방법과 코딩하지 않는 방법을 모두 제공합니다.
+        </p>
+        <div class="grid">
+            <div class="card">
+                <div class="num">COURSE A / PYTHON</div>
+                <h2>구글 코랩에서<br>직접 코딩하기</h2>
+                <p>별도 업로드 없이 노트북 하나를 `런타임 → 모두 실행`하면 912행 웹 크롤링에서 HTML 보고서 생성까지 자동 완성됩니다.</p><a class="button"
+                    href="01_Colab/SNS_SLEEP_Colab_실습.ipynb" download>코랩 노트북 파일 받기</a>
+                <p><a href="https://colab.research.google.com/" target="_blank" rel="noopener">Google Colab 접속 ↗</a></p>
+            </div>
+            <div class="card">
+                <div class="num">COURSE B / NO CODE</div>
+                <h2>클릭만으로<br>웹앱 실습하기</h2>
+                <p>학교 데이터 수집 시연·CSV 저장·학년별 차트·30명 비교·선형회귀 예측을 클릭과 슬라이더로 실습할 수 있습니다.</p><a class="button alt"
+                    href="./02_WebApp/sns_sleep_nocode_webapp.html">웹앱 바로 실행 ↗</a>
+                <p><a href="./04_InfoG/sns_sleep_infographic.html">결과 인포그래픽 보기 ↗</a></p>
+            </div>
+            <div class="card">
+                <div class="num">COURSE B / NO CODE</div>
+                <h2>클릭만으로<br>포켓몬고 실습하기</h2>
+                <p>포켓몬고 데이터 수집 시연·CSV 등을 실습할 수 있습니다.</p><a class="button alt"
+                    href="./07_Pocket/pokemon_data_lab_webapp.html">웹앱 바로 실행 ↗</a>
+                <p><a href="./07_Pocket/pokemon_report.html">결과 인포그래픽 보기 ↗</a></p>
+            </div>
+        </div>
+        <div class="note"><strong>합성 데이터 안내</strong>
+            <p>표본 30행과 전체 900행의 데이터는 강의용 가상 설문입니다. 실제 학교 결과나 개인의 건강진단이 아니며, 크롤링할 HTML 페이지도 패키지에 포함됩니다.</p>
+        </div>
+        <div class="foot">상세 사용법: README_특강_실행방법.md · 모든 파일은 ZIP 폴더 안에서 상대 경로로 연결됩니다.</div>
+    </div>
+</body>
+
+</html>
