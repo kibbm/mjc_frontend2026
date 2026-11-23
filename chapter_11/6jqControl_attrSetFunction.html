@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Basic</title>
+    <script src= "https://code.jquery.com/jquery-4.0.0.js" ></script>
+    <script>
+        //..Src속성에 함수를 지정하면 콜백 함수에 index객체가 순서대로 지정되고, 
+        // 반환 값을 속성에 적용합니다. 콜백함수가 호출될수록 가로 길이가 깁니다.
+
+
+        //이벤트를 연결합니다.
+        $(document).ready(function () { 
+            //속성을 지정합니다.
+            $('img').attr({
+                alt: 'jQuery라이브러리를 사용한 속성 지정', 
+                src: function(index){
+                    //변수를 선언합니다.
+                    let size = (index + 1) * 100;
+
+                    //반환합니다.
+                    return 'http://via.placeholder.com/'+ size +'x100'
+                }
+            });
+
+        });
+    </script>
+</head>
+
+<body> 
+    <h2>02 문서 객체 선택</h2>
+    <h4>3.1속성 조작</h4>
+    <ol>
+        <li>속성 값을 입력해 속성 지정하기</li>
+        <li>객체를 입력해 속성 지정하기</li>
+        <li><b>함수를 이용해 속성 지정하기</b></li>
+    </ol>
+    <hr>
+    <img>
+    <img>
+    <img>
+</body>
+
+</html>

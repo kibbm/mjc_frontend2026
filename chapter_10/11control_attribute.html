@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Basic</title>
+    <script>
+        //이벤트를 연결합니다.
+        window.onload = function () {         
+            // 변수를 선언합니다.
+            let image = document.getElementById('image');
+
+            // 속성을 변경합니다.
+           image.src = 'http://via.placeholder.com/300x200';
+           image.width = 300;
+           image.height = 200;
+        };
+    </script>
+</head>
+
+<body>
+    <img id = "image">
+    
+
+    <hr>
+    <h2>03문서 객체 조작</h2>
+    <ol>
+        <li>글자 조작</li>
+        <li>스타일 조작</li>
+        <li><b>속성 조작</b></li>
+    </ol>
+
+    <p>.3-1 img태그 속성 조작하기
+        .3-2 body태그 속성 조작하기
+    </p>
+
+</body>
+
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="검색, 장르 선택, 찜하기, 추천 추가로 배우는 jQuery 개인 관심사 프로젝트">
+    <title>PLAYLIST | 나만의 게임 추천 보드</title>
+    <style>
+        /* 원본의 header / navigation / section / aside / footer 구조를 활용한다. */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #eef1f5; color: #20283a;
+            font-family: "맑은 고딕", "Malgun Gothic", sans-serif;
+            font-size: 16px; line-height: 1.65;
+        }
+        button, input, select, textarea { font: inherit; }
+        button { cursor: pointer; }
+        a { color: inherit; text-decoration: none; }
+        li { list-style: none; }
+        button, input, select, textarea { border-radius: 8px; }
+        button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible {
+            outline: 3px solid #6d55cf; outline-offset: 3px;
+        }
+        [hidden] { display: none !important; }
+        #page-wrapper {
+            width: min(1100px, calc(100% - 40px)); margin: 32px auto;
+            background: white; border: 1px solid #dfe3eb; border-radius: 20px;
+            box-shadow: 0 12px 40px #20283a0a;
+        }
+        #main-header {
+            padding: 38px 36px; color: white; background: #20273e;
+            border-radius: 19px 19px 0 0;
+        }
+        .eyebrow { color: #bdb0ff; font-size: 14px; font-weight: 700; letter-spacing: .12em; }
+        .master-title { font-size: clamp(26px, 4vw, 38px); margin: 8px 0; letter-spacing: -.04em; }
+        .master-description { color: #d5daea; max-width: 650px; }
+        .header-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+        .header-tags span { background: #343c57; padding: 4px 10px; border-radius: 5px; font-size: 14px; }
+        #main-navigation {
+            padding: 14px 36px; border-bottom: 1px solid #e3e6ed;
+            display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+        }
+        .outer-menu { display: flex; }
+        .outer-menu-item { position: relative; }
+        .menu-title, .nav-button { border: 0; padding: 9px 13px; background: #f0edf9; color: #49368c; font-weight: 700; }
+        .nav-button { background: transparent; color: #4d5669; }
+        .nav-button[aria-pressed="true"] { background: #f0edf9; color: #49368c; }
+        .inner-menu {
+            display: none; position: absolute; top: 100%; left: 0; width: 170px;
+            padding: 8px; background: white; border: 1px solid #dfe3eb;
+            border-radius: 10px; box-shadow: 0 8px 24px #20283a20; z-index: 10;
+        }
+        .genre-shortcut { width: 100%; border: 0; background: white; text-align: left; padding: 7px 12px; }
+        .genre-shortcut:hover, .genre-shortcut:focus-visible { background: #f0edf9; color: #49368c; }
+        .search-bar { margin-left: auto; }
+        .input-search { width: 230px; padding: 9px 12px; border: 1px solid #c8ceda; background: #f7f8fa; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+        #content { display: flex; align-items: flex-start; gap: 28px; padding: 30px 36px; }
+        #main-section { flex: 1; min-width: 0; }
+        .section-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+        .section-heading h2 { font-size: 23px; letter-spacing: -.03em; }
+        .result-summary { font-size: 14px; color: #657086; margin-top: 3px; }
+        .genre-control { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+        select { border: 1px solid #c8ceda; padding: 8px; background: white; color: #20283a; }
+        .game-card {
+            display: flex; align-items: flex-start; gap: 18px; padding: 22px 0;
+            border-bottom: 1px solid #e3e6ed;
+        }
+        .game-card:first-of-type { border-top: 1px solid #e3e6ed; }
+        .game-cover {
+            width: 84px; min-height: 102px; flex-shrink: 0; display: grid; place-items: center;
+            font-size: 38px; border-radius: 12px; background: #edf0fa;
+        }
+        .game-card[data-genre="힐링"] .game-cover { background: #e4f3eb; }
+        .game-card[data-genre="퍼즐"] .game-cover { background: #f8eedc; }
+        .game-card[data-genre="모험"] .game-cover { background: #e3edfa; }
+        .game-card[data-genre="협동"] .game-cover { background: #f5e7f1; }
+        .article-body { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+        .genre-tag { font-size: 14px; color: #606b81; }
+        .article-title { font-size: 20px; line-height: 1.4; margin: 3px 0 7px; }
+        .game-description { color: #566175; }
+        .favorite-button { border: 1px solid #c8ceda; background: white; padding: 5px 11px; margin-top: 12px; font-size: 14px; color: #4d5669; }
+        .is-favorite .favorite-button { background: #f0edf9; border-color: #a996e3; color: #49368c; }
+        #empty-message { padding: 35px 18px; background: #f7f8fa; text-align: center; border-radius: 10px; color: #566175; }
+        #main-aside { width: 275px; flex-shrink: 0; }
+        .aside-list { background: #f6f7fb; padding: 20px; border-radius: 12px; margin-bottom: 18px; }
+        .aside-list h2 { font-size: 18px; margin-bottom: 14px; }
+        .board-stats { display: flex; gap: 28px; }
+        .board-stats dt { color: #626d82; font-size: 14px; }
+        .board-stats dd { font-size: 30px; font-weight: 700; color: #49368c; }
+        .field { margin-top: 12px; }
+        .field label { display: block; margin-bottom: 5px; font-size: 14px; font-weight: 700; }
+        .field input, .field select, .field textarea { width: 100%; border: 1px solid #c8ceda; padding: 9px 10px; background: white; }
+        .field textarea { resize: vertical; min-height: 85px; }
+        .primary-button { width: 100%; border: 0; margin-top: 14px; padding: 11px; background: #5940a5; color: white; font-weight: 700; }
+        .primary-button:hover { background: #473186; }
+        .small-note, #form-message { font-size: 14px; color: #657086; margin-top: 12px; }
+        #form-message { color: #25664c; overflow-wrap: anywhere; }
+        #form-message:empty { display: none; }
+        #form-message.is-error { color: #a32f3b; }
+        .learning-note { border-left: 3px solid #a996e3; padding-left: 13px; color: #657086; font-size: 14px; }
+        .learning-note strong { display: block; color: #49368c; margin-bottom: 5px; }
+        #main-footer { border-top: 1px solid #e3e6ed; padding: 18px 36px; font-size: 14px; color: #657086; }
+        .notice { background: #fff0eb; color: #853a2b; padding: 14px 36px; }
+        @media (max-width: 850px) {
+            #content { flex-direction: column; }
+            #main-section, #main-aside { width: 100%; }
+        }
+        @media (max-width: 600px) {
+            #page-wrapper { width: calc(100% - 20px); margin: 10px auto; }
+            #main-header, #content { padding: 24px 20px; }
+            #main-navigation, #main-footer { padding: 14px 20px; }
+            #main-navigation { gap: 8px; }
+            .search-bar, .input-search { width: 100%; }
+            .game-card { gap: 12px; }
+            .game-cover { width: 58px; min-height: 80px; font-size: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="page-wrapper">
+        <header id="main-header">
+            <p class="eyebrow">PLAYLIST / MY INTEREST BOARD</p>
+            <h1 class="master-title">오늘은 어떤 게임을 해볼까?</h1>
+            <p class="master-description">좋아하는 게임을 찾고, 찜하고, 나만의 추천을 더해 보세요.</p>
+            <div class="header-tags"><span>개인 관심사 프로젝트</span><span>HTML · CSS · jQuery</span></div>
+        </header>
+        <nav id="main-navigation" aria-label="게임 보드 메뉴">
+            <ul class="outer-menu">
+                <li class="outer-menu-item">
+                    <button type="button" class="menu-title" aria-expanded="false" aria-controls="genre-menu">장르 둘러보기 ▾</button>
+                    <ul class="inner-menu" id="genre-menu">
+                        <li><button type="button" class="genre-shortcut" data-genre="all">전체 장르</button></li>
+                        <li><button type="button" class="genre-shortcut" data-genre="힐링">힐링</button></li>
+                        <li><button type="button" class="genre-shortcut" data-genre="퍼즐">퍼즐</button></li>
+                        <li><button type="button" class="genre-shortcut" data-genre="모험">모험</button></li>
+                        <li><button type="button" class="genre-shortcut" data-genre="협동">협동</button></li>
+                    </ul>
+                </li>
+            </ul>
+            <button type="button" id="favorites-filter" class="nav-button" aria-pressed="false">찜한 게임만</button>
+            <button type="button" id="reset-filters" class="nav-button">필터 초기화</button>
+            <div class="search-bar">
+                <label class="sr-only" for="search-input">게임 제목 또는 추천 이유 검색</label>
+                <input type="search" id="search-input" class="input-search" placeholder="제목이나 추천 이유 검색" autocomplete="off">
+            </div>
+        </nav>
+        <noscript><p class="notice">이 예제를 실행하려면 브라우저의 JavaScript를 켜 주세요.</p></noscript>
+        <p id="library-error" class="notice" role="alert" hidden>jQuery를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.</p>
+        <div id="content">
+            <section id="main-section" aria-labelledby="board-heading">
+                <div class="section-heading">
+                    <div>
+                        <h2 id="board-heading">나의 게임 컬렉션</h2>
+                        <p class="result-summary" role="status">현재 <strong id="result-count">4</strong>개의 게임을 보고 있어요.</p>
+                    </div>
+                    <div class="genre-control">
+                        <label for="genre-filter">장르</label>
+                        <select id="genre-filter">
+                            <option value="all">전체 장르</option>
+                            <option value="힐링">힐링</option>
+                            <option value="퍼즐">퍼즐</option>
+                            <option value="모험">모험</option>
+                            <option value="협동">협동</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- 초기 카드는 원본의 article / article-header / article-body 구조를 확장했다. -->
+                <article class="game-card" data-genre="힐링">
+                    <div class="game-cover" aria-hidden="true">🌱</div>
+                    <div class="article-body">
+                        <header class="article-header"><p class="genre-tag">힐링</p><h3 class="article-title">초록섬의 하루</h3></header>
+                        <p class="game-description">작은 정원을 가꾸고 섬을 꾸미는 게임. 느긋하게 쉬고 싶은 날 추천해요.</p>
+                        <button type="button" class="favorite-button" aria-pressed="false" aria-label="초록섬의 하루 찜하기">♡ 찜하기</button>
+                    </div>
+                </article>
+                <article class="game-card" data-genre="퍼즐">
+                    <div class="game-cover" aria-hidden="true">🧩</div>
+                    <div class="article-body">
+                        <header class="article-header"><p class="genre-tag">퍼즐</p><h3 class="article-title">별빛 조각 연구소</h3></header>
+                        <p class="game-description">흩어진 별 조각을 연결해 문제를 풀어요. 짧은 시간 집중하기에 좋아요.</p>
+                        <button type="button" class="favorite-button" aria-pressed="false" aria-label="별빛 조각 연구소 찜하기">♡ 찜하기</button>
+                    </div>
+                </article>
+                <article class="game-card" data-genre="모험">
+                    <div class="game-cover" aria-hidden="true">🧭</div>
+                    <div class="article-body">
+                        <header class="article-header"><p class="genre-tag">모험</p><h3 class="article-title">구름길 탐험대</h3></header>
+                        <p class="game-description">구름 위의 지도를 따라 숨은 길을 찾아요. 새로운 세계를 탐험하고 싶을 때!</p>
+                        <button type="button" class="favorite-button" aria-pressed="false" aria-label="구름길 탐험대 찜하기">♡ 찜하기</button>
+                    </div>
+                </article>
+                <article class="game-card" data-genre="협동">
+                    <div class="game-cover" aria-hidden="true">🚀</div>
+                    <div class="article-body">
+                        <header class="article-header"><p class="genre-tag">협동</p><h3 class="article-title">우주 정비 크루</h3></header>
+                        <p class="game-description">친구와 역할을 나눠 우주선을 수리해요. 함께 소통하며 즐길 수 있어요.</p>
+                        <button type="button" class="favorite-button" aria-pressed="false" aria-label="우주 정비 크루 찜하기">♡ 찜하기</button>
+                    </div>
+                </article>
+                <p id="empty-message" hidden>조건에 맞는 게임이 없어요. 검색어나 장르를 바꿔 보세요.</p>
+            </section>
+            <aside id="main-aside" aria-label="보드 현황과 추천 추가">
+                <div class="aside-list">
+                    <h2>내 보드 현황</h2>
+                    <dl class="board-stats">
+                        <div><dt>전체 게임</dt><dd id="total-count">4</dd></div>
+                        <div><dt>찜한 게임</dt><dd id="favorite-count">0</dd></div>
+                    </dl>
+                </div>
+                <div class="aside-list">
+                    <h2>나의 추천 더하기</h2>
+                    <form id="recommend-form">
+                        <div class="field"><label for="game-title">게임 이름</label><input id="game-title" name="title" maxlength="40" required placeholder="예: 달빛 산책"></div>
+                        <div class="field">
+                            <label for="game-genre">장르</label>
+                            <select id="game-genre" name="genre" required>
+                                <option value="">장르 선택</option><option value="힐링">힐링</option>
+                                <option value="퍼즐">퍼즐</option><option value="모험">모험</option><option value="협동">협동</option>
+                            </select>
+                        </div>
+                        <div class="field"><label for="game-description">추천 이유</label><textarea id="game-description" name="description" maxlength="120" required placeholder="어떤 점이 재미있나요?"></textarea></div>
+                        <button type="submit" class="primary-button">추천 게임 추가</button>
+                        <p id="form-message" role="status"></p>
+                    </form>
+                    <p class="small-note">추가한 게임과 찜은 새로고침하면 초기화됩니다.</p>
+                </div>
+                <p class="learning-note"><strong>나의 관심사로 바꿔 보세요.</strong>게임 대신 음악, 운동, 책 등 좋아하는 주제를 정하고 필요한 이벤트를 설계해 보세요.</p>
+            </aside>
+        </div>
+        <footer id="main-footer">jQuery 개인 과제 샘플 · 모든 초기 게임은 수업을 위해 만든 가상 예시입니다.</footer>
+    </div>
+
+    <!-- 원본과 같은 jQuery 버전. CDN 사용에는 인터넷 연결이 필요하다. -->
+    <script src="https://code.jquery.com/jquery-3.6.4.js" onerror="document.getElementById('library-error').hidden = false;"></script>
+    <script>
+        // ready는 DOM 준비 시점이며, 과제에서 추가하는 사용자 이벤트 종류에 포함하지 않는다.
+        if (window.jQuery) {
+            $(document).ready(function () {
+                var favoritesOnly = false;
+
+                // [기존] hover: 원본의 드롭다운 메뉴 기능을 유지한다.
+                $('.outer-menu-item').hover(function () {
+                    $(this).find('.inner-menu').show();
+                    $(this).find('.menu-title').attr('aria-expanded', 'true');
+                }, function () {
+                    // 키보드 초점이 메뉴 안에 있으면 닫지 않는다.
+                    if (!$(this).find(':focus').length) {
+                        $(this).find('.inner-menu').hide();
+                        $(this).find('.menu-title').attr('aria-expanded', 'false');
+                    }
+                });
+
+                // 키보드 사용자는 Tab으로 메뉴에 접근할 수 있다. 마우스용 hover의 보완이다.
+                $('.outer-menu-item').on('focusin', function () {
+                    $(this).find('.inner-menu').show();
+                    $(this).find('.menu-title').attr('aria-expanded', 'true');
+                }).on('focusout', function (event) {
+                    if (!this.contains(event.relatedTarget)) {
+                        $(this).find('.inner-menu').hide();
+                        $(this).find('.menu-title').attr('aria-expanded', 'false');
+                    }
+                });
+
+                // 공통 함수: 검색어 AND 장르 AND 찜 조건을 모두 만족한 카드만 표시한다.
+                function applyFilters() {
+                    var keyword = $('#search-input').val().trim().toLowerCase();
+                    var genre = $('#genre-filter').val();
+                    var visibleCount = 0;
+
+                    $('#main-section .game-card').each(function () {
+                        var $card = $(this);
+                        var text = $card.find('.article-title').text() + ' ' + $card.find('.game-description').text();
+                        var matchesKeyword = text.toLowerCase().includes(keyword);
+                        var matchesGenre = genre === 'all' || $card.attr('data-genre') === genre;
+                        var matchesFavorite = !favoritesOnly || $card.hasClass('is-favorite');
+                        var isVisible = matchesKeyword && matchesGenre && matchesFavorite;
+                        $card.toggle(isVisible);
+                        if (isVisible) { visibleCount += 1; }
+                    });
+
+                    $('#result-count').text(visibleCount);
+                    $('#empty-message').prop('hidden', visibleCount !== 0);
+                    $('#total-count').text($('#main-section .game-card').length);
+                    $('#favorite-count').text($('#main-section .game-card.is-favorite').length);
+                }
+
+                // [추가 E1] click: 찜하기/해제. 부모에 위임하므로 나중에 추가한 카드도 동작한다.
+                $('#main-section').on('click', '.favorite-button', function () {
+                    var $card = $(this).closest('.game-card');
+                    $card.toggleClass('is-favorite');
+                    var isFavorite = $card.hasClass('is-favorite');
+                    var title = $card.find('.article-title').text();
+                    $(this).text(isFavorite ? '♥ 찜 해제' : '♡ 찜하기')
+                        .attr('aria-pressed', String(isFavorite))
+                        .attr('aria-label', title + (isFavorite ? ' 찜 해제' : ' 찜하기'));
+                    applyFilters();
+                });
+
+                // [추가 E2] input: 키 입력뿐 아니라 붙여넣기/검색어 삭제에도 즉시 검색한다.
+                $('#search-input').on('input', function () {
+                    applyFilters();
+                });
+
+                // [추가 E3] change: 선택한 장르가 바뀌면 필터를 다시 적용한다.
+                $('#genre-filter').on('change', function () {
+                    applyFilters();
+                });
+
+                // 아래 click도 E1과 같은 이벤트 종류이다. 버튼 수를 이벤트 종류 수로 세지 않는다.
+                $('#favorites-filter').on('click', function () {
+                    favoritesOnly = !favoritesOnly;
+                    $(this).attr('aria-pressed', String(favoritesOnly));
+                    applyFilters();
+                });
+
+                $('#reset-filters').on('click', function () {
+                    $('#search-input').val('');
+                    $('#genre-filter').val('all');
+                    favoritesOnly = false;
+                    $('#favorites-filter').attr('aria-pressed', 'false');
+                    applyFilters();
+                });
+
+                $('.genre-shortcut').on('click', function () {
+                    // .val()로 값을 바꾸는 것만으로는 change가 발생하지 않아 직접 발생시킨다.
+                    $('#genre-filter').val($(this).attr('data-genre')).trigger('change').trigger('focus');
+                    $(this).closest('.inner-menu').hide();
+                    $('.menu-title').attr('aria-expanded', 'false');
+                });
+
+                // [추가 E4] submit: 버튼 클릭과 Enter 제출을 같은 방식으로 처리한다.
+                $('#recommend-form').on('submit', function (event) {
+                    event.preventDefault(); // 폼 기본 제출에 따른 페이지 이동/새로고침을 막는다.
+                    var title = $('#game-title').val().trim();
+                    var genre = $('#game-genre').val();
+                    var description = $('#game-description').val().trim();
+
+                    if (!title || !genre || !description) {
+                        $('#form-message').text('공백만 입력할 수 없습니다. 이름, 장르, 추천 이유를 모두 확인해 주세요.').addClass('is-error');
+                        if (!title) { $('#game-title').trigger('focus'); }
+                        else if (!genre) { $('#game-genre').trigger('focus'); }
+                        else { $('#game-description').trigger('focus'); }
+                        return;
+                    }
+
+                    // HTML 골격만 생성하고 사용자 입력은 .text()로 넣어 HTML로 해석되지 않게 한다.
+                    var $card = $('<article>').addClass('game-card').attr('data-genre', genre);
+                    var $cover = $('<div>').addClass('game-cover').attr('aria-hidden', 'true').text('🎮');
+                    var $body = $('<div>').addClass('article-body');
+                    var $header = $('<header>').addClass('article-header');
+                    $header.append($('<p>').addClass('genre-tag').text(genre));
+                    $header.append($('<h3>').addClass('article-title').text(title));
+                    $body.append($header);
+                    $body.append($('<p>').addClass('game-description').text(description));
+                    $body.append($('<button>').attr({
+                        type: 'button', 'aria-pressed': 'false', 'aria-label': title + ' 찜하기'
+                    }).addClass('favorite-button').text('♡ 찜하기'));
+                    $card.append($cover, $body);
+                    $('#empty-message').before($card);
+
+                    this.reset();
+                    applyFilters(); // 현재 검색/장르/찜 필터 조건을 유지한다.
+                    var message = '“' + title + '”을(를) 추가했어요.';
+                    if (!$card.is(':visible')) { message += ' 현재 필터에 가려져 있어요. 필터를 초기화하면 볼 수 있어요.'; }
+                    $('#form-message').text(message).removeClass('is-error');
+                    $('#game-title').trigger('focus');
+                });
+
+                applyFilters();
+            });
+        }
+    </script>
+</body>
+</html>

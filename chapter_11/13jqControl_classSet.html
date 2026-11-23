@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Basic</title>
+    <style>
+        #box {
+            width: 100;
+            height: 100px;
+            background-color: red;
+        }
+
+        #box.hover {
+            background-color: blue;
+            border-radius: 50px;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+    <script>
+        // ..Hover()메서드는 
+        // 첫번째 매개변수에 마우스 커서를 올렸을 때 실행할 것을 입력하고
+        // 두번째 매개변수에 마우스 커서를 내렸을 때 실행할 것을 입력합니다.
+
+        //이벤트를 연결합니다.
+        $(document).ready(function () {
+            $('#box').hover(function () {
+                // 스타일을 변경합니다.
+                $('#box').addClass('hover');
+            }, function () {
+                // 스타일을 변경합니다.
+                $('#box').removeClass('hover');
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <h4>3.4클래스 조작</h4>
+    </hr>
+
+    <div id="box"></div>
+</body>
+
+</html>

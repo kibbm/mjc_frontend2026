@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Basic</title>
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+    <script>
+        // ...메서드 체이닝을 사용해 문서 객체에 이벤트 여러 개를 적용합니다. 
+
+
+        $(document).ready(function () {
+            // 스타일 변경 및 이벤트 연결
+            $('#box').css({
+                width: 100,
+                height: 100,
+                background: 'orange'
+            }).on('click', function () {
+                $(this).css('background', 'red');
+            }).on('mouseenter', function () {
+                $(this).css('background', 'blue');
+            }).on('mouseleave', function () {
+                $(this).css('background', 'orange');
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h2>04 이벤트</h2>
+    <h4>4.1이벤트 연결</h4>
+    <h4><b>4.2이벤트 사용</b></h4>
+    <hr>
+
+    <div id="box"></div>
+</body>
+
+</html>

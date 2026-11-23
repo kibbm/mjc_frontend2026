@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Basic</title>
+    <script src= "https://code.jquery.com/jquery-4.0.0.js" ></script>
+    <script>
+        // ..css()메서드의 매개변수에 객체를 넣은 후 코드 형태로도 스타일을 조작할 수 있습니다. 
+
+
+        //이벤트를 연결합니다.
+        $(document).ready(function () { 
+            //스타일을 지정합니다.
+            $('.box').css({
+                float:'left',
+                margin:10, 
+                width:100, 
+                height:100, 
+                backgroundColor:'red'
+            });
+        });
+    </script>
+</head>
+
+<body> 
+    <h4>3.2스타일 조작</h4>
+    <ol>
+        <li>속성 값을 입력해 속성 지정하기</li>
+        <li><b>객체를 입력해 속성 지정하기</b></li>
+        <li>함수를 이용해 속성 지정하기</li>
+    </ol>
+    <hr>
+
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+
+</body>
+
+</html>

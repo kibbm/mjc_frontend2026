@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>jQuery Mobile 1.0 폼 및 UI 요소 강의교안</title><style>
+:root{--ink:#1f354d;--muted:#5c6e83;--line:#dbe5ed;--blue:#2c76aa}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}body{margin:0;background:#f2f6fa;color:var(--ink);font:16px/1.75 'Apple SD Gothic Neo','Malgun Gothic',Arial,sans-serif}
+.container{max-width:1010px;margin:auto;padding:0 24px 100px}
+.cover{background:linear-gradient(120deg,#183b5d,#2c7b9f);color:white;padding:75px 65px;border-radius:0 0 25px 25px;box-shadow:0 12px 28px #1c4b6d20}
+.eyebrow{color:#2e78a6;font-size:12px;font-weight:900;letter-spacing:2px}.cover .eyebrow{color:#b8f2e7}
+.cover h1{font-size:45px;line-height:1.23;margin:22px 0 21px;letter-spacing:-1.8px}.cover p{font-size:20px;color:#d7e8f3;margin:0 0 25px}.meta{display:flex;gap:11px;flex-wrap:wrap}.meta span{background:#ffffff1f;border:1px solid #ffffff3e;border-radius:30px;padding:8px 14px;font-size:14px;font-weight:800}
+.chapter{margin-top:28px;padding:37px 43px;background:white;border:1px solid #e1e9ef;border-radius:18px;box-shadow:0 9px 26px #23415b0a;break-inside:avoid-page}
+.chapter h2{font-size:29px;line-height:1.3;margin:8px 0 8px;letter-spacing:-.8px;color:#204b70}
+.chapter .sub{font-size:18px;color:#567b96;font-weight:750;margin:0 0 20px}.chapter h3{font-size:19px;margin:23px 0 11px;color:#35546f}
+.chapter p,.chapter li{color:#4f6578}.explain{padding-left:18px;border-left:4px solid #cfe7f4;color:#53687a}
+.sample{margin:14px 0;white-space:pre-wrap;word-break:break-word;background:#1e334b;border-radius:13px;padding:21px 24px;color:#e2eff8;font:15px/1.7 Consolas,Menlo,monospace;overflow-x:auto}
+.callout{border-radius:11px;padding:12px 17px;font-size:14px;margin:17px 0 0}.callout.blue{background:#e8f2fc;color:#315f87}.callout.green{background:#eaf7f0;color:#25715d}.callout.amber{background:#fff4df;color:#87652f}
+.table{border-collapse:collapse;width:100%;font-size:15px}.table th{background:#e8f3fc;color:#2a5d7d;text-align:left}.table th,.table td{padding:12px 14px;border:1px solid #dbe6ee}.table td{background:#fff}.table tr:nth-child(even) td{background:#f8fbfe}
+.flow{display:flex;gap:11px;align-items:center;justify-content:center;margin:20px 0}.flow div{flex:1;text-align:center;padding:22px 10px;background:#eaf3fb;border:1px solid #d5e6f2;border-radius:14px;font-weight:800}.flow em{font-style:normal;font-size:28px;color:#94b4ca;font-weight:900}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.task{background:#f5f9fd;border:1px solid #dce8f1;border-radius:11px;padding:15px 17px}.task b{color:#2a6087}code:not(pre code){background:#eef3f8;color:#236494;border-radius:4px;padding:2px 4px;font-size:.9em}
+.toolbar{display:flex;justify-content:space-between;align-items:center;padding:15px 24px;background:#e7f0f8;border-bottom:1px solid #d5e4ef}.toolbar a{text-decoration:none;color:#2e6f9e;font-weight:850;font-size:13px}.toolbar button{border:0;background:#2d77ad;color:white;border-radius:9px;padding:8px 12px;cursor:pointer}
+footer{margin:35px 0 0;color:#78899c;text-align:center;font-size:13px}
+@media(max-width:680px){.container{padding:0 12px 60px}.cover{padding:45px 25px}.cover h1{font-size:32px}.chapter{padding:26px 18px}.two{grid-template-columns:1fr}.flow{flex-direction:column}.flow div{width:100%}.flow em{transform:rotate(90deg)}}
+@media print{@page{size:A4;margin:15mm}body{background:white}.toolbar{display:none}.container{max-width:none;padding:0}.chapter{box-shadow:none;border:1px solid #dde;break-inside:auto;page-break-inside:auto;margin:15px 0;padding:22px 25px}.cover{box-shadow:none;border-radius:0}.sample{font-size:10px}h2{break-after:avoid}.chapter h3{break-after:avoid}footer{padding-bottom:0}}
+</style></head><body><div class="toolbar"><a href="#start">JQUERY MOBILE · LECTURE NOTES</a><button type="button" onclick="window.print()">인쇄 / PDF 저장</button></div><main class="container" id="start"><div class="cover"><div class="eyebrow">대학 모바일 웹앱 프로그래밍 · 실습 교안</div><h1>jQuery Mobile<br>폼과 UI 구성 요소</h1><p>폼 요소 5종 + UI 컴포넌트 5종 | 개념·구조·예제 코드·실습</p><div class="meta"><span>HTML5 / CSS3</span><span>jQuery 1.6.4</span><span>jQuery Mobile 1.0</span><span>90분 수업 구성 예시</span></div></div><section class="chapter"><div class="eyebrow">COURSE OVERVIEW</div><h2>1. 학습목표 및 시간 구성</h2><p>본 수업은 기본 UI 요소의 역할을 이해하고, 제공된 예제 코드를 수정하여 모바일 화면에 적용하는 것을 목표로 한다.</p><ol><li>HTML 폼 요소와 <code>data-role</code> 속성의 관계를 설명한다.</li><li>5종 폼을 구현하고 값을 읽어 출력한다.</li><li>5종 UI 구성 요소의 목적과 동작을 구별한다.</li><li>jQuery Mobile 1.0의 지원 범위를 확인하고 미지원 UI를 직접 구현한다.</li><li>간단한 모바일 사용자 설정 화면을 만든다.</li></ol><table class="table"><thead><tr><th>단계</th><th>내용</th><th>권장 시간</th></tr></thead><tbody><tr><td>도입</td><td>모바일 UI와 data-role 원리</td><td>10분</td></tr><tr><td>실습 A</td><td>폼 요소 5종</td><td>30분</td></tr><tr><td>실습 B</td><td>UI 요소 5종</td><td>30분</td></tr><tr><td>종합</td><td>학생 설정 웹앱</td><td>15분</td></tr><tr><td>정리</td><td>형성평가 및 과제</td><td>5분</td></tr></tbody></table></section><section class="chapter"><div class="eyebrow">DEVELOPMENT ENVIRONMENT</div><h2>2. 기본 페이지 구조와 라이브러리</h2><p>요청한 jQuery 1.6.4 및 jQuery Mobile 1.0을 그대로 사용한다. 현대 브라우저에서 리소스를 가져올 수 있도록 주소는 <code>http</code> 대신 <code>https</code>로 작성하였다.</p><pre class="sample"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ko&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;https://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css&quot;&gt;
+  &lt;script src=&quot;https://code.jquery.com/jquery-1.6.4.min.js&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;https://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div data-role=&quot;page&quot;&gt;
+    &lt;div data-role=&quot;header&quot;&gt;&lt;h1&gt;모바일 웹앱&lt;/h1&gt;&lt;/div&gt;
+    &lt;div data-role=&quot;content&quot;&gt;&lt;p&gt;실습 본문&lt;/p&gt;&lt;/div&gt;
+    &lt;div data-role=&quot;footer&quot;&gt;&lt;h4&gt;모바일 웹앱 실습&lt;/h4&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre><div class="flow"><div>HTML5<br>구조 작성</div><em>→</em><div>jQuery<br>이벤트 처리</div><em>→</em><div>jQuery Mobile<br>자동 위젯 표시</div></div><div style="text-align:center;color:#7d8c9c;font-size:13px">그림 1. jQuery Mobile UI 생성 과정</div><div class="callout amber"><b>중요:</b> jQuery 1.6.4에는 <code>.on()</code>이 없으므로, 예제에서는 이벤트를 연결할 때 <code>.bind()</code>를 사용한다.</div></section><section class="chapter"><div class="eyebrow">VERSION COMPATIBILITY</div><h2>3. 지원 버전 요약표</h2><table class="table"><thead><tr><th>요소</th><th>jQuery Mobile 1.0</th><th>구현 방법</th></tr></thead><tbody><tr><td>Radio / Checkbox / Select</td><td>지원</td><td>기본 HTML + 자동 꾸밈</td></tr><tr><td>Flip / Range / Text · Search</td><td>지원</td><td>기본 HTML + 자동 꾸밈</td></tr><tr><td>Collapsible</td><td>지원</td><td>data-role="collapsible"</td></tr><tr><td>Grid Layout</td><td>지원</td><td>ui-grid-a ~ ui-grid-d</td></tr><tr><td>Popup</td><td>미지원 · 1.2부터</td><td>CSS + fadeIn()/fadeOut()</td></tr><tr><td>Panel</td><td>미지원 · 1.3부터</td><td>CSS 위치 + animate()</td></tr><tr><td>Responsive Table</td><td>미지원 · 1.3부터</td><td>CSS 미디어 쿼리</td></tr></tbody></table><p>아래의 코드 예제에서 버전 1.0의 기본 위젯과 직접 구현한 사용자 정의 UI를 구분하여 실습한다.</p></section><section class="chapter" id="part1"><div class="eyebrow">UNIT 01</div><h2>라디오 버튼과 체크박스</h2><p class="sub">단일 선택과 다중 선택을 처리한다.</p><div class="explain">라디오 버튼(Radio)은 여러 선택지 중 정확히 하나를 선택할 때 사용한다. 같은 그룹에 속하는 라디오 버튼은 동일한 <code>name</code>을 지정한다. 체크박스(Checkbox)는 여러 항목을 동시에 선택할 때 사용한다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;fieldset data-role=&quot;controlgroup&quot;&gt;
+  &lt;legend&gt;수강 방법 선택&lt;/legend&gt;
+  &lt;input type=&quot;radio&quot; name=&quot;course&quot; id=&quot;online&quot; value=&quot;온라인&quot; checked&gt;
+  &lt;label for=&quot;online&quot;&gt;온라인&lt;/label&gt;
+  &lt;input type=&quot;radio&quot; name=&quot;course&quot; id=&quot;offline&quot; value=&quot;오프라인&quot;&gt;
+  &lt;label for=&quot;offline&quot;&gt;오프라인&lt;/label&gt;
+&lt;/fieldset&gt;
+&lt;fieldset data-role=&quot;controlgroup&quot;&gt;
+  &lt;legend&gt;관심 분야 (복수 선택)&lt;/legend&gt;
+  &lt;input type=&quot;checkbox&quot; id=&quot;ai&quot; value=&quot;인공지능&quot;&gt;
+  &lt;label for=&quot;ai&quot;&gt;인공지능&lt;/label&gt;
+  &lt;input type=&quot;checkbox&quot; id=&quot;web&quot; value=&quot;웹 개발&quot;&gt;
+  &lt;label for=&quot;web&quot;&gt;웹 개발&lt;/label&gt;
+&lt;/fieldset&gt;</code></pre><h3>실습 방법 및 결과</h3><p>수강 방법에서는 하나만 선택되는지 확인하고, 관심 분야에서는 두 항목을 동시에 선택해 본다. <code>label for</code>는 해당 <code>input id</code>와 연결해야 한다.</p><div class="callout green"><b>버전 확인:</b> jQuery Mobile 1.0 기본 제공</div></section><section class="chapter" id="part2"><div class="eyebrow">UNIT 02</div><h2>셀렉트 메뉴 (Select Menu)</h2><p class="sub">드롭다운 목록에서 항목을 선택한다.</p><div class="explain"><code>select</code> 안에 여러 <code>option</code>을 작성하고, 사용자가 하나를 선택하도록 한다. 화면 공간을 절약할 수 있어 지역·학과·옵션 선택 등에 적합하다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;label for=&quot;major&quot;&gt;학과 선택&lt;/label&gt;
+&lt;select id=&quot;major&quot;&gt;
+  &lt;option value=&quot;AI&quot;&gt;인공지능학과&lt;/option&gt;
+  &lt;option value=&quot;SW&quot;&gt;소프트웨어학과&lt;/option&gt;
+  &lt;option value=&quot;SEC&quot;&gt;정보보호학과&lt;/option&gt;
+&lt;/select&gt;
+&lt;script&gt;
+$(document).ready(function(){
+  $(&quot;#major&quot;).bind(&quot;change&quot;,function(){
+    $(&quot;#result&quot;).text(&quot;선택: &quot; + $(this).val());
+  });
+});
+&lt;/script&gt;
+&lt;p id=&quot;result&quot;&gt;선택 대기&lt;/p&gt;</code></pre><h3>실습 방법 및 결과</h3><p>목록에서 학과를 바꾼 후 선택 코드(AI/SW/SEC)가 출력되는지 확인한다. <code>change</code>는 값 변경 시 발생하는 이벤트이다.</p><div class="callout green"><b>버전 확인:</b> jQuery Mobile 1.0 기본 제공</div></section><section class="chapter" id="part3"><div class="eyebrow">UNIT 03</div><h2>플립 스위치 (Flip Switch)</h2><p class="sub">두 상태(ON/OFF)를 직관적으로 변경한다.</p><div class="explain">플립 스위치는 ON/OFF, 허용/차단 등의 이진 상태를 변경하는 UI이다. jQuery Mobile 1.0에서는 두 개의 선택지만 가진 <code>select</code> 요소에 <code>data-role="slider"</code>를 부여한다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;label for=&quot;notice&quot;&gt;알림 설정&lt;/label&gt;
+&lt;select id=&quot;notice&quot; data-role=&quot;slider&quot;&gt;
+  &lt;option value=&quot;off&quot;&gt;OFF&lt;/option&gt;
+  &lt;option value=&quot;on&quot;&gt;ON&lt;/option&gt;
+&lt;/select&gt;</code></pre><h3>실습 방법 및 결과</h3><p>스위치를 ON과 OFF로 변경해 보면서 선택된 <code>value</code>가 달라지는지 확인한다.</p><div class="callout green"><b>버전 확인:</b> jQuery Mobile 1.0 기본 제공</div></section><section class="chapter" id="part4"><div class="eyebrow">UNIT 04</div><h2>숫자 슬라이더 (Slider)</h2><p class="sub">정해진 범위 안에서 수치를 조절한다.</p><div class="explain"><code>input type="range"</code>는 슬라이드 손잡이의 위치에 따라 값을 정한다. <code>min</code>, <code>max</code>, <code>step</code>, <code>value</code> 속성으로 범위를 지정한다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;label for=&quot;volume&quot;&gt;볼륨 조절&lt;/label&gt;
+&lt;input type=&quot;range&quot; id=&quot;volume&quot; min=&quot;0&quot; max=&quot;100&quot; value=&quot;50&quot;&gt;
+&lt;p id=&quot;volumeView&quot;&gt;50&lt;/p&gt;
+&lt;script&gt;
+$(document).ready(function(){
+  $(&quot;#volume&quot;).bind(&quot;change&quot;, function(){
+    $(&quot;#volumeView&quot;).text($(this).val());
+  });
+});
+&lt;/script&gt;</code></pre><h3>실습 방법 및 결과</h3><p>손잡이를 움직여 0, 50, 100 근처로 이동시키고 표시 숫자의 변화를 확인한다. 실제 서비스에서는 밝기·볼륨·수량에 활용한다.</p><div class="callout green"><b>버전 확인:</b> jQuery Mobile 1.0 기본 제공</div></section><section class="chapter" id="part5"><div class="eyebrow">UNIT 05</div><h2>텍스트와 검색 폼 (Text / Search)</h2><p class="sub">문자열을 입력하거나 검색어를 받는다.</p><div class="explain"><code>type="text"</code>는 일반적인 문자 입력, <code>type="search"</code>는 검색에 적합한 입력 형태이다. <code>placeholder</code>는 입력 전에 보이는 안내 문구이며, 데이터는 <code>.val()</code>로 얻는다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;label for=&quot;name&quot;&gt;이름 입력&lt;/label&gt;
+&lt;input type=&quot;text&quot; id=&quot;name&quot; placeholder=&quot;이름을 입력하세요&quot;&gt;
+&lt;label for=&quot;keyword&quot;&gt;검색어&lt;/label&gt;
+&lt;input type=&quot;search&quot; id=&quot;keyword&quot; placeholder=&quot;검색어를 입력하세요&quot;&gt;
+&lt;a href=&quot;#&quot; id=&quot;check&quot; data-role=&quot;button&quot;&gt;확인&lt;/a&gt;
+&lt;p id=&quot;print&quot;&gt;&lt;/p&gt;
+&lt;script&gt;
+$(document).ready(function(){
+  $(&quot;#check&quot;).bind(&quot;click&quot;, function(e){
+    e.preventDefault();
+    $(&quot;#print&quot;).text($(&quot;#name&quot;).val()+&quot; / &quot;+$(&quot;#keyword&quot;).val());
+  });
+});
+&lt;/script&gt;</code></pre><h3>실습 방법 및 결과</h3><p>이름과 검색어를 입력하고 확인 버튼을 클릭하여 두 값이 화면에 표시되는지 점검한다. 입력 결과를 HTML에 끼워 넣을 때는 <code>.html()</code> 대신 <code>.text()</code>를 활용한다.</p><div class="callout green"><b>버전 확인:</b> jQuery Mobile 1.0 기본 제공</div></section><section class="chapter" id="part6"><div class="eyebrow">UNIT 06</div><h2>슬라이드 패널 (Panel)</h2><p class="sub">화면 옆에서 나타나는 내비게이션 메뉴를 만든다.</p><div class="explain">패널은 모바일 화면의 공간을 효율적으로 사용하기 위한 사이드 메뉴이다. 오른쪽으로 열거나 왼쪽으로 닫는 방식으로 자주 사용된다. <code>data-role="panel"</code>은 1.3 이후에서만 유효하므로 이 실습에서는 CSS와 jQuery를 사용한다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;button id=&quot;openMenu&quot;&gt;메뉴 열기&lt;/button&gt;
+&lt;div id=&quot;menu&quot;&gt;&lt;button id=&quot;closeMenu&quot;&gt;닫기&lt;/button&gt;&lt;p&gt;홈 / 강의 / 설정&lt;/p&gt;&lt;/div&gt;
+&lt;style&gt;
+#menu { position:fixed; top:0; left:-260px; width:240px;
+        height:100%; background:#d9ecff; z-index:1000; }
+&lt;/style&gt;
+&lt;script&gt;
+$(document).ready(function(){
+  $(&quot;#openMenu&quot;).bind(&quot;click&quot;, function(){
+    $(&quot;#menu&quot;).stop(true,true).animate({left:&quot;0px&quot;},300);
+  });
+  $(&quot;#closeMenu&quot;).bind(&quot;click&quot;, function(){
+    $(&quot;#menu&quot;).stop(true,true).animate({left:&quot;-260px&quot;},300);
+  });
+});
+&lt;/script&gt;</code></pre><h3>실습 방법 및 결과</h3><p>메뉴 열기 버튼을 누르면 화면 왼쪽에서 메뉴가 나오는지 확인하고, 닫기 버튼을 누르면 다시 숨겨지는지 확인한다.</p><div class="callout amber"><b>버전 확인:</b> jQuery Mobile 1.0 미지원 → CSS + jQuery animate()로 대체</div></section><section class="chapter" id="part7"><div class="eyebrow">UNIT 07</div><h2>접이식 아코디언 (Collapsible)</h2><p class="sub">제목 클릭으로 콘텐츠를 펼치고 접는다.</p><div class="explain">접이식 요소는 공간을 절약하고 긴 본문을 단계별로 표시하는 데 적합하다. <code>data-role="collapsible"</code>은 단일 접이식 블록을 만들며, 여러 블록을 <code>data-role="collapsible-set"</code>으로 묶으면 아코디언처럼 동작한다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;div data-role=&quot;collapsible-set&quot;&gt;
+  &lt;div data-role=&quot;collapsible&quot; data-collapsed=&quot;false&quot;&gt;
+    &lt;h3&gt;HTML5&lt;/h3&gt;&lt;p&gt;문서 구조를 작성한다.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div data-role=&quot;collapsible&quot;&gt;
+    &lt;h3&gt;CSS3&lt;/h3&gt;&lt;p&gt;디자인을 작성한다.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div data-role=&quot;collapsible&quot;&gt;
+    &lt;h3&gt;JavaScript&lt;/h3&gt;&lt;p&gt;이벤트를 처리한다.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre><h3>실습 방법 및 결과</h3><p>HTML5 제목을 펼친 다음 CSS3를 클릭하여 앞 항목이 자동으로 접히는지 확인한다.</p><div class="callout green"><b>버전 확인:</b> jQuery Mobile 1.0 기본 제공</div></section><section class="chapter" id="part8"><div class="eyebrow">UNIT 08</div><h2>팝업 (Popup)</h2><p class="sub">중요한 정보를 오버레이 형태로 보여준다.</p><div class="explain">팝업은 간단한 안내, 이미지 확대, 확인 메시지 등을 제공한다. <code>data-role="popup"</code> 위젯은 1.2부터 지원되며, 1.0에서는 CSS 위치 조정 및 jQuery <code>fadeIn()</code>과 <code>fadeOut()</code>으로 대체한다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;a href=&quot;#&quot; data-role=&quot;button&quot; id=&quot;openPopup&quot;&gt;알림 보기&lt;/a&gt;
+&lt;div id=&quot;popup&quot; role=&quot;dialog&quot; style=&quot;display:none&quot;&gt;
+  &lt;p&gt;학습 알림 메시지&lt;/p&gt;
+  &lt;a href=&quot;#&quot; data-role=&quot;button&quot; id=&quot;closePopup&quot;&gt;닫기&lt;/a&gt;
+&lt;/div&gt;
+&lt;style&gt;
+#popup { position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%); padding:24px;
+  background:white; border:2px solid #aacddd; z-index:2000; }
+&lt;/style&gt;
+&lt;script&gt;
+$(document).ready(function(){
+  $(&quot;#openPopup&quot;).bind(&quot;click&quot;,function(e){e.preventDefault();$(&quot;#popup&quot;).fadeIn();});
+  $(&quot;#closePopup&quot;).bind(&quot;click&quot;,function(e){e.preventDefault();$(&quot;#popup&quot;).fadeOut();});
+});
+&lt;/script&gt;</code></pre><h3>실습 방법 및 결과</h3><p>알림 보기를 클릭하여 창이 중앙에 나타나는지 확인한다. 실무 구현에서는 오버레이, 배경 클릭 닫기, 키보드 닫기, 포커스 관리 등을 추가한다.</p><div class="callout amber"><b>버전 확인:</b> jQuery Mobile 1.0 미지원 → CSS + fadeIn/fadeOut 대체</div></section><section class="chapter" id="part9"><div class="eyebrow">UNIT 09</div><h2>반응형 테이블 (Responsive Table)</h2><p class="sub">가로 표를 작은 화면에 맞게 변환한다.</p><div class="explain">큰 화면에서는 일반적인 표를 사용하고, 작은 화면에서는 카드형 레이아웃으로 전환할 수 있다. <code>data-role="table"</code>은 1.3 이후 지원하므로 1.0 실습에서는 CSS 미디어 쿼리를 사용한다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;table class=&quot;responsive&quot;&gt;&lt;thead&gt;
+&lt;tr&gt;&lt;th&gt;이름&lt;/th&gt;&lt;th&gt;전공&lt;/th&gt;&lt;th&gt;점수&lt;/th&gt;&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td data-label=&quot;이름&quot;&gt;김학생&lt;/td&gt;&lt;td data-label=&quot;전공&quot;&gt;AI&lt;/td&gt;&lt;td data-label=&quot;점수&quot;&gt;95&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;style&gt;
+.responsive {width:100%;border-collapse:collapse;}
+.responsive th,.responsive td {border:1px solid #ccd; padding:10px;}
+@media(max-width:600px){
+  .responsive,.responsive tbody,.responsive tr,.responsive td{display:block;width:100%;}
+  .responsive thead{display:none;}
+  .responsive td:before{content:attr(data-label) &quot;: &quot;;font-weight:bold;}
+}
+&lt;/style&gt;</code></pre><h3>실습 방법 및 결과</h3><p>브라우저 개발자 도구에서 모바일 화면으로 전환하고 열이 세로로 재배치되는지 확인한다.</p><div class="callout amber"><b>버전 확인:</b> jQuery Mobile 1.0 미지원 → CSS 미디어 쿼리 대체</div></section><section class="chapter" id="part10"><div class="eyebrow">UNIT 10</div><h2>그리드 레이아웃 (Grid Layout)</h2><p class="sub">화면을 2~5개의 균등한 가로 열로 나눈다.</p><div class="explain">jQuery Mobile 1.0은 <code>ui-grid-a</code>(2단), <code>ui-grid-b</code>(3단), <code>ui-grid-c</code>(4단), <code>ui-grid-d</code>(5단)를 제공한다. 내부에는 <code>ui-block-a</code>부터 순서대로 지정한다.</div><h3>예제 코드</h3><pre class="sample"><code>&lt;!-- 2단 배치 --&gt;
+&lt;div class=&quot;ui-grid-a&quot;&gt;
+  &lt;div class=&quot;ui-block-a&quot;&gt;메뉴 A&lt;/div&gt;
+  &lt;div class=&quot;ui-block-b&quot;&gt;메뉴 B&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- 5단 배치 --&gt;
+&lt;div class=&quot;ui-grid-d&quot;&gt;
+  &lt;div class=&quot;ui-block-a&quot;&gt;A&lt;/div&gt;
+  &lt;div class=&quot;ui-block-b&quot;&gt;B&lt;/div&gt;
+  &lt;div class=&quot;ui-block-c&quot;&gt;C&lt;/div&gt;
+  &lt;div class=&quot;ui-block-d&quot;&gt;D&lt;/div&gt;
+  &lt;div class=&quot;ui-block-e&quot;&gt;E&lt;/div&gt;
+&lt;/div&gt;</code></pre><h3>실습 방법 및 결과</h3><p>2단부터 5단까지 코드를 작성하고 각각의 블록이 균등한 가로 폭으로 배치되는지 확인한다. 폭이 작은 화면에서는 5단의 가독성이 떨어질 수 있으므로 필요한 경우 다른 배치로 전환한다.</p><div class="callout green"><b>버전 확인:</b> jQuery Mobile 1.0 기본 제공</div></section><section class="chapter"><div class="eyebrow">PRACTICE PROJECT</div><h2>4. 종합 실습 · 학생 설정 모바일 웹앱</h2><p>다음 순서로 UI 요소를 조합한다.</p><div class="two"><div class="task"><b>① 화면 구성</b><p>헤더, 본문, 푸터를 포함한 기본 페이지를 작성한다.</p></div><div class="task"><b>② 사용자 정보</b><p>이름 입력, 전공 선택, 관심 분야 체크박스를 배치한다.</p></div><div class="task"><b>③ 기능 설정</b><p>플립 스위치(알림)와 숫자 슬라이더(볼륨)를 추가한다.</p></div><div class="task"><b>④ 결과 출력</b><p>버튼 클릭 시 선택값을 읽고 <code>.text()</code>로 화면에 출력한다.</p></div><div class="task"><b>⑤ 부가 화면</b><p>아코디언으로 설명을 접고, 패널·팝업을 직접 구현한다.</p></div><div class="task"><b>⑥ 반응형 정리</b><p>테이블을 모바일 크기에 따라 재배치하고 그리드를 활용한다.</p></div></div><h3>평가 기준 (20점)</h3><table class="table"><thead><tr><th>평가 항목</th><th>배점</th></tr></thead><tbody><tr><td>폼 요소 5종 구현 및 값 읽기</td><td>8점</td></tr><tr><td>패널·아코디언·팝업 동작</td><td>6점</td></tr><tr><td>반응형 테이블·그리드 구현</td><td>4점</td></tr><tr><td>코드 구조·설명·가독성</td><td>2점</td></tr></tbody></table></section>
+<section class="chapter"><div class="eyebrow">REVIEW</div><h2>5. 형성평가 및 정리</h2><ol><li><b>문제:</b> 라디오 버튼의 단일 선택에 영향을 주는 HTML 속성은? <br><b>정답:</b> 동일한 <code>name</code> 속성</li><li><b>문제:</b> 플립 스위치에 적용할 속성은? <br><b>정답:</b> <code>data-role="slider"</code></li><li><b>문제:</b> 아코디언을 만드는 컨테이너 속성은? <br><b>정답:</b> <code>data-role="collapsible-set"</code></li><li><b>문제:</b> 5단 그리드의 클래스명은? <br><b>정답:</b> <code>ui-grid-d</code></li><li><b>문제:</b> jQuery Mobile 1.0에서 Popup과 Panel을 바로 사용할 수 있는가? <br><b>정답:</b> 아니오. 1.0에서는 지원하지 않으므로 CSS와 jQuery를 활용해 직접 구현한다.</li></ol><h3>수업 정리</h3><p>폼은 사용자 입력을 받고, UI 구성 요소는 입력과 정보를 화면에 배치한다. jQuery는 이벤트를 통해 동작을 연결하고, jQuery Mobile은 지원 버전의 위젯에 디자인 및 터치 인터페이스를 적용한다.</p></section>
+<section class="chapter"><div class="eyebrow">REFERENCES</div><h2>6. 참고자료</h2><p>jQuery Mobile 공식 1.0 배포 안내: <a href="https://blog.jquerymobile.com/2011/11/16/announcing-jquery-mobile-1-0/">jQuery Mobile 1.0 발표</a></p><p>1.0 그리드: <a href="https://demos.jquerymobile.com/1.0/docs/content/content-grids.html">공식 레이아웃 그리드 설명</a></p><p>공식 위젯 문서: <a href="https://api.jquerymobile.com/popup/">Popup</a>, <a href="https://api.jquerymobile.com/panel/">Panel</a>, <a href="https://api.jquerymobile.com/table/">Table</a>, <a href="https://api.jquerymobile.com/collapsible/">Collapsible</a></p><div class="callout amber">본 교안의 라이브러리 버전은 역사적인 교육용 환경이다. 코드 실행에는 CDN 로드용 인터넷 연결이 필요하며, 신규 운영 서비스에는 유지보수와 보안 측면에서 최신 기술을 검토해야 한다.</div></section><footer>모바일 웹앱 프로그래밍 · jQuery Mobile 1.0 강의교안 · 교육용</footer></main></body></html>

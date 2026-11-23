@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c1828">
+<title>서울역 대합실 | Seoul Station · Three.js 3D</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');
+  :root { color-scheme: dark; --glass:rgba(12,22,35,.82); --edge:rgba(255,255,255,.14); --txt:#f3f8ff; --sub:#afc0d2; --accent:#7fd6ff; }
+  *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101b2b;font-family:'Noto Sans KR',system-ui,-apple-system,sans-serif;color:var(--txt)}
+  #canvas{position:fixed;inset:0;display:block;touch-action:none;outline:none}
+  #loading{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(circle at 50% 34%,#304d68,#071323 78%);text-align:center;padding:24px;transition:opacity .65s}
+  #loading h2{margin:0;font-size:clamp(23px,3vw,38px);letter-spacing:-.8px}#loading p{color:#b7c7d9;margin:0;font-size:13px;line-height:1.9}#loading .spinner{width:44px;height:44px;border:3px solid #496781;border-top-color:#b8eaff;border-radius:50%;animation:spin .9s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+  #error{display:none;border:1px solid #d88181;color:#ffe3e3;border-radius:12px;padding:16px;max-width:450px;background:#482327}
+  .top{position:fixed;left:23px;top:20px;z-index:3;pointer-events:none;text-shadow:0 2px 10px #06152599}
+  .eyebrow{font-size:10px;letter-spacing:2.5px;color:#d4edff;font-weight:800}.top h1{font-size:clamp(22px,2.4vw,36px);line-height:1.2;margin:7px 0 5px;font-weight:800;letter-spacing:-1.2px}.top p{font-size:12px;color:#e4f4ff;margin:0;opacity:.87;max-width:510px;line-height:1.7}
+  .top b{color:#fff}.badge{display:inline-flex;padding:5px 9px;background:#0a2439a8;border:1px solid #c9e2f55e;border-radius:8px;margin-left:8px;font-size:10px;vertical-align:middle;color:#bfe6ff;white-space:nowrap;font-weight:700}
+  .panel{position:fixed;left:22px;bottom:20px;z-index:4;background:var(--glass);border:1px solid var(--edge);border-radius:16px;padding:14px;width:min(398px,calc(100vw - 44px));box-shadow:0 14px 45px #0006;backdrop-filter:blur(22px)}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.panel-title{font-size:12px;font-weight:700;color:#d4e8f7;letter-spacing:.3px}.panel-head span:last-child{font-size:10px;color:#97b0c8}
+  .views{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  button{font:inherit;cursor:pointer;transition:background .18s,border-color .18s,transform .18s;color:var(--txt);user-select:none}
+  .view,.act{border:1px solid #aec7db3b;border-radius:9px;background:#ffffff0b;padding:9px 6px;font-size:11px;font-weight:600;white-space:nowrap}.view:hover,.act:hover{background:#ffffff23;border-color:#84d4ff8f}.view.active{background:#235b7eaf;border-color:#99ddffb5;color:white}
+  .actions{border-top:1px solid #ffffff25;margin-top:12px;padding-top:12px;display:flex;flex-wrap:wrap;gap:7px}.act{flex:1;min-width:75px;padding:8px 5px}.act.on{background:#20685b83;border-color:#75dcba99}
+  .hint{margin-top:10px;font-size:10px;color:#b7c9d9;line-height:1.8}.hint strong{color:#e4f6ff}
+  .meter{position:fixed;right:20px;top:22px;z-index:3;background:var(--glass);border:1px solid var(--edge);padding:12px 15px;border-radius:12px;font-size:11px;line-height:1.9;box-shadow:0 12px 40px #0019;backdrop-filter:blur(20px)}.meter b{color:#a4e5ff}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#62e5af;box-shadow:0 0 9px #62e5af;margin-right:7px}
+  #poi{position:fixed;z-index:5;right:22px;bottom:24px;min-width:190px;max-width:min(310px,calc(100vw - 44px));border:1px solid var(--edge);background:var(--glass);border-radius:14px;padding:14px;box-shadow:0 12px 38px #0008;backdrop-filter:blur(16px);display:none;line-height:1.6}.poi-name{font-size:14px;font-weight:800;color:#c5eaff}.poi-desc{font-size:11px;color:#dce8f2;margin-top:6px}.poi-close{position:absolute;right:8px;top:6px;border:0;background:transparent;font-size:19px}
+  #notice{position:fixed;z-index:8;left:50%;transform:translateX(-50%);bottom:23px;white-space:nowrap;background:#091a2de8;border:1px solid #ffffff3d;border-radius:10px;padding:11px 18px;font-size:12px;pointer-events:none;opacity:0;transition:opacity .25s}
+  .footer{position:fixed;right:18px;bottom:8px;font-size:10px;color:#cbd9e3b8;z-index:2;pointer-events:none;text-shadow:0 1px 4px #000c}
+  @media(max-width:680px){.top{top:14px;left:14px;right:14px}.top h1{font-size:23px}.top p{font-size:10px}.meter{top:105px;right:12px;padding:7px 10px;line-height:1.5;font-size:9px}.panel{bottom:9px;left:9px;width:calc(100vw - 18px);padding:10px;border-radius:13px}.view,.act{font-size:10px;padding:8px 3px}.hint{font-size:9px;margin-top:6px}.panel-head{margin-bottom:6px}.actions{margin-top:7px;padding-top:7px}.footer{display:none}#poi{bottom:208px;right:10px;max-width:200px}.badge{display:none}}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="loading" role="status" aria-live="polite"><div class="spinner"></div><h2>SEOUL STATION <span style="color:#a3dfff">3D</span></h2><p>서울역 대합실의 천장 구조, 유리 외벽과 실내 조명을 구성하고 있습니다.</p><div id="error"></div></div>
+<div class="top"><div class="eyebrow">INTERACTIVE ARCHITECTURE · THREE.JS</div><h1>서울역 대합실 <span class="badge">실사 톤 · 3D 시뮬레이션</span></h1><p>유리 파사드, 강철 트러스, 대형 LED 전광판을 재현한 공간 <b>· 실제 측량 도면과 다른 교육용 모델</b></p></div>
+<div class="meter"><div><span class="dot"></span><b id="lightLabel">주간 조명</b> · REALISTIC LIGHTING</div><div>배경: <span id="timeLabel">서울역 KTX 대합실</span></div><div>이동객 <b id="peopleNum">68</b>명 · <span id="fps">60</span> FPS</div></div>
+<div class="panel"><div class="panel-head"><span class="panel-title">카메라 시점</span><span>마우스·터치·WASD 조작</span></div><div class="views"><button class="view active" data-view="grand">전체 대합실</button><button class="view" data-view="entrance">정면 입구</button><button class="view" data-view="led">LED 전광판</button><button class="view" data-view="ticket">매표·상점</button><button class="view" data-view="gate">승강장 입구</button><button class="view" data-view="roof">천장 트러스</button></div><div class="actions"><button class="act" id="dayToggle">야간으로</button><button class="act" id="walkToggle">보행 모드</button><button class="act" id="tourToggle">자동 투어</button><button class="act" id="shot">사진 저장</button><button class="act" id="full">전체 화면</button></div><div class="hint"><strong>시점 회전</strong> 드래그 / <strong>확대·축소</strong> 휠·핀치 / <strong>이동</strong> WASD·방향키 / <strong>시설 확인</strong> 클릭<br>화면을 탭하거나 이동하여 서울역 내부를 둘러보세요.</div></div>
+<div id="poi"><button class="poi-close" id="poiClose" aria-label="닫기">×</button><div class="poi-name" id="poiName"></div><div class="poi-desc" id="poiDesc"></div></div>
+<div id="notice"></div><div class="footer">기차 시각과 매장 표기는 예시 · 실제 현장 구성과 다를 수 있습니다</div>
+<script type="module">
+(async()=>{
+const loading=document.getElementById('loading'), error=document.getElementById('error');
+let THREE;
+for(const url of [
+  'https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js',
+  'https://unpkg.com/three@0.164.1/build/three.module.js',
+  'https://esm.sh/three@0.164.1'
+]){try{THREE=await import(url);break;}catch(e){console.warn('Three.js CDN fallback:',e.message)}}
+if(!THREE){error.style.display='block';error.textContent='Three.js 라이브러리를 불러올 수 없습니다. 인터넷 연결을 확인한 후 이 HTML 파일을 다시 여세요.';loading.querySelector('.spinner').style.display='none';return;}
+
+// Three.js scene and photorealistic, entirely procedural materials.
+const canvas=document.getElementById('canvas');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false,powerPreference:'high-performance',preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,innerWidth<780?1.45:1.85));renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;
+const scene=new THREE.Scene();scene.background=new THREE.Color('#c8d9e8');scene.fog=new THREE.FogExp2('#c8d9e8',0.0034);
+const camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,0.09,500);
+const hemi=new THREE.HemisphereLight(0xdbeeff,0x7a7980,2.5);scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xfff4dd,3.1);sun.position.set(28,60,-46);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-88;sun.shadow.camera.right=88;sun.shadow.camera.top=80;sun.shadow.camera.bottom=-80;sun.shadow.camera.near=1;sun.shadow.camera.far=190;sun.shadow.bias=-0.00045;sun.shadow.normalBias=0.025;sun.target.position.set(0,0,0);scene.add(sun,sun.target);
+const fill=new THREE.DirectionalLight(0xc5dafa,1.25);fill.position.set(-50,25,38);scene.add(fill);
+const warmLights=[];
+for(const x of [-48,-20,8,36,57]){let p=new THREE.PointLight(0xffebcb,21,35,1.8);p.position.set(x,17,10);scene.add(p);warmLights.push(p);}
+const materials={
+  wall:new THREE.MeshStandardMaterial({color:0xdfe3e3,roughness:.67}),
+  white:new THREE.MeshStandardMaterial({color:0xe5e8e5,metalness:.26,roughness:.39}),
+  silv:new THREE.MeshStandardMaterial({color:0x9ba6ae,metalness:.82,roughness:.26}),
+  darkmetal:new THREE.MeshStandardMaterial({color:0x334759,metalness:.73,roughness:.3}),
+  blue:new THREE.MeshStandardMaterial({color:0x366c95,metalness:.62,roughness:.36}),
+  brass:new THREE.MeshStandardMaterial({color:0xaf9a76,metalness:.7,roughness:.34}),
+  stone:new THREE.MeshStandardMaterial({color:0xbbb8b2,roughness:.61,metalness:.08}),
+  charcoal:new THREE.MeshStandardMaterial({color:0x242c35,roughness:.62}),
+  glass:new THREE.MeshPhysicalMaterial({color:0xd4eef9,metalness:.08,roughness:.08,transparent:true,opacity:.19,side:THREE.DoubleSide,depthWrite:false}),
+  smokedGlass:new THREE.MeshPhysicalMaterial({color:0x8bb3ca,metalness:.12,roughness:.12,transparent:true,opacity:.36,side:THREE.DoubleSide,depthWrite:false}),
+  blackGlass:new THREE.MeshPhysicalMaterial({color:0x152331,metalness:.28,roughness:.16,transparent:true,opacity:.73,side:THREE.DoubleSide}),
+  light:new THREE.MeshStandardMaterial({color:0xfff3db,emissive:0xffedcb,emissiveIntensity:1.9,roughness:.24}),
+  blueLed:new THREE.MeshStandardMaterial({color:0x2b88bb,emissive:0x008de5,emissiveIntensity:1.5,roughness:.26}),
+};
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+const box=(w,h,d,mat,x=0,y=0,z=0,parent=scene,cast=false)=>{let m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=cast;m.receiveShadow=true;parent.add(m);return m;};
+const cyl=(r1,r2,h,mat,x,y,z,parent=scene,n=10)=>{let m=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,n),mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;};
+const beam=(a,b,r,mat,parent=scene)=>{const dir=b.clone().sub(a);let m=new THREE.Mesh(new THREE.CylinderGeometry(r,r,dir.length(),7),mat);m.position.copy(a).addScaledVector(dir,.5);m.quaternion.setFromUnitVectors(V(0,1,0),dir.normalize());m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;};
+const putPlane=(w,h,mat,x,y,z,rotationY=0,parent=scene)=>{let o=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat);o.position.set(x,y,z);o.rotation.y=rotationY;o.receiveShadow=true;parent.add(o);return o;};
+const textureCanvas=(canvas,w,h)=>{let t=new THREE.CanvasTexture(canvas);t.colorSpace=THREE.SRGBColorSpace;t.anisotropy=Math.min(renderer.capabilities.getMaxAnisotropy(),8);return t;};
+function textPanel(lines,w=1024,h=256,opt={}){
+ const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');
+ g.fillStyle=opt.bg||'#103d64';g.fillRect(0,0,w,h);
+ if(opt.gradient){let grad=g.createLinearGradient(0,0,w,h);grad.addColorStop(0,opt.bg||'#152a47');grad.addColorStop(1,opt.gradient);g.fillStyle=grad;g.fillRect(0,0,w,h);}
+ if(opt.border){g.strokeStyle=opt.border;g.lineWidth=8;g.strokeRect(4,4,w-8,h-8);}
+ if(opt.accent){g.fillStyle=opt.accent;g.fillRect(0,0,16,h);}
+ g.textBaseline='middle';g.textAlign=opt.align||'left';g.fillStyle=opt.color||'#fff';
+ const padx=opt.pad||52;const fs=opt.fontSize||64;g.font=`${opt.weight||'700'} ${fs}px "Noto Sans KR","Malgun Gothic",sans-serif`;
+ const lineHt=opt.lineHeight||Math.min(90,h/(lines.length+0.65));
+ const startY=(h-(lines.length-1)*lineHt)/2;
+ lines.forEach((s,i)=>{g.fillStyle=(opt.colors&&opt.colors[i])||opt.color||'#fff';g.fillText(s,opt.align==='center'?w/2:(opt.align==='right'?w-padx:padx),startY+i*lineHt,w-2*padx);});
+ return textureCanvas(c,w,h);
+}
+function flatText(lines,w,h,x,y,z,opt={}){const t=textPanel(lines,opt.pxW||1024,opt.pxH||256,opt);const m=new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide,transparent:!!opt.transparent,toneMapped:false});return putPlane(w,h,m,x,y,z,opt.flip?Math.PI:0);}
+function surfaceColor(hex,rough=.5,metal=.08){return new THREE.MeshStandardMaterial({color:hex,roughness:rough,metalness:metal});}
+function panelInfo(mesh,name,desc){mesh.userData.poi={name,desc};return mesh;}
+function tileTexture(){
+ const c=document.createElement('canvas');c.width=2048;c.height=1024;const g=c.getContext('2d');g.fillStyle='#bdbbb7';g.fillRect(0,0,2048,1024);
+ let s=27459;const rand=()=>((s=(s*1664525+1013904223)>>>0)/4294967296);
+ const nx=34,ny=19,dx=2048/nx,dy=1024/ny;
+ for(let iy=0;iy<ny;iy++)for(let ix=0;ix<nx;ix++){
+  let shade=Math.floor(185+(rand()-.5)*17);g.fillStyle=`rgb(${shade+2},${shade+1},${shade-2})`;
+  g.fillRect(ix*dx+1,iy*dy+1,dx-1.5,dy-1.5);
+  let gl=g.createLinearGradient(ix*dx,iy*dy,(ix+1)*dx,(iy+1)*dy);gl.addColorStop(0,'#ffffff11');gl.addColorStop(.5,'#ffffff03');gl.addColorStop(1,'#3433330b');g.fillStyle=gl;g.fillRect(ix*dx+1,iy*dy+1,dx-2,dy-2);
+ }
+ for(let i=0;i<15000;i++){let v=rand()*2048,yy=rand()*1024;g.fillStyle=rand()>.5?'#ffffff08':'#484b4b05';g.fillRect(v,yy,2,2);}
+ return textureCanvas(c,2048,1024);
+}
+// Architectural ground plane, tactile paths, and daylight reflections.
+const floorMat=new THREE.MeshPhysicalMaterial({map:tileTexture(),metalness:.14,roughness:.25,clearcoat:.3,clearcoatRoughness:.27});
+const floor=box(140,.45,54,floorMat,0,-.24,0);floor.castShadow=false;
+box(180,.5,100,surfaceColor('#929fa5',.89),0,-.8,0);
+for(let z of [-15,-14.58])box(129,.023,.16,surfaceColor('#c7aa56',.73),-1,.011,z);
+for(let x of [-48,-28,1,24,46]){box(.2,.026,16,surfaceColor('#caa84a',.68),x,.012,-7.6);}
+const arrowMat=surfaceColor('#578cb0',.53);
+for(let x of [-42,-18,8,34]){
+ const m=box(4,.023,2.1,arrowMat,x,.011,2);m.rotation.y=0;
+ // subtle direction strips near hall centre
+}
+// Soft bright window patches cast on the floor (faked caustic-style reflections).
+const reflection=new THREE.MeshBasicMaterial({color:'#e5f4ff',transparent:true,opacity:.085,depthWrite:false});
+for(let x=-56;x<65;x+=12){for(let q=0;q<2;q++){let m=box(7,.01,1.35,reflection,x+q*.4,.023,-17+q*3.9);m.rotation.y=-.18;}}
+
+// Far building skyline visible through curtain glazing.
+const cityMat=['#8795a4','#a2abb3','#6f8094','#a8abae','#687c8d','#8a979d'].map(c=>surfaceColor(c,.9));
+const city=new THREE.Group();scene.add(city);
+let randomSeed=45731;function rnd(){randomSeed=(randomSeed*16807)%2147483647;return randomSeed/2147483647;}
+for(let i=0;i<46;i++){
+ const x=-99+i*4.75,z=-51-rnd()*30,h=13+rnd()*38,w=3.5+rnd()*7.4;
+ const m=box(w,h,4+rnd()*8,cityMat[Math.floor(rnd()*cityMat.length)],x,h/2-1.3,z,city);
+ if(i%3===0){let winMat=new THREE.MeshBasicMaterial({color:'#e2eff7',transparent:true,opacity:.21});for(let j=2;j<h-1;j+=4)box(w*.82,.13,.02,winMat,x,j,z+2.8,city);}
+}
+
+// Translucent glass wall facing the street and front atrium.
+box(137,1.0,.5,materials.white,0,22.4,-26.2);box(137,.55,.6,materials.white,0,.7,-26.2);
+for(let x=-66;x<=66;x+=9.45){
+ box(.33,22,.3,materials.white,x,11.4,-26.1,scene,true);
+ box(.43,22,.32,materials.white,x,11.4,25.6,scene,true);
+}
+for(let y of [5.1,10.8,17.6,21.6]){
+ box(137,.24,.28,materials.white,0,y,-26.1);
+ box(137,.35,.33,materials.white,0,y,25.5);
+}
+for(let x=-61.5;x<66;x+=9.45){
+ for(let y of [2.85,7.8,14.2,19.6]){
+  const gl=box(9.14,4.8,.035,materials.glass,x,Math.min(y,20.4),-26.12);gl.castShadow=false;
+ }
+}
+// Glass facade at far entrance end (some door openings left accessible visually).
+for(let z=-25;z<=25;z+=7.1)box(.38,22.5,.36,materials.white,68,11.4,z);
+for(let y of [4,10,16,22])box(.35,.33,52,materials.white,68,y,0);
+for(let z=-21;z<26;z+=7.1){const glass=box(.04,6.1,6.8,materials.glass,68,18.5,z+3.5);glass.castShadow=false;}
+// Street-level automatic doors.
+for(let z of [-9,-3,3,9]){const gl=box(.07,4.3,5.2,materials.glass,68,2.2,z);gl.castShadow=false;}
+
+// Roof silhouette and structural lattice: silver steel and Korail blue beams.
+const roofY=z=>18.9+5.05*(1-(z/27)**2);
+for(let x=-67;x<=67;x+=8.2){
+ for(let k=0;k<12;k++){
+  let z1=-26+k*52/12,z2=-26+(k+1)*52/12;
+  beam(V(x,roofY(z1),z1),V(x,roofY(z2),z2),.18,materials.white);
+  if(k%2===0)beam(V(x,17.65,z1),V(x,roofY(z2)-.12,z2),.098,materials.white);
+  else beam(V(x,roofY(z1)-.12,z1),V(x,17.65,z2),.098,materials.white);
+ }
+ beam(V(x,17.65,-25.8),V(x,17.65,25.8),.19,materials.blue);
+ for(let z=-20;z<23;z+=8.8)beam(V(x,roofY(z)-.1,z),V(x,17.65,z+4.25),.085,materials.silv);
+}
+for(let z=-26;z<=26;z+=6.5){
+ const y=roofY(z);
+ beam(V(-67,y,z),V(67,y,z),.14,materials.silv);
+}
+// Iridescent roof glass panels plus matte insulated panel bands.
+const roofOpaque=surfaceColor('#c6d2d7',.79,.16),roofSky=new THREE.MeshPhysicalMaterial({color:'#bfd9e7',roughness:.13,metalness:.08,transparent:true,opacity:.57,side:THREE.DoubleSide,depthWrite:false});
+for(let x=-66.5;x<67;x+=8.2){
+ for(let k=0;k<12;k++){
+  const z1=-26+k*52/12,z2=-26+(k+1)*52/12,mid=(z1+z2)/2;
+  let m=new THREE.Mesh(new THREE.PlaneGeometry(7.8,V(0,roofY(z2),z2).distanceTo(V(0,roofY(z1),z1))), ((Math.floor((x+66)/8.2)+k)%4===0)?roofSky:roofOpaque);
+  m.position.set(x+4.03,(roofY(z1)+roofY(z2))/2+.12,mid);
+  const d=V(0,roofY(z2)-roofY(z1),z2-z1);m.rotation.x=Math.atan2(d.y,d.z)-Math.PI/2;
+  m.receiveShadow=true;scene.add(m);
+ }
+}
+// Strong blue transversal girders.
+for(let x=-66;x<67;x+=16.4){
+ const b=box(.34,.32,52,materials.blue,x,19,-.1);b.castShadow=true;
+ for(let z=-19;z<=20;z+=13)beam(V(x,18.85,z),V(x,roofY(z)-.1,z),.10,materials.white);
+}
+// Industrial lights along ceiling beams.
+for(let x=-58;x<65;x+=10){for(let z of [-16,2,19]){
+ cyl(.28,.28,.18,materials.silv,x,17.08,z);
+ let shade=cyl(.48,.32,.12,materials.light,x,16.93,z);shade.castShadow=false;
+}}
+
+// Side-wall storefronts: cafe, convenience shop and station services.
+const lowerWall=box(137,9.75,1.4,materials.wall,0,5.0,26.8);lowerWall.castShadow=false;
+for(let x=-65;x<66;x+=13.0){
+ box(.49,9.4,1.0,materials.white,x,4.8,25.84);
+ const shopDark=box(11.7,5.9,.24,materials.blackGlass,x+6.25,3.55,25.77);shopDark.castShadow=false;
+ box(11.9,.4,1.1,materials.darkmetal,x+6.25,7.02,25.75);
+ box(11.9,.21,.3,materials.silv,x+6.25,.6,25.6);
+}
+const shopNames=[['역사 편의점','CONVENIENCE'],['여행 안내','TOUR DESK'],['여행·휴식','LOUNGE'],['CAFE','COFFEE & BAKERY'],['KORAIL','TICKETS'],['CAFE','DESSERT'],['여행용품','TRAVEL STORE'],['편의점','SNACKS'],['기차 여행','TRAVEL'],['기념품','SOUVENIR']];
+for(let i=0;i<10;i++){
+ const x=-58.5+i*13;
+ const col=['#1d6a7b','#255780','#305d72','#644b39','#23619e','#6a4b3c','#355a4c','#245e74','#354d69','#426c74'][i];
+ flatText(shopNames[i],11.1,1.2,x,8.12,25.03,{bg:col,gradient:'#1c2734',fontSize:68,lineHeight:82,pxH:256,pad:50,flip:true});
+ const inside=box(11.15,4.7,.15,surfaceColor(i%3===0?'#514b41':'#47515b',.91),x,3.5,26.45);inside.castShadow=false;
+ // Interior rack silhouettes visible behind glass storefronts.
+ for(let j=0;j<4;j++){
+  const shelf=box(1.1,1.65,.55,surfaceColor(['#9d8570','#b0a39a','#788e91'][j%3],.65),x-3.9+j*2.6,1.8,25.42);
+  const light=box(1.1,.06,.2,materials.light,x-3.9+j*2.6,2.65,25.3);light.castShadow=false;
+ }
+}
+
+// LED wall: reference-inspired long digital train departure + scenic promotional screen.
+const ledCanvas=document.createElement('canvas');ledCanvas.width=4096;ledCanvas.height=512;
+const lg=ledCanvas.getContext('2d');let bg=lg.createLinearGradient(0,0,4096,0);bg.addColorStop(0,'#0a213b');bg.addColorStop(.53,'#10234b');bg.addColorStop(.7,'#172b63');bg.addColorStop(1,'#173750');lg.fillStyle=bg;lg.fillRect(0,0,4096,512);
+lg.fillStyle='#1a639f';lg.fillRect(0,0,4096,15);lg.fillStyle='#2f6bc1';lg.fillRect(0,474,4096,15);
+lg.font='bold 90px "Noto Sans KR","Malgun Gothic",sans-serif';lg.fillStyle='#f2f8ff';lg.fillText('열차 출발 정보',70,115);
+lg.font='45px Arial,sans-serif';lg.fillStyle='#73cffc';lg.fillText('KTX  ·  DEPARTURES  /  SIMULATION',74,178);
+const displayRows=[['08:40','부산','KTX 101','8','승차준비'],['09:03','대전','KTX 205','4','대기'],['09:25','광주송정','KTX 409','11','정상'],['09:51','강릉','KTX 703','5','대기']];
+let startX=830;lg.font='bold 44px "Noto Sans KR",sans-serif';lg.fillStyle='#91b3cc';
+['시각','도착역','열차','홈','운행'].forEach((t,i)=>lg.fillText(t,startX+[15,280,605,825,980][i],108));
+for(let i=0;i<displayRows.length;i++){
+ let yy=162+i*76;lg.fillStyle=i%2?'#10253e':'#1c3451';lg.fillRect(820,yy-25,1400,66);
+ displayRows[i].forEach((t,j)=>{lg.fillStyle=j===4?'#8bf5c9':'#ebf6ff';lg.font=`${j===1?'700':'600'} 43px "Noto Sans KR",sans-serif`;lg.fillText(t,startX+[15,280,605,825,980][j],yy+18);});
+}
+// Scenic abstract violet/blue light composition, reminiscent of an advert, no external copyrighted images.
+const scen=lg.createLinearGradient(2320,0,4096,480);scen.addColorStop(0,'#142f71');scen.addColorStop(.37,'#3d4c9c');scen.addColorStop(.7,'#a2849b');scen.addColorStop(1,'#2b6d90');lg.fillStyle=scen;lg.fillRect(2300,24,1780,440);
+for(let i=0;i<22;i++){const cx=2460+rnd()*1600,cy=rnd()*450,r=32+rnd()*170;const gr=lg.createRadialGradient(cx,cy,1,cx,cy,r);gr.addColorStop(0,'#c2e8f155');gr.addColorStop(1,'#c2e8f100');lg.fillStyle=gr;lg.beginPath();lg.arc(cx,cy,r,0,Math.PI*2);lg.fill();}
+lg.font='bold 124px "Noto Sans KR",sans-serif';lg.fillStyle='#fff';lg.fillText('SEOUL',2520,236);lg.font='57px "Noto Sans KR",sans-serif';lg.fillText('도시와 사람을 연결하는 철도',2525,315);
+lg.font='31px Arial,sans-serif';lg.fillStyle='#c6e8fc';lg.fillText('SEOUL STATION  ·  TRAVEL IN KOREA',2530,375);
+const ledTex=textureCanvas(ledCanvas,4096,512);
+const led=putPlane(128,6.05,new THREE.MeshBasicMaterial({map:ledTex,side:THREE.DoubleSide,toneMapped:false}),0,13.67,25.05,Math.PI);
+panelInfo(led,'대형 LED 안내 전광판','서울역의 대형 전광판에서 영감을 얻어 제작한 화면입니다. 열차 시간은 학습용 예시이며 실제 운행 정보가 아닙니다.');
+box(129,.3,.55,materials.charcoal,0,10.39,25.3);box(129,.27,.55,materials.charcoal,0,16.91,25.3);
+// Curved bottom sections and edge lighting.
+box(129,.055,.25,materials.blueLed,0,10.23,24.85);
+
+// Upper-level gallery by window side with toughened-glass railing.
+box(105,.6,5.6,materials.stone,8,7.95,-22.4,scene,true);
+for(let x=-43;x<=60;x+=10){cyl(.31,.34,7.95,materials.white,x,3.96,-22);}
+for(let x=-42;x<=60;x+=6.5){box(.09,2.1,.09,materials.silv,x,9.3,-19.7);}
+box(104,.21,.12,materials.silv,8,10.4,-19.7);
+const balustrade=box(103,1.5,.047,materials.smokedGlass,8,9.22,-19.68);balustrade.castShadow=false;
+// A wood-tone lounge insert inspired by older hall details.
+const timber=surfaceColor('#8c5335',.58,.05),darkWood=surfaceColor('#693f2b',.65);
+box(16,.8,8,timber,39,11.3,-22.5);
+for(let x=32;x<48;x+=2){box(.14,2.3,.15,darkWood,x,12.8,-18.75);}
+for(let y of [12.4,13.8])box(16,.19,.19,timber,39,y,-18.72);
+box(17,.48,8.6,darkWood,39,14.25,-22.6);
+
+// Front entrance portal at the far end. Suspended bilingual sign.
+box(38,.4,.65,materials.blue,68,5.8,-.5);
+flatText(['서울역   SEOUL STATION'],30,3.1,67.45,8.2,1,{bg:'#14588b',gradient:'#103857',fontSize:73,align:'center',flip:true});
+const frontSign=flatText(['서울역  ·  SEOUL STATION'],22,2.35,15,17.1,-1.0,{bg:'#164779',gradient:'#123454',fontSize:68,align:'center',flip:true});
+panelInfo(frontSign,'서울역 대합실','유리 커튼월과 강철 지붕 트러스가 특징적인 KTX 서울역을 참고한 3차원 공간입니다.');
+beam(V(6,20,-1),V(6,18.28,-1),.06,materials.silv);beam(V(24,20,-1),V(24,18.28,-1),.06,materials.silv);
+
+// Train platform entrance on left end of the concourse (schematic geometry).
+const portal=box(2,9.3,35,materials.wall,-65,4.8,1);portal.castShadow=false;
+box(2.2,2,34,materials.blue,-64.5,9.1,1);
+for(let z=-15;z<18;z+=3.7){let p=box(.25,7.3,.25,materials.silv,-63.55,3.65,z);p.castShadow=true;}
+flatText(['KTX   타는 곳  ·  Train platforms 1–15'],27,3.0,-61.5,11.3,1,{bg:'#164e86',gradient:'#0b284b',fontSize:58,align:'center',flip:true});
+const gates=new THREE.Group();scene.add(gates);
+for(let i=0;i<11;i++){
+ const z=-16.2+i*3.12;
+ box(2.1,1.04,.36,materials.silv,-55.2,.52,z,gates,true);
+ box(.65,.52,.54,materials.darkmetal,-54.4,1.18,z,gates);
+ let ok=box(.4,.18,.37,materials.blueLed,-54.13,1.53,z,gates);ok.castShadow=false;
+ box(.62,.7,.09,materials.smokedGlass,-54.25,.76,z+.75,gates);
+}
+const gateHotspot=box(1.0,.7,.3,materials.blueLed,-53.3,2.5,0);
+gateHotspot.visible=false;panelInfo(gateHotspot,'승강장 출입구','KTX 승강장 이동 방향을 표현한 교육용 입구 및 개찰 구역입니다. 실제 개찰구 수와 배치는 다를 수 있습니다.');
+
+// Escalators, glass balustrades and stainless-steel handrails.
+function escalator(x,z,reverse=false){
+ const group=new THREE.Group();scene.add(group);group.position.set(x,0,z);
+ let dir=reverse?-1:1;
+ for(let i=0;i<17;i++){
+  const t=i/16, yy=.15+t*7.2, zz=-t*14*dir;
+  box(3.0,.18,.75,materials.darkmetal,0,yy,zz,group,true);
+  box(2.7,.06,.53,surfaceColor(i%2?'#a7aab0':'#bcc2c7',.42,.5),0,yy+.13,zz,group);
+  for(let s of [-1,1]){
+   box(.08,.8,.65,materials.smokedGlass,s*1.6,yy+.55,zz,group);
+  }
+ }
+ for(let s of [-1,1]){
+  beam(V(s*1.66,.95,1),V(s*1.66,8.3,-14*dir),.105,materials.darkmetal,group);
+  beam(V(s*1.72,.5,1),V(s*1.72,7.8,-14*dir),.11,materials.silv,group);
+ }
+ box(3.4,.16,2,materials.silv,0,.12,1,group);
+ return group;
+}
+escalator(-22,-2.7);escalator(-17,-2.7);
+flatText(['에스컬레이터  Escalator'],13.7,1.4,-19,10.3,-7.2,{bg:'#25618d',fontSize:62,align:'center',flip:true});
+
+// Self-service ticket kiosks + staffed counter.
+const machineMat=surfaceColor('#cbd3d7',.31,.46);
+function ticketMachine(x,z){
+ const g=new THREE.Group();scene.add(g);g.position.set(x,0,z);
+ box(1.32,2.0,.8,machineMat,0,1.06,0,g,true);
+ box(1.08,1.24,.09,materials.darkmetal,0,1.3,-.44,g);
+ const screen=flatText(['승차권','예매 · 발권'],1.0,.85,x,1.44,z-.49,{bg:'#1e5ea0',gradient:'#153256',fontSize:91,lineHeight:107,pxH:512,pxW:512,align:'center',flip:true});
+ panelInfo(screen,'승차권 자동 발매기','승차권 조회와 발권을 위한 자동발매기를 모델링했습니다. 실제 결제 및 예매 기능은 제공하지 않습니다.');
+ box(.7,.035,.09,materials.charcoal,0,.62,-.445,g);
+ box(1.32,.12,.92,materials.blue,0,2.14,0,g);
+}
+for(let i=0;i<6;i++)ticketMachine(15+i*2.1,14.9);
+flatText(['승차권 자동발매기  ·  TICKET MACHINES'],18,1.5,20,4.1,17,{bg:'#155c91',gradient:'#113e63',fontSize:57,align:'center',flip:true});
+const counterMat=surfaceColor('#d4d7d6',.52,.1);
+box(15,1.22,1.7,counterMat,-5,.68,20,scene,true);
+box(15,.19,2.15,surfaceColor('#6b7f86',.3,.35),-5,1.39,19.7);
+flatText(['안내  ·  INFORMATION'],15,1.8,-5,4.2,25.08,{bg:'#1a6289',gradient:'#143e61',fontSize:65,align:'center',flip:true});
+for(let i=0;i<4;i++){box(2,.2,.4,materials.darkmetal,-10+i*3.3,2.4,20);}
+
+// Floor seating: perforated stainless benches with backs and arm supports.
+function bench(x,z,r=0){const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=r;scene.add(g);
+ const seat=surfaceColor('#697f8c',.35,.72);
+ for(let i=0;i<4;i++)box(.72,.10,1.35,seat,(i-1.5)*.76,.88,0,g,true);
+ box(3.18,.11,.24,materials.silv,0,1.43,.57,g);
+ for(let i=0;i<4;i++){box(.67,.58,.07,seat,(i-1.5)*.76,1.22,.57,g);}
+ for(let s of [-1,1]){box(.10,.77,.12,materials.darkmetal,s*1.52,.45,0,g);box(.1,.77,.12,materials.darkmetal,s*1.52,.45,.62,g);}
+}
+for(let x of [-5,2,9,16,23]){bench(x,5.5,Math.PI);bench(x,9.2,0);}
+// Planters make interior materials more life-like.
+const leafMat=surfaceColor('#315d47',.86),leaf2=surfaceColor('#4a745a',.8);
+function planter(x,z){let g=new THREE.Group();g.position.set(x,0,z);scene.add(g);
+ cyl(.52,.39,.7,surfaceColor('#9faba9',.55),0,.38,0,g);
+ beam(V(0,.68,0),V(0,2.15,0),.048,surfaceColor('#6b5434'),g);
+ for(let i=0;i<8;i++){let a=i*Math.PI*2/8,h=1.15+rnd()*.62;
+  const m=new THREE.Mesh(new THREE.SphereGeometry(.36,7,5),i%2?leafMat:leaf2);
+  m.scale.set(.65,1.35,.48);m.rotation.z=.22;m.position.set(Math.cos(a)*.45,h,Math.sin(a)*.45);g.add(m);
+ }
+}
+for(let x of [-36,-11,10,35,55])planter(x,18.2);
+
+// Glass-fronted information tower and route marker.
+box(2.6,5.1,1.0,materials.darkmetal,32,2.6,-8,scene,true);
+const nav=flatText(['KTX · 서울역','열차 출발 / 안내'],2.3,3.8,32,3.05,-8.55,{bg:'#205889',gradient:'#102b4a',fontSize:92,lineHeight:130,pxW:512,pxH:768,align:'center',flip:true});
+panelInfo(nav,'역내 종합 안내판','철도 승차 정보 및 주요 시설을 안내하는 디지털 안내판입니다. 화면은 시연용입니다.');
+box(2.9,.21,1.3,materials.silv,32,.35,-8);
+
+// Human figures with distinct natural clothing, silhouettes and walking cycles.
+const skins=['#b77e5a','#d7aa88','#ecc5a3','#b9896c','#9c684f','#c29a7e'].map(v=>surfaceColor(v,.92));
+const clothes=['#233a4c','#697476','#7b4e40','#434b5a','#aa9e89','#2d414a','#565343','#687a66','#5c3944','#343434','#627d8c','#c2b6a4'].map(v=>surfaceColor(v,.82));
+const pants=['#243447','#3b3d42','#4b5964','#6e6d65','#2c343c','#4d4845'].map(v=>surfaceColor(v,.85));
+const hair=[surfaceColor('#292b2e'),surfaceColor('#3e332c'),surfaceColor('#171a1f'),surfaceColor('#6b5540')];
+const people=[],personCount=68;
+const sphereG=new THREE.SphereGeometry(1,9,7),torsoG=new THREE.CapsuleGeometry(.32,.62,3,7);
+function person(ix){
+ const g=new THREE.Group();scene.add(g);g.position.set(-55+rnd()*112,0,-18+rnd()*35);
+ const h=(1.53+rnd()*.42),sk=skins[Math.floor(rnd()*skins.length)],cloth=clothes[Math.floor(rnd()*clothes.length)],pant=pants[Math.floor(rnd()*pants.length)],hj=hair[Math.floor(rnd()*hair.length)];
+ const body=new THREE.Mesh(torsoG,cloth);body.scale.set(.92,h/1.72,.78);body.position.y=h*.60;body.castShadow=true;g.add(body);
+ const head=new THREE.Mesh(sphereG,sk);head.scale.set(.155,.202,.149);head.position.set(0,h-.13,0);head.castShadow=true;g.add(head);
+ const haircap=new THREE.Mesh(sphereG,hj);haircap.scale.set(.16,.087,.156);haircap.position.set(0,h+.02,0);g.add(haircap);
+ const arm1=beam(V(-.31,h*.7,0),V(-.38,h*.45,0),.09,cloth,g);
+ const arm2=beam(V(.31,h*.7,0),V(.39,h*.45,0),.09,cloth,g);
+ const leg1=beam(V(-.15,.77,0),V(-.13,.11,0),.105,pant,g);
+ const leg2=beam(V(.15,.77,0),V(.12,.11,0),.105,pant,g);
+ const shoe=surfaceColor('#292b2e',.9);
+ box(.23,.12,.38,shoe,-.13,.075,-.095,g,true);box(.23,.12,.38,shoe,.13,.075,-.095,g,true);
+ // Backpack or rolling suitcase with correct dark muted colors.
+ let suitcase=null;let bagType=rnd();
+ if(bagType<.39){
+  suitcase=new THREE.Group();g.add(suitcase);suitcase.position.set(.57,.24,.4);
+  box(.30,.56,.24,surfaceColor(['#415c73','#343c42','#7c3f36','#8a776b'][Math.floor(rnd()*4)],.45),0,.19,0,suitcase,true);
+  box(.05,.34,.05,materials.silv,0,.64,0,suitcase);
+  for(let s of [-1,1])cyl(.048,.048,.05,materials.charcoal,s*.12,.0,0,suitcase,8);
+ } else if(bagType<.62){box(.12,.45,.36,surfaceColor('#484d52',.82),0,1.08,.28,g,true);}
+ const moving=(ix%8!==0);const ang=rnd()*Math.PI*2;const sp=.35+rnd()*.7;
+ g.rotation.y=ang;people.push({g,body,arm1,arm2,leg1,leg2,moving,ang,sp,phase:rnd()*6.2,baseY:body.position.y,suitcase});
+}
+for(let i=0;i<personCount;i++)person(i);
+document.getElementById('peopleNum').textContent=personCount;
+
+// Title/hotspot visual tags in the three-dimensional scene.
+const tags=[
+ {x:-23,y:11,z:1,s:'에스컬레이터'},
+ {x:-50,y:11,z:-9,s:'KTX 승강장'},
+ {x:24,y:5,z:14,s:'매표 시설'},
+ {x:12,y:19,z:0,s:'서울역 대합실'}
+];
+// Skip floating labels in center for an uncluttered architectural view.
+
+const pickables=[led,nav,frontSign];
+scene.traverse(o=>{if(o.userData?.poi&&!pickables.includes(o))pickables.push(o)});
+
+// Camera system: orbit, first-person navigation, touch gestures and animated presets.
+const presets={
+ grand:{pos:V(53,20.7,-14),tar:V(-19,7,5)},
+ entrance:{pos:V(49,7.3,-4),tar:V(-33,7.4,2)},
+ led:{pos:V(9,10.6,-6),tar:V(-5,13.5,24.6)},
+ ticket:{pos:V(29,7.1,5),tar:V(16,3,17)},
+ gate:{pos:V(-21,7,2),tar:V(-60,5,1)},
+ roof:{pos:V(14,13.2,-6),tar:V(-26,23,0)}
+};
+const target=presets.grand.tar.clone();camera.position.copy(presets.grand.pos);camera.lookAt(target);
+let orbitDistance=camera.position.distanceTo(target),yaw=0,pitch=0,transition=null,walk=false,tour=false,night=false;
+function deriveSpherical(){const d=camera.position.clone().sub(target);orbitDistance=d.length();yaw=Math.atan2(d.x,d.z);pitch=Math.asin(THREE.MathUtils.clamp(d.y/Math.max(.01,orbitDistance),-.98,.98));}
+deriveSpherical();
+function setView(name,quiet=false){
+ const p=presets[name];if(!p)return;walk=false;document.getElementById('walkToggle').classList.remove('on');document.getElementById('walkToggle').textContent='보행 모드';
+ transition={start:performance.now(),duration:1050,fromPos:camera.position.clone(),fromTar:target.clone(),toPos:p.pos.clone(),toTar:p.tar.clone()};
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.dataset.view===name));
+ if(!quiet)notify(({grand:'대합실 전체',entrance:'정면 입구',led:'대형 전광판',ticket:'매표 시설',gate:'KTX 승강장',roof:'천장 트러스'})[name]+' 시점으로 이동');
+}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{tour=false;document.getElementById('tourToggle').classList.remove('on');setView(b.dataset.view)}));
+const activeKeys=new Set();let pointerDown=false,lastX=0,lastY=0,moved=0,panMode=false,lastPinch=0;
+const touches=new Map();
+const touchDistance=()=>{if(touches.size<2)return 0;const p=[...touches.values()];return Math.hypot(p[0].x-p[1].x,p[0].y-p[1].y);};
+canvas.addEventListener('pointerdown',e=>{
+  touches.set(e.pointerId,{x:e.clientX,y:e.clientY});pointerDown=true;lastX=e.clientX;lastY=e.clientY;moved=0;
+  panMode=e.button===2||e.shiftKey;transition=null;canvas.setPointerCapture(e.pointerId);
+  if(touches.size===2)lastPinch=touchDistance();
+});
+canvas.addEventListener('pointermove',e=>{
+ if(!touches.has(e.pointerId))return;
+ touches.set(e.pointerId,{x:e.clientX,y:e.clientY});
+ if(touches.size>=2){const dist=touchDistance();if(lastPinch&&dist&&!walk)orbitDistance=THREE.MathUtils.clamp(orbitDistance*lastPinch/dist,3,185);lastPinch=dist;moved+=20;return;}
+ if(!pointerDown)return;let dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;moved+=Math.abs(dx)+Math.abs(dy);
+ if(panMode&&!walk){const side=V(Math.cos(yaw),0,-Math.sin(yaw));const ahead=V(Math.sin(yaw),0,Math.cos(yaw));target.addScaledVector(side,-dx*.03*orbitDistance/40).addScaledVector(ahead,dy*.025*orbitDistance/40);}
+ else{yaw-=dx*.0045;pitch=THREE.MathUtils.clamp(pitch+dy*.0036,walk?-.34:-.02,walk?.43:1.40);}
+});
+function pointerEnd(e){touches.delete(e.pointerId);pointerDown=touches.size>0;lastPinch=0;}
+canvas.addEventListener('pointerup',pointerEnd);canvas.addEventListener('pointercancel',pointerEnd);
+canvas.addEventListener('contextmenu',e=>e.preventDefault());
+canvas.addEventListener('wheel',e=>{e.preventDefault();if(walk){const f=V(Math.sin(yaw),0,Math.cos(yaw));camera.position.addScaledVector(f,-Math.sign(e.deltaY)*1.4);}else orbitDistance=THREE.MathUtils.clamp(orbitDistance*Math.exp(e.deltaY*.0012),3,185);transition=null;},{passive:false});
+window.addEventListener('keydown',e=>{if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright','shift'].includes(e.key.toLowerCase())){activeKeys.add(e.key.toLowerCase());if(['arrowup','arrowdown','arrowleft','arrowright'].includes(e.key.toLowerCase()))e.preventDefault();}});
+window.addEventListener('keyup',e=>activeKeys.delete(e.key.toLowerCase()));
+function toggleWalk(){walk=!walk;transition=null;tour=false;document.getElementById('tourToggle').classList.remove('on');
+ const b=document.getElementById('walkToggle');b.classList.toggle('on',walk);b.textContent=walk?'ꜛ 자유 회전':'보행 모드';
+ if(walk){let cx=THREE.MathUtils.clamp(camera.position.x,-59,60),cz=THREE.MathUtils.clamp(camera.position.z,-22,22);camera.position.set(cx,1.71,cz);target.copy(V(cx-8,1.65,cz+7));deriveSpherical();pitch=0;notify('보행 모드: WASD로 이동하고 드래그로 방향을 돌리세요.');}
+ else setView('grand',true);
+}
+document.getElementById('walkToggle').addEventListener('click',toggleWalk);
+function toggleNight(){night=!night;const b=document.getElementById('dayToggle');b.textContent=night?'주간으로':'야간으로';b.classList.toggle('on',night);
+ scene.background.set(night?'#16283a':'#c8d9e8');scene.fog.color.set(night?'#17293c':'#c8d9e8');
+ hemi.intensity=night?.47:2.5;sun.intensity=night?.18:3.1;fill.intensity=night?.24:1.25;
+ for(let l of warmLights)l.intensity=night?58:21;
+ renderer.toneMappingExposure=night?1.23:1.45;
+ document.getElementById('lightLabel').textContent=night?'야간 조명':'주간 조명';notify(night?'야간: 실내 등기구 및 LED 조명이 강조됩니다.':'주간: 유리 외벽의 자연광이 강조됩니다.');
+}
+document.getElementById('dayToggle').addEventListener('click',toggleNight);
+const tourViews=['grand','roof','led','ticket','gate','entrance'];let tourPos=0,tourLast=0;
+document.getElementById('tourToggle').addEventListener('click',()=>{tour=!tour;document.getElementById('tourToggle').classList.toggle('on',tour);tourPos=0;tourLast=performance.now();if(tour)setView(tourViews[0],true);notify(tour?'자동 투어 시작 · 시점 순환':'자동 투어 종료');});
+document.getElementById('full').addEventListener('click',()=>{if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.();});
+document.getElementById('shot').addEventListener('click',()=>{renderer.render(scene,camera);const a=document.createElement('a');a.download='Seoul_Station_3D.png';a.href=renderer.domElement.toDataURL('image/png');a.click();notify('현재 화면의 이미지를 저장했습니다.');});
+const poi=document.getElementById('poi');document.getElementById('poiClose').onclick=()=>poi.style.display='none';
+const raycaster=new THREE.Raycaster(),mouse=new THREE.Vector2();
+canvas.addEventListener('click',e=>{if(moved>7)return;const rect=canvas.getBoundingClientRect();mouse.set((e.clientX-rect.left)/rect.width*2-1,-((e.clientY-rect.top)/rect.height)*2+1);raycaster.setFromCamera(mouse,camera);
+ const hit=raycaster.intersectObjects(pickables,false).find(v=>v.object.userData?.poi);if(!hit){poi.style.display='none';return;}
+ document.getElementById('poiName').textContent=hit.object.userData.poi.name;document.getElementById('poiDesc').textContent=hit.object.userData.poi.desc;poi.style.display='block';
+});
+let noticeTimer=0;function notify(s){const n=document.getElementById('notice');n.textContent=s;n.style.opacity=1;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>n.style.opacity=0,2300);}
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,innerWidth<780?1.45:1.85));});
+
+const clock=new THREE.Clock();let frames=0,lastFPS=performance.now();
+function animate(now){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.07),t=now*.001;
+ if(tour&&now-tourLast>6500){tourLast=now;tourPos=(tourPos+1)%tourViews.length;setView(tourViews[tourPos],true);}
+ if(transition){let k=Math.min(1,(now-transition.start)/transition.duration),ease=k*k*(3-2*k);
+ camera.position.lerpVectors(transition.fromPos,transition.toPos,ease);target.lerpVectors(transition.fromTar,transition.toTar,ease);
+ if(k===1){transition=null;deriveSpherical();}}
+ else if(walk){
+   const dir=V(Math.sin(yaw),0,Math.cos(yaw)),side=V(Math.cos(yaw),0,-Math.sin(yaw));
+   const sp=(activeKeys.has('shift')?8:4.6)*dt;
+   if(activeKeys.has('w')||activeKeys.has('arrowup'))camera.position.addScaledVector(dir,-sp);
+   if(activeKeys.has('s')||activeKeys.has('arrowdown'))camera.position.addScaledVector(dir,sp);
+   if(activeKeys.has('a')||activeKeys.has('arrowleft'))camera.position.addScaledVector(side,-sp);
+   if(activeKeys.has('d')||activeKeys.has('arrowright'))camera.position.addScaledVector(side,sp);
+   camera.position.x=THREE.MathUtils.clamp(camera.position.x,-61,65);
+   camera.position.z=THREE.MathUtils.clamp(camera.position.z,-23.8,23.7);camera.position.y=1.72;
+   target.copy(camera.position).sub(V(Math.sin(yaw)*Math.cos(pitch),-Math.sin(pitch),Math.cos(yaw)*Math.cos(pitch)));
+ }else{
+   let right=V(Math.cos(yaw),0,-Math.sin(yaw)),forward=V(Math.sin(yaw),0,Math.cos(yaw));const sp=dt*11*(activeKeys.has('shift')?2.4:1);
+   if(activeKeys.has('w')||activeKeys.has('arrowup'))target.addScaledVector(forward,-sp);
+   if(activeKeys.has('s')||activeKeys.has('arrowdown'))target.addScaledVector(forward,sp);
+   if(activeKeys.has('a')||activeKeys.has('arrowleft'))target.addScaledVector(right,-sp);
+   if(activeKeys.has('d')||activeKeys.has('arrowright'))target.addScaledVector(right,sp);
+   target.x=THREE.MathUtils.clamp(target.x,-67,67);target.z=THREE.MathUtils.clamp(target.z,-24,24);
+   const cp=Math.cos(pitch);camera.position.set(target.x+orbitDistance*cp*Math.sin(yaw),target.y+orbitDistance*Math.sin(pitch),target.z+orbitDistance*cp*Math.cos(yaw));
+ }
+ camera.lookAt(target);
+ for(let p of people){if(p.moving){p.g.position.x+=Math.cos(p.ang)*p.sp*dt;p.g.position.z+=Math.sin(p.ang)*p.sp*dt*.55;
+    if(p.g.position.x>60)p.g.position.x=-59;if(p.g.position.x< -59)p.g.position.x=60;
+    if(p.g.position.z>20)p.g.position.z=-17;if(p.g.position.z< -19)p.g.position.z=18;
+    p.g.rotation.y=-p.ang+Math.PI/2;
+    let step=Math.sin(t*6*p.sp+p.phase);p.leg1.rotation.z=step*.18;p.leg2.rotation.z=-step*.18;
+    p.arm1.rotation.z=-step*.06;p.arm2.rotation.z=step*.06;p.body.position.y=p.baseY+Math.sin(t*12*p.sp+p.phase)*.012;
+ }}
+ renderer.render(scene,camera);
+ frames++;if(now-lastFPS>1000){document.getElementById('fps').textContent=Math.round(frames*1000/(now-lastFPS));frames=0;lastFPS=now;}
+}
+requestAnimationFrame(animate);
+loading.style.opacity='0';setTimeout(()=>loading.remove(),720);
+})();
+</script>
+</body>
+</html>
