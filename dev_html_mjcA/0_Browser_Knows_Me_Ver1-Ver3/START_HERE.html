@@ -1,0 +1,83 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>브라우저는 나를 얼마나 알고 있을까? · 실습 교안</title><style>*{box-sizing:border-box}body{margin:0;background:#f6f5ef;color:#192c37;font:17px/1.75 system-ui,sans-serif;word-break:keep-all}main{max-width:880px;margin:auto;padding:40px 24px 80px}h1{font-size:clamp(30px,5vw,48px);line-height:1.22}h2{margin-top:1.5em;line-height:1.4}h3{color:#11665f;margin-bottom:0}section{border-top:2px solid #a9bbb4;margin-top:32px}a{color:#075d62}nav a,button{display:inline-block;padding:6px 14px;background:#194d4a;color:white;border:none;margin:3px;border-radius:4px}button{font:inherit;cursor:pointer}pre{margin:8px 0;background:#172c36;color:#f7fafb;padding:16px;overflow:auto;font:15px/1.6 monospace;tab-size:2}details{padding:10px 0}summary{cursor:pointer;font-weight:bold}label,strong{font-weight:bold}p{margin:8px 0}code{overflow-wrap:anywhere}@media print{nav,button{display:none}pre{white-space:pre-wrap;color:#111;background:#eee}section{break-before:page}}</style><main><p>웹프로그래밍 실습 · JavaScript와 Browser API</p><h1>브라우저는 나를 얼마나 알고 있을까?</h1><p>창 너비를 읽을 때와 마이크를 켤 때, 브라우저의 반응은 어떻게 다를까요? 버튼을 누르기 전에 결과를 예측하고, 화면에 나타난 차이를 설명해 봅시다.</p><nav><a href="#prep">준비</a><a href="#v1">Ver.1</a><a href="#v2">Ver.2</a><a href="#v3">Ver.3</a></nav><section id="prep"><h2>실습 준비</h2><ol><li>ZIP의 압축을 모두 풀고 VS Code에서 <b>START_HERE.html이 들어 있는 폴더</b>를 엽니다. 이 교안은 브라우저에서 읽습니다.</li><li>VS Code의 Live Server가 있으면 START_HERE.html을 우클릭해 Open with Live Server를 선택하세요. Python이 있으면 같은 폴더에서 터미널에 <code>python -m http.server 8000 --bind 127.0.0.1</code>을 입력하고 <code>http://localhost:8000/START_HERE.html</code>을 여세요. Windows에서는 python 대신 py도 사용할 수 있습니다.</li><li>각 단계에서 <b>start/ver번호/script.js</b>를 열고 마지막 주석 아래에 코드를 한 번 붙여 넣습니다. Ctrl+S로 저장한 후 ‘내 실습 화면’을 열거나 새로고침하세요. complete 폴더에는 비교할 완성본이 있습니다.</li></ol><p>HTML은 버튼과 결과 칸을 만들고, CSS는 모양을 정합니다. JavaScript는 버튼의 id를 찾아 동작을 연결합니다. 각 시작 폴더에는 이번 단계의 HTML·CSS와 직전 단계까지의 JavaScript가 들어 있습니다.</p><p><b>50분 수업 예시</b>　준비·예측 5분 / Ver.1 10분 / Ver.2 15분 / Ver.3 15분 / 설명·정리 5분</p><details><summary>교수자용 · 원본 5단계와 연결</summary><p>원본 1·2의 클릭과 기본 조회는 Ver.1에 묶고 대표 값 4개로 줄였습니다. 원본 3의 목록과 4의 마이크는 Ver.2에서 비교합니다. 원본 4의 Bluetooth와 5의 JSON은 Ver.3에서 연결합니다. 장치가 없는 학생도 사용 불가 또는 빈 목록 결과로 참여할 수 있습니다.</p></details></section><section id="v1"><h2>Ver.1　버튼으로 내 브라우저 읽기</h2><h3>개념</h3><p>이벤트는 사용자의 행동을 코드에 연결합니다. #basicInfoBtn은 버튼의 id를 찾는 선택자입니다. click이 발생하면 showBasicInfo가 그 순간의 창 크기 등을 읽고 textContent로 결과 칸에 씁니다.</p><h3>코드 붙여 넣기</h3><p><code>start/ver1/script.js</code> 마지막 줄 아래에 붙여 넣고 저장하세요.</p><button onclick="copyBlock(this)">추가 코드 복사</button><span role="status"></span><pre tabindex="0">// 버튼을 누른 시점의 값을 읽습니다.
+const select = selector =&gt; document.querySelector(selector);
+const observed = {};
+
+function showBasicInfo() {
+  observed.basic = {
+    언어: navigator.language,
+    시간대: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    화면: screen.width + &quot; × &quot; + screen.height,
+    창: window.innerWidth + &quot; × &quot; + window.innerHeight
+  };
+  select(&quot;#basicInfo&quot;).textContent = Object.entries(observed.basic)
+    .map(([name, value]) =&gt; name + &quot; · &quot; + value)
+    .join(&quot;\n&quot;);
+}
+
+select(&quot;#basicInfoBtn&quot;).addEventListener(&quot;click&quot;, showBasicInfo);</pre><p><a href="start/ver1/index.html" target="_blank">내 실습 화면 열기</a>　·　<a href="complete/ver1/index.html" target="_blank">완성본 비교</a></p><h3>실행 확인</h3><p>① 내 정보 확인을 누르고 ‘화면’과 ‘창’을 비교하세요. ② 창 폭을 줄인 뒤 버튼을 다시 누르세요. 같은 모니터에서 어느 값이 바뀌었나요? ③ 코드의 ‘창’ 키를 ‘현재 창’으로 고쳐 저장·새로고침하고 다시 눌러 보세요.</p><details><summary>왜 창을 줄였는데 숫자가 그대로일까요?</summary><p>이 코드는 클릭할 때만 값을 읽습니다. 창을 줄인 뒤 버튼을 다시 누르면 현재 너비를 읽습니다.</p></details></section><section id="v2"><h2>Ver.2　장치 목록과 마이크 권한 비교하기</h2><h3>개념</h3><p>enumerateDevices()는 현재 페이지에 공개된 장치 목록을 돌려줍니다. getUserMedia()는 마이크 사용을 요청합니다. await는 결과를 기다리고, catch는 거절·장치 없음 등의 실패를 처리합니다. 허용 시 track.stop()으로 사용을 끝냅니다.</p><h3>코드 붙여 넣기</h3><p><code>start/ver2/script.js</code> 마지막 줄 아래에 붙여 넣고 저장하세요.</p><button onclick="copyBlock(this)">추가 코드 복사</button><span role="status"></span><pre tabindex="0">// 목록 조회와 마이크 사용 요청은 서로 다른 동작입니다.
+async function showDevices() {
+  const output = select(&quot;#deviceList&quot;);
+  if (!navigator.mediaDevices?.enumerateDevices) {
+    observed.devices = null;
+    output.textContent = &quot;목록 조회를 지원하지 않습니다. 실행 주소를 확인하세요.&quot;;
+    return;
+  }
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    observed.devices = devices.map(device =&gt; ({
+      종류: device.kind,
+      이름: device.label || &quot;이름 비공개&quot;
+    }));
+    output.textContent = observed.devices
+      .map(device =&gt; device.종류 + &quot; · &quot; + device.이름)
+      .join(&quot;\n&quot;) || &quot;표시 가능한 장치가 없습니다.&quot;;
+  } catch (error) {
+    observed.devices = null;
+    output.textContent = &quot;목록 확인 실패 · &quot; + error.name;
+  }
+}
+
+async function checkMic() {
+  const output = select(&quot;#permissionResult&quot;);
+  if (!navigator.mediaDevices?.getUserMedia) {
+    observed.micResult = &quot;사용 불가&quot;;
+  } else {
+    try {
+      output.textContent = &quot;마이크 요청 결과를 기다리는 중입니다.&quot;;
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track =&gt; track.stop());
+      observed.micResult = &quot;허용됨 · 스트림 종료&quot;;
+    } catch (error) {
+      observed.micResult = &quot;요청 실패 · &quot; + error.name;
+    }
+  }
+  output.textContent = observed.micResult;
+  await showDevices();
+}
+
+select(&quot;#deviceBtn&quot;).addEventListener(&quot;click&quot;, showDevices);
+select(&quot;#micBtn&quot;).addEventListener(&quot;click&quot;, checkMic);</pre><p><a href="start/ver2/index.html" target="_blank">내 실습 화면 열기</a>　·　<a href="complete/ver2/index.html" target="_blank">완성본 비교</a></p><h3>실행 확인</h3><p>① 장치 목록 보기를 누르세요. 목록이 비거나 이름이 비공개일 수 있습니다. ② 마이크 권한 요청을 누르고 허용 또는 차단을 선택하세요. ③ 요청 결과와 다시 조회된 목록을 비교하세요. 이전에 권한을 결정했다면 창이 다시 뜨지 않을 수 있습니다.</p><details><summary>장치 목록이 비었으면 컴퓨터에 마이크가 없다는 뜻일까요?</summary><p>목록에는 브라우저가 이 페이지에 공개한 장치만 나타납니다. 장치 연결 상태, 권한, 실행 환경을 함께 살펴봐야 합니다.</p></details></section><section id="v3"><h2>Ver.3　장치 선택 결과를 JSON으로 보기</h2><h3>개념</h3><p>requestDevice()는 사용자가 장치를 고르는 단계입니다. 선택된 이름이나 취소 결과를 observed 객체에 기록합니다. JSON.stringify()는 현재 객체를 문자열로 바꿉니다. 이 예제는 그 문자열을 화면에만 표시합니다.</p><h3>코드 붙여 넣기</h3><p><code>start/ver3/script.js</code> 마지막 줄 아래에 붙여 넣고 저장하세요.</p><button onclick="copyBlock(this)">추가 코드 복사</button><span role="status"></span><pre tabindex="0">// 사용자가 고른 장치 이름만 표시합니다.
+async function chooseDevice() {
+  if (!navigator.bluetooth?.requestDevice) {
+    observed.bluetooth = &quot;이 환경에서 사용 불가&quot;;
+  } else {
+    try {
+      const device = await navigator.bluetooth.requestDevice({
+        acceptAllDevices: true
+      });
+      observed.bluetooth = device.name || &quot;이름 없는 장치 선택&quot;;
+    } catch (error) {
+      observed.bluetooth = error.name === &quot;NotFoundError&quot;
+        ? &quot;선택된 장치 없음&quot;
+        : &quot;선택 실패 · &quot; + error.name;
+    }
+  }
+  select(&quot;#bluetoothResult&quot;).textContent = observed.bluetooth;
+}
+
+function showJson() {
+  select(&quot;#jsonResult&quot;).textContent = JSON.stringify(observed, null, 2);
+}
+
+select(&quot;#bluetoothBtn&quot;).addEventListener(&quot;click&quot;, chooseDevice);
+select(&quot;#jsonBtn&quot;).addEventListener(&quot;click&quot;, showJson);</pre><p><a href="start/ver3/index.html" target="_blank">내 실습 화면 열기</a>　·　<a href="complete/ver3/index.html" target="_blank">완성본 비교</a></p><h3>실행 확인</h3><p>① 새로고침 직후 JSON 보기를 눌러 {}를 확인하세요. ② 내 정보 확인 → JSON 보기를 눌러 basic이 추가됐는지 보세요. ③ Bluetooth 장치 선택 창을 취소하거나 본인 장치를 선택한 뒤 JSON 보기를 다시 누르세요. 미지원 환경에서도 상태 문구를 비교할 수 있습니다.</p><details><summary>JSON에 보인 값은 새로고침 후에도 남을까요?</summary><p>observed는 현재 페이지 메모리에만 있습니다. 새로고침 후 JSON 보기를 누르면 다시 {}입니다. 현재 값으로 다시 그리려면 JSON 보기 버튼을 누릅니다.</p></details></section><section><h2>마무리 확인</h2><p>오늘 관찰한 내용을 한 문장씩 적으세요. “버튼만 눌러 확인한 값은 ___였다.” “마이크 요청 결과는 ___였고, 장치 목록에는 ___가 보였다.” “JSON 보기 전후로 ___ 항목이 달라졌다.”</p><details><summary>버튼을 눌러도 반응이 없다면</summary><p>편집한 파일과 브라우저 주소의 ver 번호가 같은지 확인하세요. 저장 후 새로고침하고 F12 → Console을 보세요. 이미 선언했다는 오류가 뜨면 같은 코드를 두 번 붙였는지 확인하세요. 장치 API가 사용 불가라면 localhost 또는 HTTPS 주소에서 다시 실행하세요. NotAllowedError는 권한·정책 제한, NotFoundError는 마이크 요청에서 적합한 장치를 찾지 못한 경우에 나타날 수 있습니다.</p></details><p>API 참고 · <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices">장치 목록</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia">마이크 요청</a> · <a href="https://developer.mozilla.org/en-US/docs/Web/API/Bluetooth/requestDevice">Bluetooth 선택</a></p></section></main><script>async function copyBlock(button){const status=button.nextElementSibling, pre=status.nextElementSibling;try{await navigator.clipboard.writeText(pre.textContent);status.textContent=" 복사했습니다."}catch{const range=document.createRange();range.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(range);status.textContent=" 코드가 선택되었습니다. Ctrl+C 또는 ⌘C로 복사하세요."}}</script></html>
