@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Basic</title>
+    <script src= "https://code.jquery.com/jquery-4.0.0.js" ></script>
+    <script>
+//jQuery라이브러리를 사용해 스타일을 조작할 때는 css()메서드를 사용합니다. 
+// Css()메서드는 attr()메서드와 같은 방법으로 사용합니다. 
+
+
+        //이벤트를 연결합니다.
+        $(document).ready(function () { 
+            //스타일을 지정합니다.
+            $('.box').css('float', 'left');
+            $('.box').css('margin', 10);
+            $('.box').css('width', 100);
+            $('.box').css('height', 100);
+            $('.box').css('backgroundColor', 'red');
+        });
+    </script>
+</head>
+
+<body> 
+<h4>3.2스타일 조작</h4>
+    <ol>
+        <li><b>속성 값을 입력해 속성 지정하기</b></li>
+        <li>객체를 입력해 속성 지정하기</li>
+        <li>함수를 이용해 속성 지정하기</li>
+    </ol>
+    <hr>
+
+
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+
+</body>
+
+</html>

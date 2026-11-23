@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>jQuery Mobile 1.0 · 폼과 UI 요소 통합 실습</title>
+  <!-- 요청한 라이브러리 버전 그대로 사용. http 대신 https로 연결 -->
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.css">
+  <script src="https://code.jquery.com/jquery-1.6.4.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.0/jquery.mobile-1.0.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body, .ui-body-c { font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; }
+    .ui-header .ui-title { margin: 0.65em 54px; font-size: 16px; }
+    .hero { background: #e9f4ff; border: 1px solid #cee5fb; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    .hero h2 { margin: 2px 0 8px; color: #173b64; font-size: 19px; }
+    .hero p { margin: 0; color: #3b526d; font-size: 14px; line-height: 1.65; }
+    .section { margin: 15px 0 24px; padding: 15px 15px 18px; border: 1px solid #dce4ea; border-radius: 12px; background: #fff; box-shadow: 0 2px 6px rgba(23,54,81,.04); }
+    .section h3 { font-size: 18px; margin: 0 0 8px; color: #143c67; }
+    .section h4 { margin: 16px 0 8px; font-size: 15px; color: #214766; }
+    .desc { font-size: 13px; color: #566476; line-height: 1.6; margin: 4px 0 13px; }
+    .number { display: inline-block; background: #2069aa; color: #fff; border-radius: 5px; padding: 3px 8px; margin-right: 6px; font-size: 13px; vertical-align: middle; }
+    .hint { padding: 10px 12px; border-left: 3px solid #2f8fbf; background: #edf8ff; color: #29526b; font-size: 13px; line-height: 1.6; border-radius: 3px; }
+    .result { background: #f5f8fc; border: 1px solid #d6e2ec; padding: 11px 13px; border-radius: 8px; white-space: pre-line; font-size: 14px; min-height: 45px; }
+    .grid-cell { background: #e5f1ff; color: #20537c; border-radius: 7px; padding: 10px 3px; margin: 4px; text-align: center; border: 1px solid #cbdff2; font-weight: bold; font-size: 12px; }
+    .grid-example { margin-bottom: 12px; }
+    .grid-example:after { content: ""; display: block; clear: both; }
+    .form-label { display:block; margin-bottom: 5px; font-weight: bold; }
+    .demo-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .demo-table th, .demo-table td { border: 1px solid #cfdbe8; padding: 10px; text-align: left; }
+    .demo-table th { background: #e9f2fa; color: #174468; }
+    .demo-table tr:nth-child(even) { background: #f7fafd; }
+    /* jQuery Mobile 1.0에는 data-role="panel"이 없으므로 직접 구현 */
+    #panelShade { display:none; position:fixed; inset:0; background:rgba(15,30,49,.46); z-index: 1100; }
+    #sidePanel { position: fixed; left: -290px; top: 0; height: 100%; height: 100vh; width: 260px; padding: 18px; background:#f8fbff; z-index:1101; border-right:1px solid #bdd5e9; box-shadow: 4px 0 20px rgba(0,0,0,.18); overflow-y:auto; }
+    #sidePanel h3 { color: #173d68; margin-top: 10px; }
+    #sidePanel .panel-link { display:block; padding: 12px; margin-bottom: 8px; border: 1px solid #d2e2f0; border-radius:7px; background:#e8f2fc; color:#1d4c72; text-decoration:none; font-weight:bold; }
+    #sidePanel .panel-link:focus { outline: 2px solid #247dbd; }
+    /* jQuery Mobile 1.0에는 data-role="popup"이 없으므로 직접 구현 */
+    #popupShade { display:none; position:fixed; inset:0; z-index:1200; background:rgba(19,34,52,.58); }
+    #popupBox { display:none; position:fixed; z-index:1201; width:calc(100% - 42px); max-width:400px; top:50%; left:50%; transform:translate(-50%, -50%); background:white; border-radius:14px; border:1px solid #c4d9eb; box-shadow: 0 12px 32px rgba(6,34,56,.32); padding:21px; text-align:center; }
+    #popupBox h3 { color:#174468; margin:0 0 7px; }
+    #popupBox p { color:#465b70; line-height:1.65; }
+    @media (max-width: 580px) {
+      .section { padding: 13px 11px; }
+      /* jQuery Mobile 1.0 반응형 테이블 대체: 표를 세로 카드로 재배치 */
+      .demo-table, .demo-table tbody, .demo-table tr, .demo-table td { display:block; width:100%; }
+      .demo-table thead { display:none; }
+      .demo-table tr { margin-bottom:10px; border:1px solid #cfdbe8; border-radius:8px; overflow:hidden; }
+      .demo-table td { border:0; border-bottom:1px solid #e5edf4; display:flex; justify-content:space-between; gap:10px; }
+      .demo-table td:last-child { border-bottom:0; }
+      .demo-table td:before { content:attr(data-label); font-weight:bold; color:#194567; }
+      .grid-cell { padding:9px 1px; font-size:11px; margin:2px; }
+    }
+  </style>
+</head>
+<body>
+  <div data-role="page" id="demo" data-theme="c">
+    <div data-role="header" data-theme="b">
+      <h1>jQuery Mobile 1.0 실습</h1>
+    </div>
+
+    <!-- 이후 버전의 panel 대신 CSS+JavaScript 슬라이드 메뉴 -->
+    <div id="panelShade" aria-hidden="true"></div>
+    <nav id="sidePanel" aria-label="실습 사이드 메뉴">
+      <h3>실습 목차</h3>
+      <a class="panel-link" href="#forms">1. 폼 요소 5종</a>
+      <a class="panel-link" href="#collapsible">2. 아코디언</a>
+      <a class="panel-link" href="#table">3. 반응형 테이블</a>
+      <a class="panel-link" href="#grid">4. 그리드</a>
+      <a href="#" id="btnPanelClose" data-role="button" data-theme="b">메뉴 닫기</a>
+      <p class="desc">화면을 오른쪽으로 스와이프하면 메뉴를 열고, 메뉴에서 왼쪽으로 스와이프하면 닫을 수 있습니다.</p>
+    </nav>
+
+    <div data-role="content" id="mainContent">
+      <div class="hero">
+        <h2>모바일 웹앱 UI 요소 통합 실습</h2>
+        <p>폼 5종 · 사이드 패널 · 아코디언 · 팝업 · 반응형 테이블 · 2~5단 그리드를 직접 조작해 봅니다.</p>
+      </div>
+      <a href="#" id="btnPanelOpen" data-role="button" data-theme="b" data-icon="grid">사이드 메뉴 열기</a>
+
+      <section class="section" id="forms">
+        <h3><span class="number">01</span>폼 요소 5종</h3>
+        <p class="desc">선택과 입력을 실습한 후, 맨 아래의 [입력 결과 확인] 버튼을 누르세요.</p>
+        <form id="studentForm" action="#" method="get">
+          <h4>① 라디오 버튼과 체크박스</h4>
+          <div data-role="fieldcontain">
+            <fieldset data-role="controlgroup">
+              <legend>수강 형태(1개만 선택)</legend>
+              <input type="radio" name="course" id="courseOnline" value="온라인" checked>
+              <label for="courseOnline">온라인</label>
+              <input type="radio" name="course" id="courseOffline" value="오프라인">
+              <label for="courseOffline">오프라인</label>
+            </fieldset>
+          </div>
+          <div data-role="fieldcontain">
+            <fieldset data-role="controlgroup">
+              <legend>관심 분야(복수 선택)</legend>
+              <input type="checkbox" name="interest" id="interestAI" value="인공지능">
+              <label for="interestAI">인공지능</label>
+              <input type="checkbox" name="interest" id="interestWeb" value="웹 개발">
+              <label for="interestWeb">웹 개발</label>
+              <input type="checkbox" name="interest" id="interestSec" value="정보보호">
+              <label for="interestSec">정보보호</label>
+            </fieldset>
+          </div>
+
+          <h4>② 선택 메뉴(Select)</h4>
+          <div data-role="fieldcontain">
+            <label for="major">전공 선택</label>
+            <select name="major" id="major">
+              <option value="인공지능학과">인공지능학과</option>
+              <option value="소프트웨어학과">소프트웨어학과</option>
+              <option value="정보보호학과">정보보호학과</option>
+            </select>
+          </div>
+
+          <h4>③ 플립 스위치(Flip Switch)</h4>
+          <div data-role="fieldcontain">
+            <label for="wifi">알림 설정</label>
+            <select name="wifi" id="wifi" data-role="slider">
+              <option value="OFF">OFF</option>
+              <option value="ON">ON</option>
+            </select>
+          </div>
+
+          <h4>④ 숫자 슬라이더(Slider)</h4>
+          <div data-role="fieldcontain">
+            <label for="volume">볼륨: <strong id="volumeText">50</strong></label>
+            <input type="range" id="volume" name="volume" min="0" max="100" value="50">
+          </div>
+
+          <h4>⑤ 텍스트와 검색 폼</h4>
+          <div data-role="fieldcontain">
+            <label for="studentName">이름</label>
+            <input type="text" id="studentName" name="studentName" placeholder="이름 입력">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="searchWord">검색어</label>
+            <input type="search" id="searchWord" name="searchWord" placeholder="예: jQuery Mobile">
+          </div>
+
+          <a href="#" id="btnResult" data-role="button" data-theme="b" data-icon="check">입력 결과 확인</a>
+          <div class="result" id="formResult" role="status" aria-live="polite">아직 입력 결과가 없습니다.</div>
+        </form>
+      </section>
+
+      <section class="section" id="collapsible">
+        <h3><span class="number">02</span>접이식 아코디언</h3>
+        <p class="desc">jQuery Mobile 1.0 기본 위젯: <code>data-role="collapsible-set"</code></p>
+        <div data-role="collapsible-set" data-theme="c" data-content-theme="c">
+          <div data-role="collapsible" data-collapsed="false">
+            <h3>HTML5란?</h3><p>웹 문서의 제목, 문단, 입력 폼, 표 등 구조를 표현하는 표준 마크업 언어입니다.</p>
+          </div>
+          <div data-role="collapsible">
+            <h3>CSS3란?</h3><p>색상, 배치, 크기, 화면에 따른 반응형 스타일을 정의합니다.</p>
+          </div>
+          <div data-role="collapsible">
+            <h3>jQuery Mobile이란?</h3><p>모바일 화면에 맞는 터치 친화적인 UI를 제공하는 오래된 JavaScript UI 프레임워크입니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="popupDemo">
+        <h3><span class="number">03</span>팝업(Popup) 대체 구현</h3>
+        <p class="desc">1.0에는 기본 팝업 위젯이 없으므로 <code>fadeIn()</code>, <code>fadeOut()</code>을 사용합니다.</p>
+        <a href="#" data-role="button" data-theme="b" id="btnPopupOpen">팝업 알림 열기</a>
+      </section>
+
+      <section class="section" id="table">
+        <h3><span class="number">04</span>반응형 테이블 대체 구현</h3>
+        <p class="desc">화면이 580px 이하이면 CSS 미디어 쿼리가 표의 각 행을 세로 카드로 바꿉니다. 브라우저 폭을 조절해 보세요.</p>
+        <table class="demo-table">
+          <thead><tr><th scope="col">이름</th><th scope="col">학과</th><th scope="col">성적</th><th scope="col">학습 상태</th></tr></thead>
+          <tbody>
+            <tr><td data-label="이름">김학생</td><td data-label="학과">인공지능</td><td data-label="성적">95점</td><td data-label="학습 상태">우수</td></tr>
+            <tr><td data-label="이름">이학생</td><td data-label="학과">소프트웨어</td><td data-label="성적">88점</td><td data-label="학습 상태">진행 중</td></tr>
+            <tr><td data-label="이름">박학생</td><td data-label="학과">정보보호</td><td data-label="성적">92점</td><td data-label="학습 상태">완료</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section" id="grid">
+        <h3><span class="number">05</span>그리드(Grid Layout)</h3>
+        <p class="desc"><code>ui-grid-a</code>부터 <code>ui-grid-d</code>까지는 jQuery Mobile 1.0에서 바로 사용할 수 있습니다.</p>
+        <h4>2단: ui-grid-a</h4>
+        <div class="ui-grid-a grid-example"><div class="ui-block-a"><div class="grid-cell">A</div></div><div class="ui-block-b"><div class="grid-cell">B</div></div></div>
+        <h4>3단: ui-grid-b</h4>
+        <div class="ui-grid-b grid-example"><div class="ui-block-a"><div class="grid-cell">A</div></div><div class="ui-block-b"><div class="grid-cell">B</div></div><div class="ui-block-c"><div class="grid-cell">C</div></div></div>
+        <h4>4단: ui-grid-c</h4>
+        <div class="ui-grid-c grid-example"><div class="ui-block-a"><div class="grid-cell">A</div></div><div class="ui-block-b"><div class="grid-cell">B</div></div><div class="ui-block-c"><div class="grid-cell">C</div></div><div class="ui-block-d"><div class="grid-cell">D</div></div></div>
+        <h4>5단: ui-grid-d</h4>
+        <div class="ui-grid-d grid-example"><div class="ui-block-a"><div class="grid-cell">A</div></div><div class="ui-block-b"><div class="grid-cell">B</div></div><div class="ui-block-c"><div class="grid-cell">C</div></div><div class="ui-block-d"><div class="grid-cell">D</div></div><div class="ui-block-e"><div class="grid-cell">E</div></div></div>
+      </section>
+
+      <p class="hint"><strong>버전 안내:</strong> 이 파일은 요청하신 jQuery 1.6.4 / jQuery Mobile 1.0 기반입니다. <code>data-role="popup"</code>은 1.2부터, <code>data-role="panel"</code> 및 <code>data-role="table"</code>은 1.3부터 제공됩니다. 이 세 기능은 CSS 및 기본 jQuery로 재현했습니다. 라이브러리는 온라인 CDN에서 로드하므로 실행할 때 인터넷이 필요합니다.</p>
+    </div>
+    <div data-role="footer" data-theme="b"><h4>모바일 웹앱 프로그래밍 · 실습 예제</h4></div>
+
+    <div id="popupShade" aria-hidden="true"></div>
+    <div id="popupBox" role="dialog" aria-modal="true" aria-labelledby="popupHeading" aria-hidden="true">
+      <h3 id="popupHeading">실습 알림</h3>
+      <p>jQuery Mobile 1.0 환경에서<br>직접 구현한 오버레이 팝업입니다.</p>
+      <a href="#" id="btnPopupClose" data-role="button" data-theme="b">닫기</a>
+    </div>
+  </div>
+
+  <script>
+    // jQuery 1.6.4에서는 .on() 대신 .bind() 사용
+    $(document).ready(function () {
+      function openPanel() {
+        $("#panelShade").show();
+        $("#sidePanel").stop(true, true).animate({ left: "0px" }, 240);
+        $("#btnPanelOpen").attr("aria-expanded", "true");
+      }
+      function closePanel() {
+        $("#sidePanel").stop(true, true).animate({ left: "-290px" }, 240, function () {
+          $("#panelShade").hide();
+        });
+        $("#btnPanelOpen").attr("aria-expanded", "false");
+      }
+      function openPopup() {
+        $("#popupShade").fadeIn(160);
+        $("#popupBox").fadeIn(160).attr("aria-hidden", "false");
+      }
+      function closePopup() {
+        $("#popupBox").fadeOut(160).attr("aria-hidden", "true");
+        $("#popupShade").fadeOut(160);
+      }
+      $("#btnPanelOpen").bind("click", function (e) { e.preventDefault(); openPanel(); });
+      $("#btnPanelClose, #panelShade").bind("click", function (e) { e.preventDefault(); closePanel(); });
+      $("#sidePanel .panel-link").bind("click", function (e) {
+        e.preventDefault();
+        var target = $(this).attr("href");
+        closePanel();
+        var section = $(target);
+        if (section.length) {
+          $("html, body").animate({ scrollTop: section.offset().top }, 350);
+        }
+      });
+      // jQuery Mobile 1.0의 swipe 이벤트 활용
+      $("#mainContent").bind("swiperight", function (e) {
+        // 슬라이더/선택기 조작은 메뉴 제스처로 취급하지 않음
+        if ($(e.target).closest(".ui-slider, input, select").length) return;
+        openPanel();
+      });
+      $("#sidePanel").bind("swipeleft", function () { closePanel(); });
+      $("#btnPopupOpen").bind("click", function (e) { e.preventDefault(); openPopup(); });
+      $("#btnPopupClose, #popupShade").bind("click", function (e) { e.preventDefault(); closePopup(); });
+      $(document).bind("keydown", function (e) {
+        if (e.which === 27) { closePopup(); closePanel(); }
+      });
+      $("#volume").bind("change keyup", function () {
+        $("#volumeText").text($(this).val());
+      });
+      $("#btnResult").bind("click", function (e) {
+        e.preventDefault();
+        var interests = [];
+        $("input[name='interest']:checked").each(function () { interests.push($(this).val()); });
+        var output = "수강 형태: " + ($("input[name='course']:checked").val() || "미선택") + "\n" +
+                     "관심 분야: " + (interests.length ? interests.join(", ") : "미선택") + "\n" +
+                     "선택 전공: " + $("#major").val() + "\n" +
+                     "알림 설정: " + $("#wifi").val() + "\n" +
+                     "볼륨: " + $("#volume").val() + "\n" +
+                     "이름: " + ($("#studentName").val() || "미입력") + "\n" +
+                     "검색어: " + ($("#searchWord").val() || "미입력");
+        $("#formResult").text(output);
+      });
+      $("#studentForm").bind("submit", function (e) { e.preventDefault(); $("#btnResult").trigger("click"); });
+    });
+  </script>
+</body>
+</html>

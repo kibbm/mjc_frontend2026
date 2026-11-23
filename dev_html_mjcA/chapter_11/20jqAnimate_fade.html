@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Basic</title>
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+    <script>
+        
+
+
+        //    이벤트를 연결합니다.
+        $(document).ready(function () {
+            //    이벤트를 연결합니다.
+            $('button').click(function(){
+                // 간단한 효과를 적용합니다.
+                $('.page').fadeToggle('slow');
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h2>05 시각 효과</h2>
+    <h4><b>5.1시각 효과 메서드</b></h4>
+    <h4>5.2애니메이션 효과</h4>
+    <hr>
+
+    <button>Toggle Show</button>
+    <div class="page">
+        <h1>Lorem ipsum dolor sit amet</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque ac mauris at risus consequat accumsan sit amet id leo. Fusce vestibulum erat vel consectetur aliquam. Integer a velit neque. Morbi at nibh a justo fringilla lobortis. Morbi vulputate nibh sem, ut volutpat ante placerat a. In arcu mi, ullamcorper ut est sit amet, ultrices consectetur dui. Sed a ullamcorper mi, quis pellentesque eros. Donec sit amet purus ac orci elementum maximus. Curabitur est nisl, blandit ut lectus non, placerat aliquet nunc.</p>
+    </div>
+</body>
+
+</html>

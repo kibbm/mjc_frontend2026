@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery Basic</title>
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+    <script>
+        // 
+
+        
+        //    이벤트를 연결합니다.
+        $(document).ready(function () {
+            //변수를 선언합니다.
+            let clearQueue = false;
+            let goToEnd = false; 
+            
+            //    이벤트를 연결합니다.
+            $('#clearQueue').change(function(){
+                clearQueue = $(this).prop('checked');
+            });
+            $('#goToEnd').change(function(){
+                goToEnd = $(this).prop('checked'); //현재 체크박스가 표시되었는지 확인
+            });
+            $('#stopButton').click(function(){
+                $('#box').stop(clearQueue, goToEnd); //goToEnd매개변수는 애니메이션을 중지할 때 어떤 상태로 종료할 지 지정.
+            });
+
+            //스타일을 변경합니다.
+            $('#box').css({
+                width:100,
+                height:100,
+                background:'red'
+            });
+
+            //타이머를 연결합니다.
+            setInterval(function(){
+                $('#box').animate({
+                    width:200
+                }, 1000).delay(1000).animate({
+                    width:100,
+                    height:100
+                }, 1000);
+            }, 3000);
+        });
+    </script>
+</head>
+
+<body>
+    <h2>05 시각 효과</h2>
+    <h4>5.1시각 효과 메서드</h4>
+    <h4><b>5.2애니메이션 효과</b></h4>
+    <p>. goToEnd매개변수를 사용하지 않고 애니메이션 진행 중에 stop()메서드를 사용하면 그 시점에서 애니메이션이 멈춥니다. <br>
+코드에서 width속성을 200px까지 증가시키라고 했지만, 현재 상태에서 멈추기 때문에 100px과 200px사이에 있습니다. <br>
+
+. 하지만 goToEnd매개변수를 사용하면 애니메이션이 멈추었을 때 animate()메서드에서 지정한 최종 수치로 변경해서 정지합니다. 
+</p>
+    <hr>
+
+    <!--입력 양식-->
+    <label>clearQueue</label>
+    <input id="clearQueue" type="checkbox">
+    <br>
+    <label>goToEnd</label>
+    <input id="goToEnd" type="checkbox">
+    <br>
+    <button id="stopButton">Stop</button>
+    <!--애니메이션-->
+    <div id="box"></div>
+
+
+
+</body>
+
+</html>
